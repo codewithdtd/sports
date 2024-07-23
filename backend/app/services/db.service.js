@@ -15,13 +15,22 @@ class DBHandler {
     }
   }
 
-  async findOne(id) {
+  async findById(id) {
     try {
       const result = await this.model.findById(id);
       if (!result) {
         throw new Error('Document not found');
       }
       return result;
+    } catch (err) {
+      throw new Error('Error finding document: ' + err.message);
+    }
+  }
+
+  async findOne(data) {
+    try {
+      const results = await this.model.findOne(data);
+      return results;
     } catch (err) {
       throw new Error('Error finding document: ' + err.message);
     }
