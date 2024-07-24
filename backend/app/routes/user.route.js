@@ -1,17 +1,17 @@
 const express = require("express");
 const user = require("../controllers/user.controller");
-
+const middleware = require("../middleware/middleware")
 const router = express.Router();
 
 router.route("/")
-    .get(user.findAll)
+    .get(middleware.verifyToken, user.findAll)
     .post(user.create);
 
 router.route("/login").post(user.login);
 router.route("/logout").post(user.logout);
 
 router.route("/:id")
-    .delete(user.deleteOne)
+    .delete(middleware.verifyAdmin, user.deleteOne)
     .get(user.findOne)
     .put(user.update)
 

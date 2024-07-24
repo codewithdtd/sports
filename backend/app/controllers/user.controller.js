@@ -46,10 +46,11 @@ exports.login = async (req, res, next) => {
             );
         }
         if(validPassword && result) {
+            console.log(result.admin);
             const accessToken = jwt.sign(
                 {
                     id: result.id,
-                    // admin: result.admin
+                    // role: result.role
                 },  
                 process.env.JWT_ACCESS_TOKEN,
                 { expiresIn: "300s" }

@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   hinhAnh_KH: { type: String, },
   ngayTao_KH: { type: String, },
   ngayCapNhat_KH: { type: String, },
-  da_xoa: { type: String, default: false },
+  da_xoa: { type: Boolean, default: false },
 });
 
 userSchema.pre('save', function (next) {
