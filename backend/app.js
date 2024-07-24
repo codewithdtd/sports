@@ -3,9 +3,10 @@ const cors = require("cors");
 const userRouter = require("./app/routes/user.route");
 // const adminRouter = require("./app/routes/admin.route");
 const ApiError = require("./app/api-error");
-
+const cookieParser = require('cookie-parser');
 
 const app = express();
+app.use(cookieParser());
 app.use(express.json());
 
 app.use(cors());

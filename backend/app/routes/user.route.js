@@ -8,6 +8,7 @@ router.route("/")
     .post(user.create);
 
 router.route("/login").post(user.login);
+router.route("/refresh").post(user.refreshToken);
 router.route("/logout").post(user.logout);
 
 router.route("/:id")

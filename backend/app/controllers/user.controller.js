@@ -46,7 +46,6 @@ exports.login = async (req, res, next) => {
             );
         }
         if(validPassword && result) {
-            console.log(result.admin);
             const accessToken = jwt.sign(
                 {
                     id: result.id,
@@ -55,6 +54,23 @@ exports.login = async (req, res, next) => {
                 process.env.JWT_ACCESS_TOKEN,
                 { expiresIn: "300s" }
             );
+            // refresh
+            const refreshToken = jwt.sign(
+                {
+                    id: result.id,
+                    // role: result.role
+                },  
+                process.env.JWT_REFRESH_TOKEN,
+                { expiresIn: "30d" }
+            );
+
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                path: "/",
+                sameSite: "strict",
+            });
+
+
             const {matKhau_KH, ...others} = result._doc;
             res.status(200).json({user: others, accessToken: accessToken});
         }
@@ -64,6 +80,47 @@ exports.login = async (req, res, next) => {
         );
     }
 };
+
+exports.refreshToken = async (req, res, next) => {
+    const refreshToken = req.cookies.refreshToken;
+    if(!refreshToken) {
+        return next(
+            new ApiError(401, "You're not authenticated!")
+        );
+    }
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN, (err, user) => {
+        if(err) {
+            return next(
+                new ApiError(403, "Token is not valid!")
+            );
+        }
+        const newAccessToken = jwt.sign(
+            {
+                id: user.id,
+                // role: result.role
+            },  
+            process.env.JWT_ACCESS_TOKEN,
+            { expiresIn: "300s" }
+        );
+        // refresh
+        const newRefreshToken = jwt.sign(
+            {
+                id: user.id,
+                // role: result.role
+            },  
+            process.env.JWT_REFRESH_TOKEN,
+            { expiresIn: "30d" }
+        );
+
+        res.cookie("refreshToken", newRefreshToken, {
+            httpOnly: true,
+            path: "/",
+            sameSite: "strict",
+        });
+        res.status(200).json({accessToken: newAccessToken});
+    })
+
+}
 
 exports.logout = async (req, res, next) => {
     res.send({ message: "Logout" });
