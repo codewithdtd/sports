@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const userRouter = require("./app/routes/user.route");
-// const adminRouter = require("./app/routes/admin.route");
+const adminRouter = require("./app/routes/admin.route");
 const ApiError = require("./app/api-error");
 const cookieParser = require('cookie-parser');
 
@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/user", userRouter);
 
-// app.use("/api/admin", adminRouter);
+app.use("/api/admin", adminRouter);
 
 // app.use((req, res, next) => {
 //     // Code ở đây sẽ chạy khi không có route được định nghĩa nào
