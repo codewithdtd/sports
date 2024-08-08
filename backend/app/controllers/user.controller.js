@@ -1,4 +1,5 @@
 const Users = require("../services/user.service");
+const Bookings = require("../services/booking.service");
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
@@ -155,5 +156,58 @@ exports.deleteOne = async (req, res, next) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+
+// Đặt sân
+exports.createBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.create(req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.updateBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findAllBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findAllBookingUser = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.findAllBookingUser(req.body.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findOneBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await booking.findOne(req.body)
+        else 
+            result = await booking.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 
 
