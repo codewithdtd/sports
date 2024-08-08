@@ -23,11 +23,20 @@ router.route("/staff/:id")
 //Sân thể thao
 router.route("/facility")
     .get(admin.findAllFacility)
-    .post(admin.createFacility)
+    .post(middleware.verifyAdmin, admin.createFacility)
 router.route("/facility/:id")
-    .delete(admin.deleteOneFacility)
+    .delete(middleware.verifyAdmin, admin.deleteOneFacility)
     .get(admin.findOneFacility)
-    .put(admin.updateFacility);
+    .put(middleware.verifyAdmin, admin.updateFacility);
+   
+
+//Đặt sân
+router.route("/booking")
+    .get(admin.findAllBooking)
+    .post(middleware.verifyAdmin, admin.createBooking)
+router.route("/booking/:id")
+    .get(admin.findOneBooking)
+    .put(middleware.verifyAdmin, admin.updateBooking);
    
 
 module.exports = router;

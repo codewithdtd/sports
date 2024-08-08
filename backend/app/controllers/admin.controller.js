@@ -1,5 +1,8 @@
 const Staffs = require("../services/staff.service");
 const Facilities = require("../services/facility.service");
+const Bookings = require("../services/booking.service");
+
+
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
@@ -141,12 +144,25 @@ exports.findAllStaff = async (req, res, next) => {
 exports.findOneStaff = async (req, res, next) => {
     const staff = new Staffs();
     try {
-        const result = await staff.findOne(req.params.id);
+        let result;
+        if(!req.params.id) 
+            result = await staff.findOne(req.body)
+        else 
+            result = await staff.findById(req.params.id)
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+// exports.findByIdStaff = async (req, res, next) => {
+//     const staff = new Staffs();
+//     try {
+//         const result = await staff.findOne(req.params.id);
+//         res.status(201).json(result);
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
 
 exports.deleteOneStaff = async (req, res, next) => {
     const staff = new Staffs();
@@ -196,12 +212,26 @@ exports.findAllFacility = async (req, res, next) => {
 exports.findOneFacility = async (req, res, next) => {
     const facility = new Facilities();
     try {
-        const result = await facility.findOne(req.params.id);
+        let result;
+        if(!req.params.id) 
+            result = await facility.findOne(req.body)
+        else 
+            result = await facility.findById(req.params.id) 
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
+
+// exports.findByIdFacility = async (req, res, next) => {
+//     const facility = new Facilities();
+//     try {
+//         const result = await facility.findById(req.params.id);
+//         res.status(201).json(result);
+//     } catch (err) {
+//         res.status(500).json({ error: err.message });
+//     }
+// };
 
 exports.deleteOneFacility = async (req, res, next) => {
     const facility = new Facilities();
@@ -212,3 +242,50 @@ exports.deleteOneFacility = async (req, res, next) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+
+
+// Đặt sân 
+// 
+// 
+exports.createBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.create(req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.updateBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findAllBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findOneBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await booking.findOne(req.body)
+        else 
+            result = await booking.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
