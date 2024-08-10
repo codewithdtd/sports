@@ -2,6 +2,7 @@ const Staffs = require("../services/staff.service");
 const Facilities = require("../services/facility.service");
 const Bookings = require("../services/booking.service");
 const Invoices = require("../services/invoice.service");
+const Equipment = require("../services/equipment.service");
 
 
 const ApiError = require("../api-error");
@@ -333,3 +334,61 @@ exports.findOneInvoice = async (req, res, next) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+// Dụng  cụ thiết bị
+// 
+// 
+exports.createEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    const newEquipment = req.body;
+    try {
+        const result = await equipment.create(newEquipment);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    try {
+        const result = await equipment.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    try {
+        const result = await equipment.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await equipment.findOne(req.body)
+        else 
+            result = await equipment.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    try {
+        const result = await equipment.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

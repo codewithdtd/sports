@@ -47,5 +47,18 @@ router.route("/invoice")
 router.route("/invoice/:id")
     .get(admin.findOneInvoice)
     .put(admin.updateInvoice);
-   
+
+// 
+// Dụng cụ thiết bị
+// 
+router.route("/equipment")
+    .get(admin.findAllEquipment)
+    .post( admin.createEquipment)
+router.route("/equipment/:id")
+    .delete( admin.deleteOneEquipment)
+    .get(admin.findOneEquipment)
+    .put(admin.updateEquipment);
+
+
+
 module.exports = router;
