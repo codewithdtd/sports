@@ -38,5 +38,14 @@ router.route("/booking/:id")
     .get(admin.findOneBooking)
     .put(middleware.verifyAdmin, admin.updateBooking);
    
-
+// Hóa đơn
+// 
+// 
+router.route("/invoice")
+    .get(admin.findAllInvoice)
+    .post(admin.createInvoice)
+router.route("/invoice/:id")
+    .get(admin.findOneInvoice)
+    .put(admin.updateInvoice);
+   
 module.exports = router;

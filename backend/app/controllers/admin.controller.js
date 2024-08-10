@@ -1,6 +1,7 @@
 const Staffs = require("../services/staff.service");
 const Facilities = require("../services/facility.service");
 const Bookings = require("../services/booking.service");
+const Invoices = require("../services/invoice.service");
 
 
 const ApiError = require("../api-error");
@@ -289,3 +290,46 @@ exports.findOneBooking = async (req, res, next) => {
     }
 }
 
+// Hóa đơn
+// 
+// 
+exports.createInvoice = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        const result = await invoice.create(req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.updateInvoice = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        const result = await invoice.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findAllInvoice = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        const result = await invoice.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findOneInvoice = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await invoice.findOne(req.body)
+        else 
+            result = await invoice.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
