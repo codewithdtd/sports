@@ -11,6 +11,14 @@ router.route("/booking/:id")
     .get(user.findOneBooking)
     .put(middleware.verifyAdmin, user.updateBooking);
    
+// Hội viên
+// 
+router.route("/userMembership")
+    .get(user.findAllUserMembership)
+    .post(user.createUserMembership)
+router.route("/userMembership/:id")
+    .get(user.findOneUserMembership)
+    .put(user.updateUserMembership);
 
 // Tài khoản cá nhân
 router.route("/")

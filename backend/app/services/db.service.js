@@ -63,6 +63,17 @@ class DBHandler {
       throw new Error('Error deleting document: ' + err.message);
     }
   }
+  async findAllUser(id) {
+    try {
+      const result = await this.model.find({"ma_KH": id});
+      if (!result) {
+        throw new Error('Document not found');
+      }
+      return result;
+    } catch (err) {
+      throw new Error('Error finding document: ' + err.message);
+    }
+  }
 }
 
 module.exports = DBHandler;

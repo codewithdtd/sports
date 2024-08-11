@@ -1,5 +1,7 @@
 const Users = require("../services/user.service");
 const Bookings = require("../services/booking.service");
+const { UserMemberships } = require("../services/membership.service");
+
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
@@ -209,5 +211,52 @@ exports.findOneBooking = async (req, res, next) => {
     }
 }
 
+// Đăng ký gói hội viên
+// 
+// 
+exports.createUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    const newUserMembership = req.body;
+    try {
+        const result = await userMembership.create(newUserMembership);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    try {
+        const result = await userMembership.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    try {
+        const result = await userMembership.findAllUser(req.body.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await userMembership.findOne(req.body)
+        else 
+            result = await userMembership.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
 
