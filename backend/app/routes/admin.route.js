@@ -78,4 +78,14 @@ router.route("/membership/:id")
     .get(admin.findOneMembership)
     .put(admin.updateMembership);
 
+// Hội viên
+// 
+router.route("/userMembership")
+    .get(admin.findAllUserMembership)
+    .post(admin.createUserMembership)
+router.route("/userMembership/:id")
+    .delete(admin.deleteOneUserMembership)
+    .get(admin.findOneUserMembership)
+    .put(admin.updateUserMembership);
+
 module.exports = router;

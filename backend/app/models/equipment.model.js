@@ -9,14 +9,14 @@ const equipmentSchema = new mongoose.Schema({
   soLuongTonKho: { type: Number, required: true },
   soLuongHuHong: { type: Number, required: true },
   ma_Loai_DC: { type: String, required: true },
-  ngayTao: { type: String },
+  ngayTao_DC: { type: String },
   da_xoa: { type: Boolean, default: false },
 });
 
 
 
 equipmentSchema.pre('save', function (next) {
-  if (!this.ngayTao) {
+  if (!this.ngayTao_DC) {
     const currentDate = new Date();
     const day = String(currentDate.getDate()).padStart(2, '0');
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
@@ -25,7 +25,7 @@ equipmentSchema.pre('save', function (next) {
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
-    this.ngayDat = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    this.ngayTao_DC = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   }
   next();
 });

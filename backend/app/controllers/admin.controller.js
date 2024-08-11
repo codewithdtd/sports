@@ -4,7 +4,7 @@ const Bookings = require("../services/booking.service");
 const Invoices = require("../services/invoice.service");
 const Equipment = require("../services/equipment.service");
 const EquipmentRentail = require("../services/equipmentRentail.service");
-const { Memberships } = require("../services/membership.service");
+const { Memberships, UserMemberships } = require("../services/membership.service");
 
 
 const ApiError = require("../api-error");
@@ -506,6 +506,64 @@ exports.deleteOneMembership = async (req, res, next) => {
     const membership = new Memberships();
     try {
         const result = await membership.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Đăng ký gói hội viên
+// 
+// 
+exports.createUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    const newUserMembership = req.body;
+    try {
+        const result = await userMembership.create(newUserMembership);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    try {
+        const result = await userMembership.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    try {
+        const result = await userMembership.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await userMembership.findOne(req.body)
+        else 
+            result = await userMembership.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    try {
+        const result = await userMembership.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
