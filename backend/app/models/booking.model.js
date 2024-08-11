@@ -4,9 +4,11 @@ const mongoose = require('mongoose');
 const bookingDetailSchema = new mongoose.Schema({
   maSan: { type: String, required: true },
   tenSan: { type: String, required: true },
+  ngayDat: { type: String, required: true },
   thoiGianBatDau: { type: String, required: true },
   thoiGianKetThuc: { type: String, required: true },
   datCoc: { type: Number },
+  ghiChu: { type: String },
   thanhTien: { type: Number, required: true },
 }, { _id: false });
 
