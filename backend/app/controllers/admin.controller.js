@@ -1,6 +1,9 @@
 const Staffs = require("../services/staff.service");
 const Facilities = require("../services/facility.service");
 const Bookings = require("../services/booking.service");
+const Invoices = require("../services/invoice.service");
+const Equipment = require("../services/equipment.service");
+const EquipmentRentail = require("../services/equipmentRentail.service");
 
 
 const ApiError = require("../api-error");
@@ -289,3 +292,163 @@ exports.findOneBooking = async (req, res, next) => {
     }
 }
 
+// Hóa đơn
+// 
+// 
+exports.createInvoice = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        const result = await invoice.create(req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.updateInvoice = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        const result = await invoice.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findAllInvoice = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        const result = await invoice.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findOneInvoice = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await invoice.findOne(req.body)
+        else 
+            result = await invoice.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+
+// Dụng  cụ thiết bị
+// 
+// 
+exports.createEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    const newEquipment = req.body;
+    try {
+        const result = await equipment.create(newEquipment);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    try {
+        const result = await equipment.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    try {
+        const result = await equipment.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await equipment.findOne(req.body)
+        else 
+            result = await equipment.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneEquipment = async (req, res, next) => {
+    const equipment = new Equipment();
+    try {
+        const result = await equipment.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Nhập kho
+// 
+// 
+exports.createEquipmentRentail = async (req, res, next) => {
+    const equipmentRentail = new EquipmentRentail();
+    const newEquipment = req.body;
+    try {
+        const result = await equipmentRentail.create(newEquipment);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateEquipmentRentail = async (req, res, next) => {
+    const equipmentRentail = new EquipmentRentail();
+    try {
+        const result = await equipmentRentail.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllEquipmentRentail = async (req, res, next) => {
+    const equipmentRentail = new EquipmentRentail();
+    try {
+        const result = await equipmentRentail.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneEquipmentRentail = async (req, res, next) => {
+    const equipmentRentail = new EquipmentRentail();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await equipmentRentail.findOne(req.body)
+        else 
+            result = await equipmentRentail.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneEquipmentRentail = async (req, res, next) => {
+    const equipmentRentail = new EquipmentRentail();
+    try {
+        const result = await equipmentRentail.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
