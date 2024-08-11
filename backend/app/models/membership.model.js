@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Gói hội viên
 
 const membershipSchema = new mongoose.Schema({
-  ten_GoiHV: { type: String, required: true },
+  ten_GoiHV: { type: String, required: true, unique: true },
   gia_GoiHV: { type: Number, required: true },
   thoiHan: { type: String, },
   quyenLoi: { type: String },
@@ -37,8 +37,8 @@ const Membership = mongoose.model('goi_hoi_vien', membershipSchema, collectionNa
 const userMembershipSchema = new mongoose.Schema({
   ma_KH: { type: String, required: true },
   ma_GoiHV: { type: String, required: true },
-  ngayBatDau_HV: { type: String, required: true },
-  ngayKetThuc_HV: { type: String, required: true },
+  ngayBatDau_HV: { type: String, },
+  ngayKetThuc_HV: { type: String, required: true},
   trangThai: { type: String, },
   giaHan: { type: Boolean, default: false },
   da_xoa: { type: Boolean, default: false },
@@ -57,9 +57,6 @@ userMembershipSchema.pre('save', function (next) {
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
     this.ngayBatDau_HV = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
-
-    const dayEnd = toString(parseInt(day) + parseInt(membershipSchema.thoiHan));
-    this.ngayKetThuc_HV = `${dayEnd}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   }
   next();
 });
