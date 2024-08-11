@@ -58,7 +58,7 @@ router.route("/equipment/:id")
     .get(admin.findOneEquipment)
     .put(middleware.verifyAdmin, admin.updateEquipment);
 
-// Phiếu nhập
+// Phiếu nhập hàng
 // 
 router.route("/equipmentRentail")
     .get(admin.findAllEquipmentRentail)
@@ -68,5 +68,14 @@ router.route("/equipmentRentail/:id")
     .get(admin.findOneEquipmentRentail)
     .put(admin.updateEquipmentRentail);
 
+// Gói hội viên
+// 
+router.route("/membership")
+    .get(admin.findAllMembership)
+    .post(admin.createMembership)
+router.route("/membership/:id")
+    .delete(admin.deleteOneMembership)
+    .get(admin.findOneMembership)
+    .put(admin.updateMembership);
 
 module.exports = router;
