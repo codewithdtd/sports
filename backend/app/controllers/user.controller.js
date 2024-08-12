@@ -1,6 +1,7 @@
 const Users = require("../services/user.service");
 const Bookings = require("../services/booking.service");
 const { UserMemberships } = require("../services/membership.service");
+const { UserEvent } = require("../services/event.service");
 
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
@@ -260,3 +261,60 @@ exports.findOneUserMembership = async (req, res, next) => {
 };
 
 
+// Đăng ký giải đấu
+// 
+// 
+exports.createUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvent();
+    const newUserEvent = req.body;
+    try {
+        const result = await event.create(newUserEvent);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvent();
+    try {
+        const result = await event.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvent();
+    try {
+        const result = await event.findAllUser(req.body.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvent();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await event.findOne(req.body)
+        else 
+            result = await event.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvent();
+    try {
+        const result = await event.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

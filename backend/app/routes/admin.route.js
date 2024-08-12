@@ -88,4 +88,21 @@ router.route("/userMembership/:id")
     .get(admin.findOneUserMembership)
     .put(admin.updateUserMembership);
 
+// Sự kiện
+router.route("/event")
+    .get(admin.findAllEvent)
+    .post(admin.createEvent)
+router.route("/event/:id")
+    .delete(admin.deleteOneEvent)
+    .get(admin.findOneEvent)
+    .put(admin.updateEvent);
+// Đăng ký sự kiện
+router.route("/userEvent")
+    .get(admin.findAllUserEvent)
+    .post(admin.createUserEvent)
+router.route("/userEvent/:id")
+    .delete(admin.deleteOneUserEvent)
+    .get(admin.findOneUserEvent)
+    .put(admin.updateUserEvent);
+
 module.exports = router;

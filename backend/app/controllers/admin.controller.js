@@ -5,6 +5,7 @@ const Invoices = require("../services/invoice.service");
 const Equipment = require("../services/equipment.service");
 const EquipmentRentail = require("../services/equipmentRentail.service");
 const { Memberships, UserMemberships } = require("../services/membership.service");
+const { Events, UserEvents } = require("../services/event.service");
 
 
 const ApiError = require("../api-error");
@@ -564,6 +565,123 @@ exports.deleteOneUserMembership = async (req, res, next) => {
     const userMembership = new UserMemberships();
     try {
         const result = await userMembership.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+// Tạo sự kiện, giải đấu
+// 
+// 
+exports.createEvent = async (req, res, next) => {
+    const event = new Events();
+    const newEvent = req.body;
+    try {
+        const result = await event.create(newEvent);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateEvent = async (req, res, next) => {
+    const event = new Events();
+    try {
+        const result = await event.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllEvent = async (req, res, next) => {
+    const event = new Events();
+    try {
+        const result = await event.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneEvent = async (req, res, next) => {
+    const event = new Events();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await event.findOne(req.body)
+        else 
+            result = await event.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneEvent = async (req, res, next) => {
+    const event = new Events();
+    try {
+        const result = await event.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Đăng ký giải đấu
+// 
+// 
+exports.createUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvents();
+    const newUserEvent = req.body;
+    try {
+        const result = await userEvent.create(newUserEvent);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvents();
+    try {
+        const result = await userEvent.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvents();
+    try {
+        const result = await userEvent.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvents();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await userEvent.findOne(req.body)
+        else 
+            result = await userEvent.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneUserEvent = async (req, res, next) => {
+    const userEvent = new UserEvents();
+    try {
+        const result = await userEvent.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
