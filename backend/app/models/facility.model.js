@@ -28,7 +28,7 @@ facilitySchema.pre('save', function (next) {
   next();
 });
 
-const collectionName = 'San_the_thao'; 
-const Facility = mongoose.model('San_the_thao', facilitySchema, collectionName);
+const collectionName = 'san_the_thao'; 
+const Facility = mongoose.model('san_the_thao', facilitySchema, collectionName);
 
 module.exports = Facility;

@@ -39,7 +39,7 @@ bookingSchema.pre('save', function (next) {
   next();
 });
 
-const collectionName = 'Dat_san'; 
-const Booking = mongoose.model('Dat_san', bookingSchema, collectionName);
+const collectionName = 'dat_san'; 
+const Booking = mongoose.model('dat_san', bookingSchema, collectionName);
 
 module.exports = Booking;
