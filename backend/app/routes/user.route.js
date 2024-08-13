@@ -3,6 +3,14 @@ const user = require("../controllers/user.controller");
 const middleware = require("../middleware/middleware")
 const router = express.Router();
 
+// Đánh giá
+router.route("/review")
+    .get(user.findAllReview)
+    .post(user.createReview)
+router.route("/review/:id")
+    .get(user.findOneReview)
+    .put(user.updateReview);
+   
 // Đặt Sân 
 router.route("/booking")
     .get(user.findAllBookingUser)

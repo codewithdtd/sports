@@ -6,6 +6,7 @@ const Equipment = require("../services/equipment.service");
 const EquipmentRentail = require("../services/equipmentRentail.service");
 const { Memberships, UserMemberships } = require("../services/membership.service");
 const { Events, UserEvents } = require("../services/event.service");
+const Reviews = require("../services/review.service");
 
 
 const ApiError = require("../api-error");
@@ -682,6 +683,62 @@ exports.deleteOneUserEvent = async (req, res, next) => {
     const userEvent = new UserEvents();
     try {
         const result = await userEvent.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Đánh giá
+exports.createReview = async (req, res, next) => {
+    const review = new Reviews();
+    const newReview = req.body;
+    try {
+        const result = await review.create(newReview);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateReview = async (req, res, next) => {
+    const review = new Reviews();
+    try {
+        const result = await review.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllReview = async (req, res, next) => {
+    const review = new Reviews();
+    try {
+        const result = await review.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneReview = async (req, res, next) => {
+    const review = new Reviews();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await review.findOne(req.body)
+        else 
+            result = await review.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneReview = async (req, res, next) => {
+    const review = new Reviews();
+    try {
+        const result = await review.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });

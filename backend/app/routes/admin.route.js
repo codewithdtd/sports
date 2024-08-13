@@ -105,4 +105,13 @@ router.route("/userEvent/:id")
     .get(admin.findOneUserEvent)
     .put(admin.updateUserEvent);
 
+
+// Đánh giá
+router.route("/review")
+    .get(admin.findAllReview)
+    .post(admin.createReview)
+router.route("/review/:id")
+    .get(admin.findOneReview)
+    .put(admin.updateReview);
+   
 module.exports = router;
