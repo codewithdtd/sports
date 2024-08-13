@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 // Chi tiết đặt sân
 const bookingDetailSchema = new mongoose.Schema({
-  maSan: { type: String, required: true },
-  tenSan: { type: String, required: true },
+  ma_San: { type: String, required: true },
+  ten_San: { type: String, required: true },
   ngayDat: { type: String, required: true },
   thoiGianBatDau: { type: String, required: true },
   thoiGianKetThuc: { type: String, required: true },

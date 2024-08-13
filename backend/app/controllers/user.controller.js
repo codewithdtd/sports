@@ -1,7 +1,7 @@
 const Users = require("../services/user.service");
 const Bookings = require("../services/booking.service");
 const { UserMemberships } = require("../services/membership.service");
-const { UserEvent } = require("../services/event.service");
+const { UserEvents } = require("../services/event.service");
 
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
@@ -265,10 +265,10 @@ exports.findOneUserMembership = async (req, res, next) => {
 // 
 // 
 exports.createUserEvent = async (req, res, next) => {
-    const userEvent = new UserEvent();
+    const userEvent = new UserEvents();
     const newUserEvent = req.body;
     try {
-        const result = await event.create(newUserEvent);
+        const result = await userEvent.create(newUserEvent);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -276,9 +276,9 @@ exports.createUserEvent = async (req, res, next) => {
 };
 
 exports.updateUserEvent = async (req, res, next) => {
-    const userEvent = new UserEvent();
+    const userEvent = new UserEvents();
     try {
-        const result = await event.update(req.params.id, req.body);
+        const result = await userEvent.update(req.params.id, req.body);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -286,9 +286,9 @@ exports.updateUserEvent = async (req, res, next) => {
 };
 
 exports.findAllUserEvent = async (req, res, next) => {
-    const userEvent = new UserEvent();
+    const userEvent = new UserEvents();
     try {
-        const result = await event.findAllUser(req.body.id);
+        const result = await userEvent.findAllUser(req.body.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -296,13 +296,13 @@ exports.findAllUserEvent = async (req, res, next) => {
 };
 
 exports.findOneUserEvent = async (req, res, next) => {
-    const userEvent = new UserEvent();
+    const userEvent = new UserEvents();
     try {
         let result;
         if(!req.params.id) 
-            result = await event.findOne(req.body)
+            result = await userEvent.findOne(req.body)
         else 
-            result = await event.findById(req.params.id) 
+            result = await userEvent.findById(req.params.id) 
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -310,9 +310,9 @@ exports.findOneUserEvent = async (req, res, next) => {
 };
 
 exports.deleteOneUserEvent = async (req, res, next) => {
-    const userEvent = new UserEvent();
+    const userEvent = new UserEvents();
     try {
-        const result = await event.delete(req.params.id);
+        const result = await userEvent.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
