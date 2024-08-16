@@ -29,10 +29,6 @@ router.route("/userMembership/:id")
     .put(user.updateUserMembership);
 
 // Tài khoản cá nhân
-router.route("/")
-    .get(middleware.verifyAdmin, user.findAll)
-    .post(user.create);
-
 router.route("/login").post(user.login);
 router.route("/refresh").post(middleware.verifyToken, user.refreshToken);
 router.route("/logout").post(middleware.verifyToken, user.logout);
@@ -41,6 +37,11 @@ router.route("/:id")
     .delete(middleware.verifyAdmin, user.deleteOne)
     .get(user.findOne)
     .put(middleware.verifyAdmin, user.update);
+    
+router.route("/")
+    .get(middleware.verifyAdmin, user.findAll)
+    .post(user.create);
+
 
 
 module.exports = router;
