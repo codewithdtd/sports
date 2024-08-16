@@ -1,0 +1,59 @@
+body {
+    font-family: "Afacad", sans-serif;
+    font-optical-sizing: auto;
+}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset;
+    box-shadow: 0 0 0 1000px transparent inset;
+    background-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: inherit;
+}
+
+/* Form */
+.form-left {
+    position: relative;
+}
+.form-left .logo {
+    position: absolute;
+}
+.form-left .img-main {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.form-left .img-main h1{
+    font-family: "Keania One", sans-serif;
+}
+.form-right h1 {
+    font-size: 40px;
+    font-weight: 700;
+    background: linear-gradient(to bottom, #22FF53 0%, #125511 100%);
+    background-clip: text;
+    color: transparent;
+}
+.form-right input{
+    background-color: #C6FFC8;
+    padding-left: 15px;
+    height: 50px;
+    width: 100%;
+    border-radius: 40px;
+    outline: none;
+}
+.form-right button {
+    height: 40px;
+    border-radius: 40px;
+}
+.form-right .form-items {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    background-color: #C6FFC8;
+    border-radius: 40px;
+    padding-left: 10px;
+    font-size: 18px;
+}
