@@ -1,12 +1,13 @@
 import createApiClient from "./api.service";
 class BaseService {
-    constructor(baseUrl = "/api/user") {
+    constructor(baseUrl) {
         this.api = createApiClient(baseUrl);
     }
     async getAll() {
         return (await this.api.get("/")).data;
     }
     async create(data) {
+        console.log(data)
         return (await this.api.post("/", data)).data;
     }
     // async deleteAll() {
