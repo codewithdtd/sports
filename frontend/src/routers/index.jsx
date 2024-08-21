@@ -3,34 +3,85 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import Home from '../views/Home';
-import About from '../views/About';
 import ErrorPage from '../views/ErrorPage';
 import Login from '../views/Login';
 import SignUp from '../views/SignUp';
+import App from '../App';
+import Report from '../views/Report';
+import Facility from '../views/Facility';
+import Booking from '../views/Booking';
+import Invoice from '../views/Invoice';
+import Equipment from '../views/Equipment';
+import Review from '../views/Review';
+import Customer from '../views/Customer';
+import Staff from '../views/Staff';
+import Membership from '../views/Membership';
+import Event from '../views/Event';
+import Info from '../views/Info';
+import ChangePass from '../views/ChangePass';
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <App />,  // Sử dụng App làm layout chính
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "contacts/:contactId",
-        element: <Home />,
+        path: "/",
+        element: <Report />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "signup",
+        element: <SignUp />,
+      },
+      {
+        path: "facility",
+        element: <Facility />,
+      },
+      {
+        path: "booking",
+        element: <Booking />,
+      },
+      {
+        path: "invoice",
+        element: <Invoice />,
+      },
+      {
+        path: "equipment",
+        element: <Equipment />,
+      },
+      {
+        path: "review",
+        element: <Review />,
+      },
+      {
+        path: "customer",
+        element: <Customer />,
+      },
+      {
+        path: "membership",
+        element: <Membership />,
+      },
+      {
+        path: "event",
+        element: <Event />,
+      },
+      {
+        path: "staff",
+        element: <Staff />,
+      },
+      {
+        path: "info",
+        element: <Info />,
+      },
+      {
+        path: "changePass",
+        element: <ChangePass />,
       },
     ],
-  },
-  {
-    path: "/about",
-    element: <About />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/signup",
-    element: <SignUp />,
   },
 ]);
 
