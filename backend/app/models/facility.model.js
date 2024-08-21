@@ -6,7 +6,7 @@ const facilitySchema = new mongoose.Schema({
   tinhTrang: { type: String, required: true, default: "Trống" },
   khuVuc: { type: String, required: true },
   bangGioMoiGio: { type: Number, require: true },
-  sucChua: { type: Number, },
+  // sucChua: { type: Number, },
   hinhAnh_San: { type: String, },
   ngayTao_San: { type: String, },
   ngayCapNhat_San: { type: String, },

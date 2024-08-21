@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 const Form = (props) => {
   const [user, setUser] = useState({
     ho_KH: '',
@@ -84,8 +85,8 @@ const Form = (props) => {
             <button className='bg-green-500 hover:bg-green-700 text-white w-[50%] m-auto'>{props.name == 'signUp' ? 'Đăng ký' : 'Đăng nhập'}</button>
             
             {props.name == 'signUp' 
-            ?  <span>Bạn đã có tài khoản? <a href="/login" className='text-green-700'>Đăng nhập</a></span>
-            : <span>Bạn chưa có tài khoản? <a href="/signup" className='text-green-700'>Đăng ký</a></span>
+            ?  <span>Bạn đã có tài khoản? <Link to="/login" className='text-green-700'>Đăng nhập</Link></span>
+            : <span>Bạn chưa có tài khoản? <Link to="/signup" className='text-green-700'>Đăng ký</Link></span>
             }
           </form>
         </div>
