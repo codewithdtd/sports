@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 function Header(props) {
   return (
     <div className="header items-center pl-12 md:pl-0 mr-2 px-2 flex justify-between">
-        <div className="header__left uppercase text-xl font-bold">
+        <div className="header__left uppercase text-2xl font-bold">
             <p>{ props.name }</p>
         </div>
         <div className="header__right group relative flex flex-col">
