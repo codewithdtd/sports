@@ -15,7 +15,7 @@ function Facility() {
     hinhAnh_San: "",
     bangGiaMoiGio: 0
   });
-
+  const [search, setSearch] = useState('');
 
   const handleFacility = async (data = {}) => {
     (data != {})
@@ -45,18 +45,41 @@ function Facility() {
   function formatNumber(num) {
     return new Intl.NumberFormat('vi-VN').format(num);
   }
+  // Chuyển đổi thành dạng chuỗi
+  const convertString = () => {
+    return facilities.map((item) => {
+      const { ten_San, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San } = item;
+      return [ten_San, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San].join(" ").toLowerCase();
+    });
+  }
+  // Lọc dữ liệu
+  const filterFacility = () => {
+    if(search == '') 
+      return facilities;
 
+
+    const searchTerms = search.toLowerCase().split(' ');
+    const convertedStrings = convertString();
+    console.log(convertedStrings)
+    const filteredFacilities = facilities.filter((item, index) =>
+      // Kiểm tra xem mỗi từ trong chuỗi tìm kiếm có tồn tại trong mảng đã chuyển đổi không
+      searchTerms.every(term =>
+        convertedStrings[index]?.includes(term) // Đảm bảo kiểm tra giá trị trước khi gọi includes
+      )
+    );
+    return filteredFacilities;
+  }
 
   // GỌI SERVICE BACKEND
   // lấy dữ liệu
   const getFacility = async () => {
     const data = await facilityService.getAll();
     setFacilities(data);
+    console.log('tải lại')
   }
   const createFacility = async (data) => {
     const newFac = await facilityService.create(data);
-    return newFac;
-    
+    return newFac;  
   }
   const editFacility = async (data) => {
     const editFac = await facilityService.update(data._id, data);
@@ -69,7 +92,7 @@ function Facility() {
 
   useEffect(() => {
     getFacility();
-  }, [facilities]);
+  }, []);
   return (
     <div className='facility'>
       <Header name="Quản lý Sân thể thao" />
@@ -77,7 +100,7 @@ function Facility() {
         <div className='flex-1 flex relative justify-between'>
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
             <i className="ri-search-line font-semibold"></i>
-            <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" />
+            <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <div className="bg-green-500 cursor-pointer hover:bg-green-700 ml-2 max-w-50% shadow-gray-700 shadow-sm text-white overflow-hidden rounded-lg p-2" onClick={e => setFilter(!filter)}>
             <i className="ri-arrow-down-double-line"></i>
@@ -152,7 +175,7 @@ function Facility() {
 
 
         {/* Nội dung bảng */}
-        { facilities.map((facility, index) => 
+        {facilities ? filterFacility().map((facility, index) => 
           <div key={facility._id} className="flex justify-between py-2 border-b border-gray-300 text-center items-center"> 
             <div className="w-1/12">{ index+1 }</div>
             <div className="w-1/6">
@@ -174,7 +197,7 @@ function Facility() {
               <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteFacility(facility)} ></i>
             </div>
           </div> 
-        )}
+        ) : ''}
         </div>
         {/* from nhập dữ liệu */}
       {edit ? <FromFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
