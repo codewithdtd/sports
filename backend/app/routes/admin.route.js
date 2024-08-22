@@ -22,11 +22,11 @@ router.route("/staff/:id")
 //Sân thể thao
 router.route("/facility")
     .get(admin.findAllFacility)
-    .post(middleware.verifyAdmin, admin.createFacility)
+    .post( admin.createFacility)
 router.route("/facility/:id")
-    .delete(middleware.verifyAdmin, admin.deleteOneFacility)
+    .delete( admin.deleteOneFacility)
     .get(admin.findOneFacility)
-    .put(middleware.verifyAdmin, admin.updateFacility);
+    .put( admin.updateFacility);
    
 
 //Đặt sân

@@ -33,14 +33,15 @@ function Navbar() {
     };
   }, []);
   return (
-    <div className="navigation absolute md:relative h-[100%]">
+    <div className="navigation z-10 absolute md:relative h-[100%]">
         <div className='block md:hidden absolute border mx-2 w-[30px] translate-y-1/2 text-center rounded-lg' onClick={toggleMenu}>
             <i className="ri-menu-line text-xl font-bold"></i>
         </div>
-        <div className={`bg-white shadow-black shadow-sm rounded-lg h-[100%] w-full md:block transition-all ${isOpen ? 'translate-x-0' : 'absolute -translate-x-80'}`}>
+        <div className={`bg-white shadow-black shadow-sm rounded-lg h-[100%] w-full md:block transition-all ${isOpen ? 'relative translate-x-0' : 'absolute -translate-x-80'}`}>
             <div className='navigation-group-logo flex justify-center items-center'>
                 <img src="./src/assets/img/Logo.svg" alt="" className='navigation-logo w-[20%] py-2' />
                 <p className='ml-2 italic font-extrabold text-3xl'>SPORT</p>
+                {/* <p>X</p> */}
             </div>
             <ul className="navigation__link">
                 <li className="navigation__link__items">
@@ -51,7 +52,7 @@ function Navbar() {
                 </li>
                 <li className="navigation__link__items">
                     <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`} to="/facility" end>
-                        <i class="ml-5 ri-square-line mr-2"></i> 
+                        <i className="ml-5 ri-square-line mr-2"></i> 
                         <span>Sân thể thao</span>
                     </NavLink>
                 </li>
