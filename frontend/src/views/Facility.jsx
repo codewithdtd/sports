@@ -18,6 +18,7 @@ function Facility() {
   const [search, setSearch] = useState('');
 
   const handleFacility = async (data = {}) => {
+    console.log(data);
     (data != {})
       ? setFac(data) 
       : setFac({
@@ -92,7 +93,7 @@ function Facility() {
 
   useEffect(() => {
     getFacility();
-  }, []);
+  }, [facilities]);
   return (
     <div className='facility'>
       <Header name="Quản lý Sân thể thao" />
@@ -176,7 +177,7 @@ function Facility() {
 
         {/* Nội dung bảng */}
         {facilities ? filterFacility().map((facility, index) => 
-          <div key={facility._id} className="flex justify-between py-2 border-b border-gray-300 text-center items-center"> 
+          <div key={facility._id} className="hover:bg-slate-200 flex justify-between py-2 border-b border-gray-300 text-center items-center"> 
             <div className="w-1/12">{ index+1 }</div>
             <div className="w-1/6">
               {
@@ -191,7 +192,11 @@ function Facility() {
               <p>{facility.khuVuc}</p>
             </div>
             <div className="w-1/6">{ formatNumber(parseInt(facility.bangGiaMoiGio))}</div>
-            <div className="w-1/6">Đang trống</div>
+            <div className="w-1/6 flex">
+              <p className={`m-auto p-1 ${facility.tinhTrang == 'Đang sử dụng' ? 'text-white rounded-lg bg-green-600 w-full lg:w-1/2 shadow-md shadow-slate-500' : facility.tinhTrang == 'Đã đặt' ? 'text-white rounded-lg bg-blue-500 w-full md:w-1/2 shadow-md shadow-slate-500' : ''}`}>
+                { facility.tinhTrang }
+              </p>
+            </div>
             <div className="w-1/6 text-xl">
               <i className="ri-edit-box-line p-2 mr-2 bg-gray-300 rounded-md" onClick={e => handleFacility(facility)}></i>
               <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteFacility(facility)} ></i>
