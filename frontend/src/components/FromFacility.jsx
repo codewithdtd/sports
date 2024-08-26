@@ -35,6 +35,10 @@ function FromFacility(props) {
               <input name='ten_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ten_San} onChange={e => setData({...data, ten_San: e.target.value})}/>
             </div>
             <div className="flex">
+              <label htmlFor="" className='w-1/4'>Mã sân:</label>
+              <input name='ten_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ma_San} onChange={e => setData({...data, ma_San: e.target.value})}/>
+            </div>
+            <div className="flex">
               <label htmlFor="" className='w-1/4'>Loại sân:</label>
               <input name='loai_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.loai_San} onChange={e => setData({...data, loai_San: e.target.value})}/>
             </div>

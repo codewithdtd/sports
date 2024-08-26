@@ -97,7 +97,7 @@ function Facility() {
   return (
     <div className='facility'>
       <Header name="Quản lý Sân thể thao" />
-      <div className="flex justify-between mb-5">
+      <div className="flex justify-between mb-3">
         <div className='flex-1 flex relative justify-between'>
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
             <i className="ri-search-line font-semibold"></i>
@@ -139,6 +139,20 @@ function Facility() {
         >
           +
         </button>
+      </div>
+      <div className='flex pb-2'>
+        <div className='flex items-center'>
+          <i className="mr-1 ri-calendar-event-fill"></i>
+          <input name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" value={''} onChange={''}/>
+        </div>
+        <div className='flex items-center'>
+          Từ:
+          <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' />
+        </div>
+        <div className='flex items-center'>
+          Đến:
+          <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' />
+        </div>
       </div>
       {/* Lọc dữ liệu */}
       

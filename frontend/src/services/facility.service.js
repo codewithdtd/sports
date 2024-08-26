@@ -5,6 +5,9 @@ class Facility extends BaseService {
     constructor() {
         super('/api/admin/facility'); 
     }
+    async getAllBooked(data) {
+        return (await this.api.get("/booked", {params: data})).data;
+    }
     
 }
 
