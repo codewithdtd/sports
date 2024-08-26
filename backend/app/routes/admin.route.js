@@ -23,19 +23,20 @@ router.route("/staff/:id")
 router.route("/facility")
     .get(admin.findAllFacility)
     .post( admin.createFacility)
+router.route("/facility/booked")
+    .get(admin.findAllFacilityBooking)
 router.route("/facility/:id")
     .delete( admin.deleteOneFacility)
     .get(admin.findOneFacility)
     .put( admin.updateFacility);
-   
 
 //Đặt sân
 router.route("/booking")
     .get(admin.findAllBooking)
-    .post(middleware.verifyAdmin, admin.createBooking)
+    .post(admin.createBooking)
 router.route("/booking/:id")
     .get(admin.findOneBooking)
-    .put(middleware.verifyAdmin, admin.updateBooking);
+    .put(admin.updateBooking);
    
 // Hóa đơn
 // 

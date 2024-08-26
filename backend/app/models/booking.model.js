@@ -1,31 +1,34 @@
 const mongoose = require('mongoose');
 
 // Chi tiết đặt sân
-const bookingDetailSchema = new mongoose.Schema({
-  ma_San: { type: String, required: true },
-  ten_San: { type: String, required: true },
-  ngayDat: { type: String, required: true },
-  thoiGianBatDau: { type: String, required: true },
-  thoiGianKetThuc: { type: String, required: true },
-  datCoc: { type: Number },
-  ghiChu: { type: String },
-  thanhTien: { type: Number, required: true },
-}, { _id: false });
+// const bookingDetailSchema = new mongoose.Schema({
+//   ma_San: { type: String, required: true },
+//   ten_San: { type: String, required: true },
+//   ngayDat: { type: String, required: true },
+//   thoiGianBatDau: { type: String, required: true },
+//   thoiGianKetThuc: { type: String, required: true },
+//   thanhTien: { type: Number, required: true },
+// }, { _id: false });
 
 
 const bookingSchema = new mongoose.Schema({
-  ma_KH: { type: String, required: true },
+  khachHang: { type: Object, required: true },
   trangThai: { type: String, },
-  tongTien: { type: Number, required: true },
-  chiTietDatSan: { type: [bookingDetailSchema], required: true },
-  ngayDat: { type: String, },
+  san: { type: Object, required: true },
+  thoiGianBatDau: { type: String, required: true },
+  thoiGianKetThuc: { type: String, required: true },
+  thanhTien: { type: Number, required: true },
+  ghiChu: { type: String },
+  // datCoc: { type: Number },
+  ngayDat: { type: String, required: true},
+  ngayTao: { type: String, required: true},
   da_xoa: { type: Boolean, default: false },
 });
 
 
 
 bookingSchema.pre('save', function (next) {
-  if (!this.ngayDat) {
+  if (!this.ngayTao) {
     const currentDate = new Date();
     const day = String(currentDate.getDate()).padStart(2, '0');
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
@@ -34,7 +37,7 @@ bookingSchema.pre('save', function (next) {
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
-    this.ngayDat = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    this.ngayTao = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   }
   next();
 });

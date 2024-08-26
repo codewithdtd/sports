@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const facilitySchema = new mongoose.Schema({
+  ma_San: {type: String, required: true},
   ten_San: { type: String, required: true},
   loai_San: { type: String, require: true },
   tinhTrang: { type: String, required: true, default: "Trống" },

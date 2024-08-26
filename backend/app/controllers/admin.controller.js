@@ -229,6 +229,49 @@ exports.findOneFacility = async (req, res, next) => {
     }
 };
 
+exports.findAllFacilityBooking = async (req, res, next) => {
+    const facility = new Facilities();
+    const booking = new Bookings();
+    try {
+        const listField = await facility.findAll();
+        const listBooking = await booking.findAll();
+
+        const time = req.query;
+        let result = listField;
+        if (time.ngayDat || time.thoiGianBatDau || time.thoiGianKetThuc) {
+            result = result.filter(field => {
+                return listBooking.some((booking) => {
+                    const bookingDate = booking.ngayDat;
+                    const isSameDate = bookingDate === time.ngayDat;
+                    const isSameField = booking.san._id.toString() === field._id.toString();
+
+                    const startTime = time.thoiGianBatDau ? time.thoiGianBatDau : '00:00';
+                    const endTime = time.thoiGianKetThuc ? time.thoiGianKetThuc : '23:59';
+                    const bookingStart = booking.thoiGianBatDau;
+                    const bookingEnd = booking.thoiGianKetThuc;
+                    console.log((startTime <= bookingEnd && endTime >= bookingStart))
+                    // Lọc theo thời gian nếu có thời gian bắt đầu và kết thúc
+                    if (time.thoiGianBatDau || time.thoiGianKetThuc) {
+                        return isSameField &&
+                        isSameDate &&
+                        (
+                            (startTime <= bookingEnd && endTime >= bookingStart) // Kiểm tra chồng lấn thời gian
+                        );
+                    } else {
+                        // Lọc chỉ theo ngày nếu không có thời gian
+                        return isSameField &&
+                        isSameDate;
+                    }
+                });
+            });
+        }
+
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 // exports.findByIdFacility = async (req, res, next) => {
 //     const facility = new Facilities();
 //     try {
