@@ -13,7 +13,7 @@ const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
   khachHang: { type: Object, required: true },
-  trangThai: { type: String, },
+  trangThai: { type: String, default: 'Chưa thanh toán', },
   san: { type: Object, required: true },
   thoiGianBatDau: { type: String, required: true },
   thoiGianKetThuc: { type: String, required: true },
@@ -21,7 +21,7 @@ const bookingSchema = new mongoose.Schema({
   ghiChu: { type: String },
   // datCoc: { type: Number },
   ngayDat: { type: String, required: true},
-  ngayTao: { type: String, required: true},
+  ngayTao: { type: String, },
   da_xoa: { type: Boolean, default: false },
 });
 
@@ -39,6 +39,9 @@ bookingSchema.pre('save', function (next) {
 
     this.ngayTao = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
   }
+   if (!this.trangThai || this.trangThai === '') {
+        this.trangThai = 'Chưa thanh toán';
+    }
   next();
 });
 

@@ -14,6 +14,15 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const bcrypt = require("bcrypt");
 
+const convertToDate = (dateStr) => {
+    const [day, month, year] = dateStr.split('/');
+    return `${year}-${month}-${day}`; // JavaScript sử dụng tháng từ 0-11
+}
+const convertToDateReverse = (dateStr) => {
+    const [year, month, day] = dateStr.split('-');
+    return `${day}/${month}/${year}`;
+}
+
 exports.createStaff = async (req, res, next) => {
     const staff = new Staffs();
     const newStaff = req.body;
@@ -232,16 +241,17 @@ exports.findOneFacility = async (req, res, next) => {
 exports.findAllFacilityBooking = async (req, res, next) => {
     const facility = new Facilities();
     const booking = new Bookings();
+    
     try {
         const listField = await facility.findAll();
         const listBooking = await booking.findAll();
-
         const time = req.query;
         let result = listField;
         if (time.ngayDat || time.thoiGianBatDau || time.thoiGianKetThuc) {
             result = result.filter(field => {
                 return listBooking.some((booking) => {
-                    const bookingDate = booking.ngayDat;
+                    const bookingDate = convertToDate(booking.ngayDat);
+                    // const bookingDate = convertToDate(booking.ngayDat);
                     const isSameDate = bookingDate === time.ngayDat;
                     const isSameField = booking.san._id.toString() === field._id.toString();
 
@@ -249,7 +259,6 @@ exports.findAllFacilityBooking = async (req, res, next) => {
                     const endTime = time.thoiGianKetThuc ? time.thoiGianKetThuc : '23:59';
                     const bookingStart = booking.thoiGianBatDau;
                     const bookingEnd = booking.thoiGianKetThuc;
-                    console.log((startTime <= bookingEnd && endTime >= bookingStart))
                     // Lọc theo thời gian nếu có thời gian bắt đầu và kết thúc
                     if (time.thoiGianBatDau || time.thoiGianKetThuc) {
                         return isSameField &&
@@ -300,8 +309,25 @@ exports.deleteOneFacility = async (req, res, next) => {
 exports.createBooking = async (req, res, next) => {
     const booking = new Bookings();
     try {
-        const result = await booking.create(req.body);
-        res.status(201).json(result);
+        const data = req.body;
+        const {san, ...other} = data;
+        let count = 0;
+        // Xử lý sân
+        for (const element of san) {
+            const { thoiGianBatDau, thoiGianKetThuc, ngayDat, thanhTien, hinhAnh_San, ...otherTwo } = element;
+            const newData = {
+                ...other,           
+                san: otherTwo,      
+                thoiGianBatDau,     
+                thoiGianKetThuc,
+                ngayDat: convertToDateReverse(ngayDat),
+                thanhTien,
+            }; 
+            if (await booking.create(newData)) {
+                count++;
+            }
+        }
+        res.status(201).json({ success: true, count});
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -310,6 +336,7 @@ exports.updateBooking = async (req, res, next) => {
     const booking = new Bookings();
     try {
         const result = await booking.update(req.params.id, req.body);
+        console.log(result)
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
