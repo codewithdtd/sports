@@ -52,8 +52,14 @@ function Navbar() {
                 </li>
                 <li className="navigation__link__items">
                     <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`} to="/facility" end>
-                        <i className="ml-5 ri-square-line mr-2"></i> 
+                        <i className="ml-5 ri-football-line mr-2"></i> 
                         <span>Sân thể thao</span>
+                    </NavLink>
+                </li>
+                <li className="navigation__link__items">
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`} to="/facilityManagement" end>
+                        <i className="ml-5 ri-folder-settings-line mr-2"></i> 
+                        <span>Quản lý sân</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">

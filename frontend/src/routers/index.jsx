@@ -19,6 +19,7 @@ import Membership from '../views/Membership';
 import Event from '../views/Event';
 import Info from '../views/Info';
 import ChangePass from '../views/ChangePass';
+import FacilityManagement from '../views/FacilityManagement';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -80,6 +81,10 @@ export const router = createBrowserRouter([
       {
         path: "changePass",
         element: <ChangePass />,
+      },
+      {
+        path: "facilityManagement",
+        element: <FacilityManagement />,
       },
     ],
   },

@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import FromFacility from '../components/FromFacility';
 import facilityService from '../services/facility.service';
+import bookingService from '../services/booking.service';
 function Facility() {
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [facilities, setFacilities] = useState([]);
+
+  // xử lý sân đã đặt
+  
   const [fac, setFac] = useState({
     _id: "",
     ten_San: "",
@@ -16,9 +20,26 @@ function Facility() {
     bangGiaMoiGio: 0
   });
   const [search, setSearch] = useState('');
+  const [currentTime, setCurrentTime] = useState(getFormattedTime());
+  const [currentDate, setCurrentDate] = useState(getFormattedDate());
+
+
+  const backgroundSan = (data) => {
+    switch (data) {
+      case 'Bóng đá':
+        return './src/assets/img/football.png';
+      case 'Bóng rổ':
+        return './src/assets/img/basketball-ball.png';
+      case 'Bóng chuyền':
+        return './src/assets/img/volleyball-ball.png';
+      case 'Cầu lông':
+        return './src/assets/img/shuttlecock.png';
+      default: 
+        break;
+    }
+  } 
 
   const handleFacility = async (data = {}) => {
-    console.log(data);
     (data != {})
       ? setFac(data) 
       : setFac({
@@ -71,6 +92,27 @@ function Facility() {
     return filteredFacilities;
   }
 
+
+  // Hàm để lấy giờ hiện tại và định dạng thành 'HH:MM'
+  function getFormattedTime() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      // return `${hours}:${minutes}`;
+      return "17:00";
+  }
+
+  // Hàm để lấy ngày hiện tại và định dạng thành 'dd/mm/yyyy'
+  function getFormattedDate() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng 0-11, cần +1
+      const year = now.getFullYear();
+      // return `${year}-${month}-${day}`;
+      return `2024-08-29`;
+  }
+
+
   // GỌI SERVICE BACKEND
   // lấy dữ liệu
   const getFacility = async () => {
@@ -78,6 +120,37 @@ function Facility() {
     setFacilities(data);
     console.log('tải lại')
   }
+    // Lấy dữ liệu sân đã đặt
+  const getFacilityBooked = async () => {
+    const time = {
+      ngayDat: currentDate,
+      thoiGianBatDau: currentTime,
+      thoiGianKetThuc: ''
+    };
+    try {
+      const field = await facilityService.getAllBookedExact(time);
+      setFacilities(field);
+
+      if (field && facilities.length > 0) {
+        facilities.forEach(async facility => {
+          // Kiểm tra xem id của facility có trong field không
+          const isBooked = field.some(booked => booked._id === facility._id);
+
+          if (isBooked && facility.tinhTrang == "Trống") {
+            facility.tinhTrang = 'Đã đặt';
+          }
+
+          // Cập nhật facility mà không cần trả về
+          await editFacility(facility);
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching or updating facilities:', error);
+    }
+  }
+  // Kiểm tra xem có đúng giờ đặt trước chưa nếu có chuyển trạng thái sang đã đặt
+
+
   const createFacility = async (data) => {
     const newFac = await facilityService.create(data);
     return newFac;  
@@ -93,22 +166,35 @@ function Facility() {
 
   useEffect(() => {
     getFacility();
-  }, [facilities]);
+    getFacilityBooked();
+    console.log(1)
+  }, [currentTime]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+        setCurrentTime(getFormattedTime());
+        setCurrentDate(getFormattedDate());
+    }, 1000); // 60000ms = 1 phút
+
+    // Dọn dẹp bộ đếm thời gian khi component bị unmount
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div className='facility'>
-      <Header name="Quản lý Sân thể thao" />
+      <Header name="Sân thể thao" />
       <div className="flex justify-between mb-3">
         <div className='flex-1 flex relative justify-between'>
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
+         
           <div className="bg-green-500 cursor-pointer hover:bg-green-700 ml-2 max-w-50% shadow-gray-700 shadow-sm text-white overflow-hidden rounded-lg p-2" onClick={e => setFilter(!filter)}>
             <i className="ri-arrow-down-double-line"></i>
             Lọc
           </div>
           {filter ? 
-          <div className='bg-white shadow-black shadow-sm rounded-md p-2 h-fit flex flex-col top-full right-0 absolute justify-around'>
+          <div className='bg-white z-10 shadow-black shadow-sm rounded-md p-2 h-fit flex flex-col top-full right-0 absolute justify-around'>
             <select className='p-1 rounded-md bg-green-100 m-1' name="" id="">
               <option value="">Loại sân</option>
               <option value="">Bóng đá</option>
@@ -142,81 +228,42 @@ function Facility() {
       </div>
       <div className='flex pb-2'>
         <div className='flex items-center'>
-          <i className="mr-1 ri-calendar-event-fill"></i>
-          <input name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" value={''} onChange={''}/>
+          <input name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" value={currentDate} readOnly/>
         </div>
         <div className='flex items-center'>
-          Từ:
-          <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' />
+          <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' value={currentTime} readOnly />
         </div>
-        <div className='flex items-center'>
+        {/* <div className='flex items-center'>
           Đến:
           <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' />
-        </div>
+        </div> */}
       </div>
       {/* Lọc dữ liệu */}
       
-
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-300">
-        {/* Header bảngg */}
-        <div className="flex justify-between py-2 border-b border-gray-300 text-center">
-          <div className="w-1/12 font-semibold">STT</div>
-          <div className="w-1/6 font-semibold">HÌNH ẢNH</div>
-          <div className="w-1/6 font-semibold flex justify-center">
-            TÊN
-            <div className="">
-              <i className={''}></i>
-              <i className="ri-arrow-down-fill"></i>
-            </div>
-          </div>
-          <div className="w-1/6 font-semibold flex justify-center">
-            GIÁ MỖI GIỜ
-            <div className="">
-              <i className="ri-arrow-up-fill"></i>
-              <i className="ri-arrow-down-fill"></i>
-            </div>
-          </div>
-          <div className="w-1/6 font-semibold flex justify-center">
-            TÌNH TRẠNG
-            <div className="">
-              <i className="ri-arrow-up-fill"></i>
-              <i className="ri-arrow-down-fill"></i>
-            </div>
-          </div>
-          <div className="w-1/6">
-            <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i>
-          </div>
-        </div>
-
-
-        {/* Nội dung bảng */}
+      {/* Phân chia xem hiển thị dạng grid hay bảng */}
+      
+      
+        <div className='grid grid-cols-3 lg:grid-cols-5 gap-4'>
         {facilities ? filterFacility().map((facility, index) => 
-          <div key={facility._id} className="hover:bg-slate-200 flex justify-between py-2 border-b border-gray-300 text-center items-center"> 
-            <div className="w-1/12">{ index+1 }</div>
-            <div className="w-1/6">
-              {
-              facility.hinhAnh_San 
-              ? <img src={facility.hinhAnh_San} alt="" />
-              : <img src="https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg" alt="" />
-              }
-              </div>
-            <div className="w-1/6">
-              { facility.ten_San }
-              <p>Loại sân: {facility.loai_San}</p>
-              <p>{facility.khuVuc}</p>
+          <div 
+            key={facility._id} 
+            className={`${facility.tinhTrang == "Trống" ? 'bg-white' : facility.tinhTrang == "Đã đặt" ? 'bg-blue-500' : 'bg-green-500'} shadow-lg shadow-slate-500 rounded-lg overflow-hidden transition-all cursor-pointer hover:-translate-y-1`}
+            onClick={e => handleFacility(facility)}
+          >  
+            <div className={`px-1 text-sm flex justify-between `}>
+              <p>{facility.ma_San}</p>
+              <p>{facility.datSan ? facility.datSan.khachHang.ho_KH+' '+facility.datSan.khachHang.ten_KH : ''}</p>
             </div>
-            <div className="w-1/6">{ formatNumber(parseInt(facility.bangGiaMoiGio))}</div>
-            <div className="w-1/6 flex">
-              <p className={`m-auto p-1 ${facility.tinhTrang == 'Đang sử dụng' ? 'text-white rounded-lg bg-green-600 w-full lg:w-1/2 shadow-md shadow-slate-500' : facility.tinhTrang == 'Đã đặt' ? 'text-white rounded-lg bg-blue-500 w-full md:w-1/2 shadow-md shadow-slate-500' : ''}`}>
-                { facility.tinhTrang }
-              </p>
+            <div className='bg-white relative facility-item-name pl-1 min-h-24 sm:min-h-28 md:h-36 justify-center items-center bg-no-repeat bg-center flex text-lg font-extrabold'>
+              <img src={backgroundSan(facility.loai_San)} className='absolute w-1/3 z-[0] opacity-50' alt="" /> 
+              <p className='text-3xl z-[1] xl:text-4xl italic'>{facility.tinhTrang}</p>
             </div>
-            <div className="w-1/6 text-xl">
-              <i className="ri-edit-box-line p-2 mr-2 bg-gray-300 rounded-md" onClick={e => handleFacility(facility)}></i>
-              <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteFacility(facility)} ></i>
+            <div className='z-10 text-sm sm:text-base px-1 sm:flex justify-between'>
+              {facility.datSan ? facility.datSan.thoiGianBatDau+'-'+facility.datSan.thoiGianKetThuc : facility.ten_San} 
+              <p>{facility.datSan ? formatNumber(facility.datSan.thanhTien) : formatNumber(facility.bangGiaMoiGio)+"/h"}</p>
             </div>
-          </div> 
-        ) : ''}
+          </div>
+          ) : ''}
         </div>
         {/* from nhập dữ liệu */}
       {edit ? <FromFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }

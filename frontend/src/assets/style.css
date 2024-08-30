@@ -72,3 +72,12 @@ input {
     background-clip: text;
     color: transparent;
 }
+
+/* Facility */
+.facility .facility-item-name {
+    text-shadow:
+            1px 1px 0px white,
+            -1px -1px 0px white, 
+            -1px 1px 0px white,
+            1px -1px 0px white;
+}
