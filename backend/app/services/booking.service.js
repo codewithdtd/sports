@@ -16,6 +16,50 @@ class Bookings extends db {
       throw new Error('Error finding document: ' + err.message);
     }
   }
+  async findBookingBooked(payload) {
+    try {
+      let query = {
+        ngayDat: payload.ngayDat
+      };
+
+      // Nếu có điều kiện thời gian bắt đầu, thêm vào điều kiện truy vấn
+      if (payload.thoiGianBatDau != '') {
+          query.thoiGianBatDau = { $gte: payload.thoiGianBatDau };
+      }
+
+      // Nếu có điều kiện thời gian kết thúc, thêm vào điều kiện truy vấn
+      if (payload.thoiGianKetThuc != '') {
+          query.thoiGianKetThuc = { $lte: payload.thoiGianKetThuc };
+      }
+      const result = await this.model.find(query);
+      if (!result) {
+        throw new Error('Document not found');
+      }
+      return result
+    } catch (err) {
+      throw new Error('Error finding document: ' + err.message);
+    }
+  }
+  async findBookingBookedExact(payload) {
+    try {
+      let query = {
+        ngayDat: payload.ngayDat
+      };
+
+      // Nếu có điều kiện thời gian bắt đầu, thêm vào điều kiện truy vấn
+      if (payload.thoiGianBatDau != '') {
+          query.thoiGianBatDau = payload.thoiGianBatDau;
+      }
+
+      const result = await this.model.find(query);
+      if (!result) {
+        throw new Error('Document not found');
+      }
+      return result
+    } catch (err) {
+      throw new Error('Error finding document: ' + err.message);
+    }
+  }
     //   Xóa phần tử trong mảng chi tiết đặt sân
   // async removeBookingDetail(bookingId, maSan) {
   //   try {

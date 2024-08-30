@@ -244,36 +244,73 @@ exports.findAllFacilityBooking = async (req, res, next) => {
     
     try {
         const listField = await facility.findAll();
-        const listBooking = await booking.findAll();
         const time = req.query;
+        time.ngayDat = convertToDateReverse(time.ngayDat);
+        const listBooking = await booking.findBookingBooked(time);
         let result = listField;
-        if (time.ngayDat || time.thoiGianBatDau || time.thoiGianKetThuc) {
+        
+        if(listBooking)
             result = result.filter(field => {
-                return listBooking.some((booking) => {
-                    const bookingDate = convertToDate(booking.ngayDat);
-                    // const bookingDate = convertToDate(booking.ngayDat);
-                    const isSameDate = bookingDate === time.ngayDat;
-                    const isSameField = booking.san._id.toString() === field._id.toString();
-
-                    const startTime = time.thoiGianBatDau ? time.thoiGianBatDau : '00:00';
-                    const endTime = time.thoiGianKetThuc ? time.thoiGianKetThuc : '23:59';
-                    const bookingStart = booking.thoiGianBatDau;
-                    const bookingEnd = booking.thoiGianKetThuc;
-                    // Lọc theo thời gian nếu có thời gian bắt đầu và kết thúc
-                    if (time.thoiGianBatDau || time.thoiGianKetThuc) {
-                        return isSameField &&
-                        isSameDate &&
-                        (
-                            (startTime <= bookingEnd && endTime >= bookingStart) // Kiểm tra chồng lấn thời gian
-                        );
-                    } else {
-                        // Lọc chỉ theo ngày nếu không có thời gian
-                        return isSameField &&
-                        isSameDate;
-                    }
-                });
+                return listBooking.some(element => field._id.toString() === element.san._id.toString());
             });
-        }
+        
+                // return listBooking.some((booking) => {
+                //     const bookingDate = convertToDate(booking.ngayDat);
+                //     // const bookingDate = convertToDate(booking.ngayDat);
+                //     const isSameDate = bookingDate === time.ngayDat;
+                //     const isSameField = booking.san._id.toString() === field._id.toString();
+
+                //     const startTime = time.thoiGianBatDau ? time.thoiGianBatDau : '00:00';
+                //     const endTime = time.thoiGianKetThuc ? time.thoiGianKetThuc : '23:59';
+                //     const bookingStart = booking.thoiGianBatDau;
+                //     const bookingEnd = booking.thoiGianKetThuc;
+                //     // Lọc theo thời gian nếu có thời gian bắt đầu và kết thúc
+                //     if (time.thoiGianBatDau || time.thoiGianKetThuc) {
+                //         return isSameField &&
+                //         isSameDate &&
+                //         (
+                //             (startTime <= bookingEnd && endTime >= bookingStart) // Kiểm tra chồng lấn thời gian
+                //         );
+                //     } else {
+                //         // Lọc chỉ theo ngày nếu không có thời gian
+                //         return isSameField &&
+                //         isSameDate;
+                //     }
+                // });
+            // });
+        // }
+        // console.log(result);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+exports.findAllFacilityBookingExact = async (req, res, next) => {
+    const facility = new Facilities();
+    const booking = new Bookings();
+    
+    try {
+        const listField = await facility.findAll();
+        const time = req.query;
+        time.ngayDat = convertToDateReverse(time.ngayDat);
+        const listBooking = await facility.findAllBookedExact(time);
+        let result = listField.map(field => field.toObject());
+        // Tạo một map từ listBooking để tra cứu nhanh
+        const bookingMap = new Map(listBooking.map(booking => [booking._id.toString(), booking]));
+        // console.log(bookingMap)
+
+        // Duyệt qua listField và thay thế các phần tử trùng lặp
+       result = result.map(field => {
+            // Chuyển đổi ObjectId thành chuỗi để so sánh
+            if (bookingMap.has(field._id.toString())) {
+                return {
+                    ...field,
+                    ...bookingMap.get(field._id.toString()) // Thay thế hoặc thêm các thuộc tính từ bookingMap
+                };
+            }
+            return field;
+        });
 
         res.status(201).json(result);
     } catch (err) {
@@ -336,7 +373,7 @@ exports.updateBooking = async (req, res, next) => {
     const booking = new Bookings();
     try {
         const result = await booking.update(req.params.id, req.body);
-        console.log(result)
+        // console.log(result)
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
