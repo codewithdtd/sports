@@ -63,13 +63,13 @@ router.route("/equipment/:id")
 
 // Phiếu nhập hàng
 // 
-router.route("/equipmentRentail")
-    .get(admin.findAllEquipmentRentail)
-    .post(admin.createEquipmentRentail)
-router.route("/equipmentRentail/:id")
-    .delete(admin.deleteOneEquipmentRentail)
-    .get(admin.findOneEquipmentRentail)
-    .put(admin.updateEquipmentRentail);
+router.route("/goodReceivedNote")
+    .get(admin.findAllGoodReceivedNote)
+    .post(admin.createGoodReceivedNote)
+router.route("/goodReceivedNote/:id")
+    .delete(admin.deleteOneGoodReceivedNote)
+    .get(admin.findOneGoodReceivedNote)
+    .put(admin.updateGoodReceivedNote);
 
 // Gói hội viên
 // 
@@ -114,7 +114,17 @@ router.route("/review")
     .get(admin.findAllReview)
     .post(admin.createReview)
 router.route("/review/:id")
+    .delete(admin.deleteOneReview)
     .get(admin.findOneReview)
     .put(admin.updateReview);
-   
+
+
+// Dịch vụ
+router.route("/service")
+    .get(admin.findAllService)
+    .post(admin.createService)
+router.route("/service/:id")
+    .delete(admin.deleteOneService)
+    .get(admin.findOneService)
+    .put(admin.updateService);
 module.exports = router;
