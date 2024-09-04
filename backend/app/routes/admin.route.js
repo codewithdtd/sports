@@ -22,20 +22,23 @@ router.route("/staff/:id")
 //Sân thể thao
 router.route("/facility")
     .get(admin.findAllFacility)
-    .post(middleware.verifyAdmin, admin.createFacility)
+    .post( admin.createFacility)
+router.route("/facility/booked-exact")
+    .get(admin.findAllFacilityBookingExact)
+router.route("/facility/booked")
+    .get(admin.findAllFacilityBooking)
 router.route("/facility/:id")
-    .delete(middleware.verifyAdmin, admin.deleteOneFacility)
+    .delete( admin.deleteOneFacility)
     .get(admin.findOneFacility)
-    .put(middleware.verifyAdmin, admin.updateFacility);
-   
+    .put( admin.updateFacility);
 
 //Đặt sân
 router.route("/booking")
     .get(admin.findAllBooking)
-    .post(middleware.verifyAdmin, admin.createBooking)
+    .post(admin.createBooking)
 router.route("/booking/:id")
     .get(admin.findOneBooking)
-    .put(middleware.verifyAdmin, admin.updateBooking);
+    .put(admin.updateBooking);
    
 // Hóa đơn
 // 
@@ -60,13 +63,13 @@ router.route("/equipment/:id")
 
 // Phiếu nhập hàng
 // 
-router.route("/equipmentRentail")
-    .get(admin.findAllEquipmentRentail)
-    .post(admin.createEquipmentRentail)
-router.route("/equipmentRentail/:id")
-    .delete(admin.deleteOneEquipmentRentail)
-    .get(admin.findOneEquipmentRentail)
-    .put(admin.updateEquipmentRentail);
+router.route("/goodReceivedNote")
+    .get(admin.findAllGoodReceivedNote)
+    .post(admin.createGoodReceivedNote)
+router.route("/goodReceivedNote/:id")
+    .delete(admin.deleteOneGoodReceivedNote)
+    .get(admin.findOneGoodReceivedNote)
+    .put(admin.updateGoodReceivedNote);
 
 // Gói hội viên
 // 
@@ -111,7 +114,17 @@ router.route("/review")
     .get(admin.findAllReview)
     .post(admin.createReview)
 router.route("/review/:id")
+    .delete(admin.deleteOneReview)
     .get(admin.findOneReview)
     .put(admin.updateReview);
-   
+
+
+// Dịch vụ
+router.route("/service")
+    .get(admin.findAllService)
+    .post(admin.createService)
+router.route("/service/:id")
+    .delete(admin.deleteOneService)
+    .get(admin.findOneService)
+    .put(admin.updateService);
 module.exports = router;

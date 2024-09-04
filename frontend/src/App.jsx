@@ -5,7 +5,7 @@ import Header from './components/Header'
 
 const App = () => {
   return (
-    <div className='flex h-screen bg-green-200'>
+    <div className='flex h-screen bg-gray-200'>
       <div className='rounded-md h-full md:w-1/4 lg:w-[15%]'>
         <Navbar />
       </div>

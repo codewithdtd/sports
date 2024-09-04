@@ -3,16 +3,26 @@ const Facilities = require("../services/facility.service");
 const Bookings = require("../services/booking.service");
 const Invoices = require("../services/invoice.service");
 const Equipment = require("../services/equipment.service");
-const EquipmentRentail = require("../services/equipmentRentail.service");
+const GoodsReceivedNotes = require("../services/goodsReceivedNote.service");
 const { Memberships, UserMemberships } = require("../services/membership.service");
 const { Events, UserEvents } = require("../services/event.service");
 const Reviews = require("../services/review.service");
+const Services = require("../services/service.service");
 
 
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const bcrypt = require("bcrypt");
+
+const convertToDate = (dateStr) => {
+    const [day, month, year] = dateStr.split('/');
+    return `${year}-${month}-${day}`; // JavaScript sử dụng tháng từ 0-11
+}
+const convertToDateReverse = (dateStr) => {
+    const [year, month, day] = dateStr.split('-');
+    return `${day}/${month}/${year}`;
+}
 
 exports.createStaff = async (req, res, next) => {
     const staff = new Staffs();
@@ -229,6 +239,86 @@ exports.findOneFacility = async (req, res, next) => {
     }
 };
 
+exports.findAllFacilityBooking = async (req, res, next) => {
+    const facility = new Facilities();
+    const booking = new Bookings();
+    
+    try {
+        const listField = await facility.findAll();
+        const time = req.query;
+        time.ngayDat = convertToDateReverse(time.ngayDat);
+        const listBooking = await booking.findBookingBooked(time);
+        let result = listField;
+        
+        if(listBooking)
+            result = result.filter(field => {
+                return listBooking.some(element => field._id.toString() === element.san._id.toString());
+            });
+        
+                // return listBooking.some((booking) => {
+                //     const bookingDate = convertToDate(booking.ngayDat);
+                //     // const bookingDate = convertToDate(booking.ngayDat);
+                //     const isSameDate = bookingDate === time.ngayDat;
+                //     const isSameField = booking.san._id.toString() === field._id.toString();
+
+                //     const startTime = time.thoiGianBatDau ? time.thoiGianBatDau : '00:00';
+                //     const endTime = time.thoiGianKetThuc ? time.thoiGianKetThuc : '23:59';
+                //     const bookingStart = booking.thoiGianBatDau;
+                //     const bookingEnd = booking.thoiGianKetThuc;
+                //     // Lọc theo thời gian nếu có thời gian bắt đầu và kết thúc
+                //     if (time.thoiGianBatDau || time.thoiGianKetThuc) {
+                //         return isSameField &&
+                //         isSameDate &&
+                //         (
+                //             (startTime <= bookingEnd && endTime >= bookingStart) // Kiểm tra chồng lấn thời gian
+                //         );
+                //     } else {
+                //         // Lọc chỉ theo ngày nếu không có thời gian
+                //         return isSameField &&
+                //         isSameDate;
+                //     }
+                // });
+            // });
+        // }
+        // console.log(result);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+exports.findAllFacilityBookingExact = async (req, res, next) => {
+    const facility = new Facilities();
+    const booking = new Bookings();
+    
+    try {
+        const listField = await facility.findAll();
+        const time = req.query;
+        time.ngayDat = convertToDateReverse(time.ngayDat);
+        const listBooking = await facility.findAllBookedExact(time);
+        let result = listField.map(field => field.toObject());
+        // Tạo một map từ listBooking để tra cứu nhanh
+        const bookingMap = new Map(listBooking.map(booking => [booking._id.toString(), booking]));
+        // console.log(bookingMap)
+
+        // Duyệt qua listField và thay thế các phần tử trùng lặp
+       result = result.map(field => {
+            // Chuyển đổi ObjectId thành chuỗi để so sánh
+            if (bookingMap.has(field._id.toString())) {
+                return {
+                    ...field,
+                    ...bookingMap.get(field._id.toString()) // Thay thế hoặc thêm các thuộc tính từ bookingMap
+                };
+            }
+            return field;
+        });
+
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
 // exports.findByIdFacility = async (req, res, next) => {
 //     const facility = new Facilities();
 //     try {
@@ -257,8 +347,25 @@ exports.deleteOneFacility = async (req, res, next) => {
 exports.createBooking = async (req, res, next) => {
     const booking = new Bookings();
     try {
-        const result = await booking.create(req.body);
-        res.status(201).json(result);
+        const data = req.body;
+        const {san, ...other} = data;
+        let count = 0;
+        // Xử lý sân
+        for (const element of san) {
+            const { thoiGianBatDau, thoiGianKetThuc, ngayDat, thanhTien, hinhAnh_San, ...otherTwo } = element;
+            const newData = {
+                ...other,           
+                san: otherTwo,      
+                thoiGianBatDau,     
+                thoiGianKetThuc,
+                ngayDat: convertToDateReverse(ngayDat),
+                thanhTien,
+            }; 
+            if (await booking.create(newData)) {
+                count++;
+            }
+        }
+        res.status(201).json({ success: true, count});
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -267,6 +374,7 @@ exports.updateBooking = async (req, res, next) => {
     const booking = new Bookings();
     try {
         const result = await booking.update(req.params.id, req.body);
+        // console.log(result)
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -401,55 +509,55 @@ exports.deleteOneEquipment = async (req, res, next) => {
 // Nhập kho
 // 
 // 
-exports.createEquipmentRentail = async (req, res, next) => {
-    const equipmentRentail = new EquipmentRentail();
+exports.createGoodReceivedNote = async (req, res, next) => {
+    const goodsReceivedNote = new GoodsReceivedNotes();
     const newEquipment = req.body;
     try {
-        const result = await equipmentRentail.create(newEquipment);
+        const result = await goodsReceivedNote.create(newEquipment);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
 
-exports.updateEquipmentRentail = async (req, res, next) => {
-    const equipmentRentail = new EquipmentRentail();
+exports.updateGoodReceivedNote = async (req, res, next) => {
+    const goodsReceivedNote = new GoodsReceivedNotes();
     try {
-        const result = await equipmentRentail.update(req.params.id, req.body);
+        const result = await goodsReceivedNote.update(req.params.id, req.body);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
 
-exports.findAllEquipmentRentail = async (req, res, next) => {
-    const equipmentRentail = new EquipmentRentail();
+exports.findAllGoodReceivedNote = async (req, res, next) => {
+    const goodsReceivedNote = new GoodsReceivedNotes();
     try {
-        const result = await equipmentRentail.findAll();
+        const result = await goodsReceivedNote.findAll();
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
 
-exports.findOneEquipmentRentail = async (req, res, next) => {
-    const equipmentRentail = new EquipmentRentail();
+exports.findOneGoodReceivedNote = async (req, res, next) => {
+    const goodsReceivedNote = new GoodsReceivedNotes();
     try {
         let result;
         if(!req.params.id) 
-            result = await equipmentRentail.findOne(req.body)
+            result = await goodsReceivedNote.findOne(req.body)
         else 
-            result = await equipmentRentail.findById(req.params.id) 
+            result = await goodsReceivedNote.findById(req.params.id) 
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
 
-exports.deleteOneEquipmentRentail = async (req, res, next) => {
-    const equipmentRentail = new EquipmentRentail();
+exports.deleteOneGoodReceivedNote = async (req, res, next) => {
+    const goodsReceivedNote = new GoodsReceivedNotes();
     try {
-        const result = await equipmentRentail.delete(req.params.id);
+        const result = await goodsReceivedNote.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -739,6 +847,63 @@ exports.deleteOneReview = async (req, res, next) => {
     const review = new Reviews();
     try {
         const result = await review.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+// Dịch vụ
+exports.createService = async (req, res, next) => {
+    const service = new Services();
+    const newService = req.body;
+    try {
+        const result = await service.create(newService);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateService = async (req, res, next) => {
+    const service = new Services();
+    try {
+        const result = await service.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllService = async (req, res, next) => {
+    const service = new Services();
+    try {
+        const result = await service.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneService = async (req, res, next) => {
+    const service = new Services();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await service.findOne(req.body)
+        else 
+            result = await service.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneService = async (req, res, next) => {
+    const service = new Services();
+    try {
+        const result = await service.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
