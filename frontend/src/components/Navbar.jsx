@@ -14,7 +14,7 @@ function Navbar() {
   // Effect to handle screen resizing
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth >= 780) {
         setIsOpen(true);
       } else {
         setIsOpen(false);

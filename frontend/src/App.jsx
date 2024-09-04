@@ -9,7 +9,7 @@ const App = () => {
       <div className='rounded-md h-full md:w-1/4 lg:w-[15%]'>
         <Navbar />
       </div>
-      <div className='m-2 flex-1'>
+      <div className='p-2 flex-1 relative'>
         {/* <Header /> */}
         <Outlet />
       </div>

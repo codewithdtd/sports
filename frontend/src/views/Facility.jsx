@@ -264,7 +264,7 @@ function Facility() {
           ) : ''}
         </div>
         {/* from nhập dữ liệu */}
-      {edit == edit ? <FromFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
+      {edit ? <FromFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
     </div>
   )
 }
