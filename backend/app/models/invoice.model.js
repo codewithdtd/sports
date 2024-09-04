@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 const invoiceSchema = new mongoose.Schema({
-  ma_DS: { type: String, required: true},
-  ma_NV: { type: String, require: true },
+  datSan: { type: Object, required: true},
+  nhanVien: { type: Object, require: true },
+  dichVu: { type: [Object], },
   thoiGianCheckIn: { type: String, default: "-- : --" },
   thoiGiaCheckOut: { type: String, default: "-- : --" },
   bangGioMoiGio: { type: Number, required: true },
