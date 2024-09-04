@@ -134,9 +134,7 @@ function Facility() {
       if (field && facilities.length > 0) {
         facilities.forEach(async facility => {
           // Kiểm tra xem id của facility có trong field không
-          const isBooked = field.some(booked => booked._id === facility._id);
-
-          if (isBooked && facility.tinhTrang == "Trống") {
+          if (facility.datSan && facility.datSan.thoiGianBatDau == currentTime && facility.tinhTrang == "Trống") {
             facility.tinhTrang = 'Đã đặt';
           }
 
@@ -266,7 +264,7 @@ function Facility() {
           ) : ''}
         </div>
         {/* from nhập dữ liệu */}
-      {edit ? <FromFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
+      {edit == edit ? <FromFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
     </div>
   )
 }

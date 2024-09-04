@@ -26,52 +26,100 @@ function FromFacility(props) {
   }, [props.data]);
 
   return (
-     <div className='absolute bg-opacity-30 bg-black -translate-x-2 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
-        <form action="" className={`relative transition flex flex-col bg-white p-2 px-6 w-3/5 lg:w-1/4 rounded-md m-auto md:-translate-x-20+ ${show ? 'scale-100' : 'scale-0'}`} onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
+     <div className='absolute z-10 bg-opacity-30 bg-black -translate-x-2 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
+        <form action="" className={`relative transition flex flex-col lg:flex-row bg-white p-2 px-6 w-[95%] lg:w-2/3 rounded-md m-auto md:-translate-x-20 ${show ? 'scale-100' : 'scale-0'}`} onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
             <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
-            <h1 className='text-center text-2xl font-bold p-5'>THÔNG TIN</h1>
-            <div className="flex">
-              <label htmlFor="" className='w-1/4'>Tên sân:</label>
-              <input name='ten_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ten_San} onChange={e => setData({...data, ten_San: e.target.value})}/>
-            </div>
-            <div className="flex">
-              <label htmlFor="" className='w-1/4'>Mã sân:</label>
-              <input name='ten_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ma_San} onChange={e => setData({...data, ma_San: e.target.value})}/>
-            </div>
-            <div className="flex">
-              <label htmlFor="" className='w-1/4'>Loại sân:</label>
-              <input name='loai_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.loai_San} onChange={e => setData({...data, loai_San: e.target.value})}/>
-            </div>
-            <div className="flex">
-              <label htmlFor="" className='w-1/4'>Khu vực:</label>
-              <input name='khuVuc' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khuVuc} onChange={e => setData({...data, khuVuc: e.target.value})}/>
-            </div>
-            <div className="flex">
-              <label htmlFor="" className='w-1/4'>Tình trạng:</label>
-              {/* <input name='khuVuc' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.tinhTrang} onChange={e => setData({...data, khuVuc: e.target.value})}/> */}
-              <select name="khuVuc" className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' id="" onChange={e => setData({...data, tinhTrang: e.target.value})}>
-                <option value={data.tinhTrang || 'Trạng thái'}>{ data.tinhTrang || 'Trạng thái' }</option>
-                <option value={'Trống'}>Trống</option>
-                <option value={'Đang sử dụng'}>Đang sử dụng</option>
-                <option value={'Đã đặt'}>Đã đặt</option>
-              </select>
-            </div>
-            <div className="flex">
-              <label htmlFor="" className='w-1/4'>Giá mỗi giờ:</label>
-              <input name='bangGiaMoiGio' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="number" value={data.bangGiaMoiGio} onChange={e => setData({...data, bangGiaMoiGio: e.target.value})}/>
-            </div>
-            <div className="flex">
-              <label htmlFor="" className='w-1/4'>Hình ảnh:</label>
-              <div className='w-3/4 flex flex-col'>
-                <img src={data.hinhAnh_San} alt="" className='w-1/2'/>
-                <img src={preImg || ''} alt="" className='w-1/2'/>
-                <label htmlFor="file-upload" className='bg-gray-300 hover:text-blue-900 hover:border-blue-500 cursor-pointer w-[90px] h-[80px] flex items-center justify-center text-4xl rounded-lg border border-dashed border-black'>
-                  <i className="ri-image-add-fill"></i>
-                </label>
-                <input id='file-upload' className='hidden' type="file" onChange={e => handleFileUpload(e)} />
+            <div className='flex-1'>
+            <h1 className='text-center text-2xl font-bold pt-5 pb-2'>SÂN BD5S1</h1>
+              <div className='flex justify-between text-sm border-b border-gray-400 mb-3 italic'>
+                <p>Nhân viên: Nguyễn Văn Web</p>
+                <p>02/09/2024 02:09PM</p>
+                <p>Chức vụ: Nhân viên</p>
+              </div>
+              <div className="flex">
+                <div className='flex-1 text-sm sm:text-base'>
+                  <div className='flex'>
+                    <p className='w-2/5'>Khách hàng:</p>
+                    <span className=''>Đỗ Thành Đạt</span>
+                  </div>
+                  <div className='flex'>
+                    <p className='w-2/5'>Số điện thoại:</p>
+                    <span className=''>0111 222 333</span>
+                  </div>
+                  <div className='flex'>
+                    <p className='w-2/5'>Hội viên:</p>
+                    <span className=''>VIP</span>
+                  </div>
+                </div>
+                <div className='flex-1 text-sm sm:text-base'>
+                  <div className='flex'>
+                    <p className='w-2/5'>Mã sân:</p>
+                    <span className=''>BD5S1</span>
+                  </div>
+                  <div className='flex'>
+                    <p className='w-2/5'>Thời gian:</p>
+                    <div className='flex flex-col'>
+                      <span className=''>17:00 - 19:00 (2 giờ)</span> 
+                    </div>
+                  </div>
+                  <div className='flex'>
+                    <p className='w-2/5'>Ngày đặt:</p>
+                    <span className=''>30/08/2024 09:05:25</span>
+                  </div>
+                </div>
+              </div>
+              <div className='flex items-center'>
+                <p>Thời gian nhận sân: --:--</p>
+              </div>
+                <p>Thời gian trả sân: --:--</p>
+              {/* Bảng dịch vụ */}
+              <div className='flex-1'>
+                <div className='flex text-center font-bold bg-gray-400'>
+                    <div className="flex-1 border border-gray-300">Tên</div>
+                    <div className="flex-1 border border-gray-300">Số lượng</div>
+                    <div className="flex-1 border border-gray-300">Giá</div> 
+                </div>
+                <div className='flex text-center'>
+                    <div className="flex-1 border border-gray-400">Cầu</div>
+                    <div className="flex-1 border border-gray-400">1</div>
+                    <div className="flex-1 border border-gray-400">15.000</div> 
+                </div>
+              </div>
+                  <button className='bg-green-600 flex-1 m-4 py-1 rounded-lg text-white hover:bg-green-500'>+ Thêm dịch vụ</button>
+              <div className='flex'>
+                  <button className='border-green-600 flex-1 border m-4 px-3 py-1 rounded-lg font-bold text-green-600 hover:bg-green-500 hover:text-white'>Nhận sân</button>
+                  <button className='border-gray-600 flex-1 bg-gray-200 border px-3 m-4 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white'>Trả sân</button>
+                  <button className='bg-green-600 m-4 flex-1 py-1 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
               </div>
             </div>
-            <button className='bg-green-600 m-4 py-1 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
+            <div className='m-4 flex-1 flex flex-col'>
+              Chọn: <input type="text"className='border'/>
+              <div className='flex-1 bg-slate-200'>     
+                <div className='flex text-center font-bold bg-gray-400'>
+                    <div className="flex-1 border border-gray-300">Tên</div>
+                    <div className="flex-1 border border-gray-300">Số lượng</div>
+                    <div className="flex-1 border border-gray-300">Giá</div> 
+                </div>
+                <div className='flex text-center'>
+                    <div className="flex-1 border border-gray-400">Cầu</div>
+                    <div className="flex-1 border border-gray-400">1</div>
+                    <div className="flex-1 border border-gray-400">15.000</div> 
+                </div>
+              </div>
+              <div className='flex-1'>
+                Đã chọn:
+                <div className='flex text-center font-bold bg-gray-400'>
+                    <div className="flex-1 border border-gray-300">Tên</div>
+                    <div className="flex-1 border border-gray-300">Số lượng</div>
+                    <div className="flex-1 border border-gray-300">Giá</div> 
+                </div>
+                <div className='flex text-center'>
+                    <div className="flex-1 border border-gray-400">Cầu</div>
+                    <div className="flex-1 border border-gray-400">1</div>
+                    <div className="flex-1 border border-gray-400">15.000</div> 
+                </div>
+              </div>
+            </div>
         </form>
     </div>
   )
