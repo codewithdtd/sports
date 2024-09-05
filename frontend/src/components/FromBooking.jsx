@@ -122,7 +122,7 @@ function FromBooking(props) {
 
   return (
     <div className='absolute bg-opacity-30 bg-black -translate-x-2 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
-        <form action="" className='relative flex flex-col bg-white p-2 px-6 w-4/5 md:w-fit rounded-md m-auto md:-translate-x-20' onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
+        <form action="" className='relative flex flex-col bg-white p-2 px-6 w-4/5 md:w-fit rounded-md m-auto' onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
           <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
           <h1 className='text-center text-2xl font-bold p-5'>THÔNG TIN</h1>
           <div className={`flex flex-col ${!data.san._id ? 'lg:flex-row' : ''}`}>  

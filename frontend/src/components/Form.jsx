@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 const Form = (props) => {
   const [user, setUser] = useState({
-    ho_KH: '',
-    ten_KH: '',
-    email_KH: '',
-    sdt_KH: '',
-    matKhau_KH: '',
+    ho_NV: '',
+    ten_NV: '',
+    email_NV: '',
+    sdt_NV: '',
+    matKhau_NV: '',
   });
 
   const [error, setError] = useState('');
@@ -21,11 +21,11 @@ const Form = (props) => {
       setSuccess('Registration successful!');
       // Clear the form
       setUser({
-        ho_KH: '',
-        ten_KH: '',
-        email_KH: '',
-        sdt_KH: '',
-        matKhau_KH: '',
+        ho_NV: '',
+        ten_NV: '',
+        email_NV: '',
+        sdt_NV: '',
+        matKhau_NV: '',
       });
       } catch (err) {
         console.log(err);
@@ -53,33 +53,33 @@ const Form = (props) => {
               <div className="flex sm:w-full lg:w-[50%]">
                 <div className="flex form-items sm:w-full lg:w-[50%] mr-2">
                   <i className="ri-user-3-line"></i>
-                  <input className='' type="text" name="ho_KH" value={user.ho_KH} onChange={(e)=>setUser({...user, ho_KH: e.target.value})} placeholder='Họ và tên đệm' required/>
+                  <input className='' type="text" name="ho_NV" value={user.ho_NV} onChange={(e)=>setUser({...user, ho_NV: e.target.value})} placeholder='Họ và tên đệm' required/>
                 </div>
                 <div className='form-items sm:w-[100%] lg:w-[50%]'>  
                   <i className="ri-user-3-line"></i>
-                  <input className='' type="text" name="ten_KH" value={user.ten_KH} onChange={(e)=>setUser({...user, ten_KH: e.target.value})} placeholder='Tên' required/>
+                  <input className='' type="text" name="ten_NV" value={user.ten_NV} onChange={(e)=>setUser({...user, ten_NV: e.target.value})} placeholder='Tên' required/>
                 </div>
               </div> : ''
             }
             <div className='form-items sm:w-[100%] lg:w-[50%]'>
               <i className="ri-phone-line"></i>
-              <input className='' type="text" name="sdt_KH" value={user.sdt_KH} onChange={(e)=>setUser({...user, sdt_KH: e.target.value})} placeholder='Số điện thoại' required/>
+              <input className='' type="text" name="sdt_NV" value={user.sdt_NV} onChange={(e)=>setUser({...user, sdt_NV: e.target.value})} placeholder='Số điện thoại' required/>
             </div>
             { props.name == 'signUp' ?
               <div className="form-items sm:w-[100%] lg:w-[50%]">
                 <i className="ri-mail-line"></i>
-                <input className='' type="text" name="email_KH" value={user.email_KH} onChange={(e)=>setUser({...user, email_KH: e.target.value})} placeholder='Email (Nếu có)'/>
+                <input className='' type="text" name="email_NV" value={user.email_NV} onChange={(e)=>setUser({...user, email_NV: e.target.value})} placeholder='Email (Nếu có)'/>
               </div> : ''
             }
             <div className="form-items sm:w-[100%] lg:w-[50%]">
               <i className="ri-lock-line"></i>
-              <input className='' type="text" name="matKhau_KH" value={user.matKhau_KH} onChange={(e)=>setUser({...user, matKhau_KH: e.target.value})} placeholder='Mật khẩu' required/>
+              <input className='' type="text" name="matKhau_NV" value={user.matKhau_NV} onChange={(e)=>setUser({...user, matKhau_NV: e.target.value})} placeholder='Mật khẩu' required/>
             </div>
 
             { props.name == 'signUp' ?
               <div className="form-items sm:w-[100%] lg:w-[50%]">
                 <i className="ri-lock-line"></i>
-                <input className='' type="text" name="matKhau_KH" value={user.matKhau_KH} onChange={(e)=>setUser({...user, matKhau_KH: e.target.value})} placeholder='Xác nhận mật khẩu' required/>
+                <input className='' type="text" name="matKhau_NV" value={user.matKhau_NV} onChange={(e)=>setUser({...user, matKhau_NV: e.target.value})} placeholder='Xác nhận mật khẩu' required/>
               </div> : ''
             }
             <button className='bg-green-500 hover:bg-green-700 text-white w-[50%] m-auto'>{props.name == 'signUp' ? 'Đăng ký' : 'Đăng nhập'}</button>

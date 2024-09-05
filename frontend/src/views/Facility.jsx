@@ -1,23 +1,38 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import Header from '../components/Header'
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import FromFacility from '../components/FromFacility';
-import facilityService from '../services/facility.service';
+import invoiceService from '../services/invoice.service';
 import bookingService from '../services/booking.service';
+import facilityService from '../services/facility.service';
+
 function Facility() {
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [facilities, setFacilities] = useState([]);
+  const user = useSelector((state)=> state.user.login.user)
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if(!user) {
+      navigate('/login');
+    }
+  })
   // xử lý sân đã đặt
   
   const [fac, setFac] = useState({
-    _id: "",
-    ten_San: "",
-    loai_San: "",
-    tinhTrang: "",
-    khuVuc: "",
-    hinhAnh_San: "",
-    bangGiaMoiGio: 0
+    _id: null,
+    datSan: {},
+    nhanVien: {},
+    dichVu: [],
+    thoiGianCheckIn: '',
+    thoiGiaCheckOut: '',
+    bangGiaMoiGio: 0,
+    ghiChu: '',
+    phuongThucThanhToan: '',
+    giamGia: 0,
+    tongTien: 0
   });
   const [search, setSearch] = useState('');
   const [currentTime, setCurrentTime] = useState(getFormattedTime());
@@ -40,26 +55,18 @@ function Facility() {
   } 
 
   const handleFacility = async (data = {}) => {
-    (data != {})
-      ? setFac(data) 
-      : setFac({
-          _id: null,
-          ten_San: "",
-          loai_San: "",
-          tinhTrang: "",
-          khuVuc: "",
-          hinhAnh_San: "",
-          bangGiaMoiGio: 0,
-        });
+    setFac(data) 
+    console.log(data)
+      
     if(data.phuongThuc == 'edit') {
       console.log('edit')
-      if(await editFacility(data))
+      if(await editBooing(data))
         console.log('Đã cập nhật');
     }
-    if(data.phuongThuc == 'create') {
-      console.log('create')
+    if(data.phuongThuc == 'thanhToan') {
+      console.log('check out')
       if(await createFacility(data))
-        console.log('Đã thêm mới');
+        console.log('check out');
     }
     setEdit(!edit);  
   };
@@ -98,8 +105,8 @@ function Facility() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
-      // return `${hours}:${minutes}`;
-      return "17:00";
+      return `${hours}:${minutes}`;
+      // return "17:00";
   }
 
   // Hàm để lấy ngày hiện tại và định dạng thành 'dd/mm/yyyy'
@@ -108,8 +115,8 @@ function Facility() {
       const day = String(now.getDate()).padStart(2, '0');
       const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng 0-11, cần +1
       const year = now.getFullYear();
-      // return `${year}-${month}-${day}`;
-      return `2024-08-29`;
+      return `${year}-${month}-${day}`;
+      // return `2024-09-04`;
   }
 
 
@@ -132,7 +139,7 @@ function Facility() {
       setFacilities(field);
 
       if (field && facilities.length > 0) {
-        facilities.forEach(async facility => {
+        facilities.forEach(async (facility) => {
           // Kiểm tra xem id của facility có trong field không
           if (facility.datSan && facility.datSan.thoiGianBatDau == currentTime && facility.tinhTrang == "Trống") {
             facility.tinhTrang = 'Đã đặt';
@@ -150,13 +157,24 @@ function Facility() {
 
 
   const createFacility = async (data) => {
-    const newFac = await facilityService.create(data);
+    // const newFac = await facilityService.create(data);
+    const newInvoice = {
+      datSan: data.datSan,
+      nhanVien: user
+    }
+    // const newInvoice = await invoiceService.create(data);
     return newFac;  
   }
   const editFacility = async (data) => {
     const editFac = await facilityService.update(data._id, data);
+    // console.log(data)
     return editFac;
   }
+
+  const editBooing = async (data) => {
+      console.log('have datSan')
+      const editBoooking = await bookingService.update(data.datSan._id, data.datSan);
+  } 
   const deleteFacility = async (data) => {
     const deleteFac = await facilityService.delete(data._id);
     return deleteFac;
@@ -166,12 +184,12 @@ function Facility() {
     getFacility();
     getFacilityBooked();
     console.log(1)
-  }, [currentTime]);
+  }, [fac]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-        setCurrentTime(getFormattedTime());
-        setCurrentDate(getFormattedDate());
+      setCurrentTime(getFormattedTime());
+      setCurrentDate(getFormattedDate());
     }, 1000); // 60000ms = 1 phút
 
     // Dọn dẹp bộ đếm thời gian khi component bị unmount
@@ -218,11 +236,11 @@ function Facility() {
           </div>
         : '' }
         </div> 
-        <button className="bg-green-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-green-700 w-10 h-10 m-auto rounded-xl"
+        {/* <button className="bg-green-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-green-700 w-10 h-10 m-auto rounded-xl"
                 onClick={e => handleFacility()}
         >
           +
-        </button>
+        </button> */}
       </div>
       <div className='flex pb-2'>
         <div className='flex items-center'>

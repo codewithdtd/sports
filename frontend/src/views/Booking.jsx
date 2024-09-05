@@ -2,11 +2,19 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import FromBooking from '../components/FromBooking';
 import bookingService from '../services/booking.service';
-// import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 const Booking = () => {
   // const dispatch = useDispatch();
+  const user = useSelector((state)=> state.user.login.user)
 
+  const navigate = useNavigate();
 
+    useEffect(() => {
+      if(!user) {
+        navigate('/login');
+      }
+    })
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [list, setList] = useState([]);

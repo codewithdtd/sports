@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import userService from '../services/user.service';
+import staffService from '../services/staff.service';
 import Form from '../components/Form'
 const Login = () => {
   const dispatch = useDispatch();
@@ -10,11 +10,11 @@ const Login = () => {
   const handleData= async (data) => {
     try {
       const user = {
-        "sdt_KH": data.sdt_KH,
-        "matKhau_KH": data.matKhau_KH,
+        "sdt_NV": data.sdt_NV,
+        "matKhau_NV": data.matKhau_NV,
       }
       console.log(data);
-      const response = await userService.login(data, dispatch, navigate);
+      const response = await staffService.login(data, dispatch, navigate);
     } catch (err) {
       console.log(err);
     }

@@ -39,7 +39,7 @@ router.route("/:id")
     .put(middleware.verifyAdmin, user.update);
     
 router.route("/")
-    .get(middleware.verifyAdmin, user.findAll)
+    .get( user.findAll)
     .post(user.create);
 
 

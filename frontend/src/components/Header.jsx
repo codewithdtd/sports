@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from "react-redux";
+
 function Header(props) {
+  const user = useSelector((state) => state.user.login.user);
   return (
     <div className="header items-center pl-12 md:pl-0 mr-2 px-2 flex justify-between">
         <div className="header__left uppercase text-2xl font-bold">
@@ -12,7 +15,7 @@ function Header(props) {
                   <img src="./src/assets/img/image.png" alt="" className="object-contain"/>
               </div>
               <div className='ml-2 hidden sm:block'>
-                  Đỗ Thành Đạt <i className="ri-arrow-down-s-line"></i>
+                  {user?.user.ho_NV+' '+user?.user.ten_NV} <i className="ri-arrow-down-s-line"></i>
               </div>
             </div>
             <ul className='hidden z-[1] group-hover:block absolute top-[100%] right-0 w-40 sm:w-full bg-white shadow-lg rounded-xl overflow-hidden'>

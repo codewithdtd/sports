@@ -8,9 +8,9 @@ router.route("/staff")
     .get(middleware.verifyAdmin, admin.findAllStaff)
     .post(admin.createStaff);
 
-router.route("/login").post(admin.login);
-router.route("/refresh").post(middleware.verifyToken, admin.refreshToken);
-router.route("/logout").post(middleware.verifyToken, admin.logout);
+router.route("/staff/login").post(admin.login);
+router.route("/staff/refresh").post(middleware.verifyToken, admin.refreshToken);
+router.route("/staff/logout").post(middleware.verifyToken, admin.logout);
 
 router.route("/staff/:id")
     .delete(middleware.verifyAdmin, admin.deleteOneStaff)
@@ -45,10 +45,10 @@ router.route("/booking/:id")
 // 
 router.route("/invoice")
     .get(admin.findAllInvoice)
-    .post(middleware.verifyAdmin, admin.createInvoice)
+    .post(admin.createInvoice)
 router.route("/invoice/:id")
     .get(admin.findOneInvoice)
-    .put(middleware.verifyAdmin, admin.updateInvoice);
+    .put(admin.updateInvoice);
 
 // 
 // Dụng cụ thiết bị

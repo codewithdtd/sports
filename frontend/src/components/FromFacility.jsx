@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import serviceService from '../services/service.service';
+import ConfirmCheckOut from './ConfirmCheckOut';
 
 function FromFacility(props) {
   const [data, setData] = useState(props.data);
@@ -9,13 +10,13 @@ function FromFacility(props) {
   const [listServiceSelected, setListServiceSelected] = useState([])
   const [timeStart, setTimeStart] = useState('--:--')
   const [timeEnd, setTimeEnd] = useState('--:--')
+  const [paymentModal, setPaymentModal] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
-    console.log('cllick')
-    data._id ? data.phuongThuc = 'edit' : data.phuongThuc = 'create';
-    preImg ? data.hinhAnh_San = preImg : '';
-    // props.handleData(data); // Xử lý dữ liệu biểu mẫu
+    // console.log('click')
+    data.datSan.thoiGianCheckOut == '--:--' ? data.phuongThuc = 'edit' : data.phuongThuc = 'thanhToan';
+    props.handleData(data); // Xử lý dữ liệu biểu mẫu
   };
 
   const getTime = () => {
@@ -58,7 +59,7 @@ function FromFacility(props) {
   // Lấy dữ liệu từ database
   const getService = async () => {
     const services = await serviceService.getAll();
-    setListService(services); 
+    setListService(services);
   }
 
   const addSelected = (data) => {
@@ -83,6 +84,22 @@ function FromFacility(props) {
   const removeSelected = (data) =>{
     setListServiceSelected(listServiceSelected.filter(item => item._id !== data._id));
   }
+
+  const saveServiceSelected = () => {
+    const thanhTien = calculateTimeDifference(data.datSan.thoiGianBatDau, data.datSan.thoiGianKetThuc)*data.bangGiaMoiGio + listServiceSelected.reduce((a, c) => a + c.thanhTien, 0)
+    // console.log(thanhTien);
+    setData({...data, datSan: {...data.datSan, dichVu: listServiceSelected, thanhTien: thanhTien}})
+    setModalService(!modalService)
+  }
+
+  // Mở modal
+  const openModalService = () => {
+    const serviceFromData = data.datSan?.dichVu;
+    if(serviceFromData) {
+      setListServiceSelected(serviceFromData);
+      setModalService(!modalService);
+    }
+  }
 // Hàm xử lý khi thay đổi số lượng
   const handleQuantityChange = (id, newQuantity) => {
     setListServiceSelected(prevList => 
@@ -92,16 +109,18 @@ function FromFacility(props) {
     );
   };
 
+  // Bấm đóng modal dịch vụ
+
+
   useEffect(() => {
     setData(props.data);
-    console.log(props.data)
     setShow(true);
     getService();
   }, [props.data]);
 
   return (
      <div className='absolute py-4 z-10 bg-opacity-30 bg-black flex top-0 right-0 w-full h-full' onClick={e => props.toggle(false)}>
-        <form action="" className={`relative shadow-gray-400 shadow-lg overflow-hidden transition flex flex-col lg:flex-row bg-white p-2 px-6 w-5/6 lg:w-1/3 lg:min-w-max rounded-md m-auto ${show ? 'scale-100' : 'scale-0'}`} onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
+        <form action="" className={`relative shadow-gray-400 shadow-lg overflow-hidden transition flex flex-col lg:flex-row bg-white p-2 px-6 w-5/6 lg:w-1/2 lg:min-w-fit rounded-md m-auto ${show ? 'scale-100' : 'scale-0'}`} onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
           <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
           <div className='flex-1'>
           <h1 className='text-center text-2xl font-bold pt-5 pb-2'>SÂN BD5S1</h1>
@@ -143,8 +162,14 @@ function FromFacility(props) {
               </div>
             </div>
             <div className='text-sm sm:text-base'>
-              <p>Thời gian nhận sân: {timeStart}</p>
-              <p>Thời gian trả sân: {timeEnd}</p>
+              <div className='flex'>
+                <p className='w-1/4 lg:w-2/5'>Thời gian nhận sân:</p>
+                <span>{data.datSan?.thoiGianCheckIn}</span>
+              </div>
+              <div className='flex'>
+                <p className='w-1/4 lg:w-2/5'>Thời gian trả sân:</p>
+                <span>{data.datSan?.thoiGianCheckOut}</span>
+              </div>
             </div>
 
 
@@ -156,24 +181,35 @@ function FromFacility(props) {
                   <div className="flex-1 border border-gray-300">Số lượng</div>
                   <div className="flex-1 border border-gray-300">Giá</div> 
               </div>
-              <div className='flex text-center'>
-                  <div className="flex-1 border border-gray-400">{data.ma_San}</div>
-                  <div className="flex-1 border border-gray-400">{calculateTimeDifference(data.datSan?.thoiGianBatDau,data.datSan?.thoiGianKetThuc)}</div>
-                  <div className="flex-1 border border-gray-400">{formatNumber(data.datSan?.thanhTien || 0)}</div> 
+              {data.datSan?.dichVu?.map(item =>
+              <div key={item._id} className='flex text-center'>
+                  <div className="flex-1 border-b border-gray-400">{item.ten_DV}</div>
+                  <div className="flex-1 border border-t-0 border-gray-400">{item.soluong}</div>
+                  <div className="flex-1 border-b border-gray-400">{formatNumber(item.thanhTien)}</div> 
               </div>
+              ) || <div className='text-center border-b border-gray-400'>Trống</div>
+              }
+
+
               <button type='button'
                 className='border-green-600 border flex-1 my-2 rounded-lg 
                 text-green-600 p-2 py-1 hover:bg-green-500 hover:text-white'
-                onClick={e => setModalService(!modalService)}
+                onClick={e => openModalService()}
               >+ Thêm
               </button>
-              <p className='pb-1'>Tổng tiền: <b>250.000</b></p> 
-              <p className='pb-1'>Giảm giá: <b>0</b></p> 
-              <p className='pb-1'>Thành tiền: <b>0</b></p> 
+              <p className='pb-1'>Tổng tiền: <b>{formatNumber(data.datSan?.thanhTien)}</b></p> 
+              {/* <p className='pb-1'>Giảm giá: <b>0</b></p> 
+              <p className='pb-1'>Thành tiền: <b>0</b></p>  */}
             </div>
             <div className='flex'>
-                <button type='button' className='border-green-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-green-600 hover:bg-green-500 hover:text-white' onClick={e => setTimeStart(getTime())}>Nhận sân</button>
-                <button type='button' className='border-gray-600 flex-1 mx-2 bg-gray-200 border px-3 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white' onClick={e => setTimeEnd(getTime())}>Trả sân</button>
+                <button type='button' className='border-green-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-green-600 hover:bg-green-500 hover:text-white' 
+                  onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckIn: getTime()}})}}>
+                    Nhận sân
+                </button>
+                <button type='button' className='border-gray-600 flex-1 mx-2 bg-gray-200 border px-3 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white'
+                  onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckOut: getTime()}})}}>
+                  Trả sân
+                </button>
                 <button className='bg-green-600 flex-1 py-1 mx-2 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
             </div>
           </div>
@@ -186,14 +222,14 @@ function FromFacility(props) {
             <div className='m-4 mt-0 text lg:text-base flex-1 flex flex-col'>
               <div className='flex-1'>     
                 <input type="text" className='border border-gray-400 mb-2 rounded-md pl-2 w-full' placeholder='Tìm kiếm'/>
-                <div className="border border-gray-500 rounded-lg h-32 px-2 overflow-x-hidden overflow-y-scroll">
+                <div className="border border-gray-500 rounded-lg h-32 lg:h-40 px-2 overflow-x-hidden overflow-y-scroll">
                   <div className='flex text-center font-bold border-b border-gray-400 '>
                     <div className="w-1/2">Tên</div>
                     <div className="w-1/3">Giá</div> 
                   </div>
                   
-                  {listService ? listService.map(item => 
-                  <div key={item._id} className='flex text-center hover:bg-gray-200'>
+                  {listService ? listService?.map(item => 
+                  <div key={item._id} className='flex border-b border-gray-300 items-center text-center hover:bg-gray-200'>
                     <div className="w-1/2">{item.ten_DV}</div>
                     <div className="w-1/3">{formatNumber(item.gia)}</div>
                     <i className="w-1/6 ri-add-circle-fill text-lg text-green-600 cursor-pointer hover:scale-125" onClick={e => addSelected(item)}></i>
@@ -205,15 +241,16 @@ function FromFacility(props) {
               </div>
               <div className='flex-1'>
                 Đã chọn:
-                <div className="border mt-2 lg:mt-0 border-gray-500 rounded-lg h-32 overflow-x-hidden overflow-y-scroll px-2">
+                <div className="border mt-2 lg:mt-0 border-gray-500 rounded-lg h-32 lg:h-40 overflow-x-hidden overflow-y-scroll px-2">
                   <div className='flex text-center font-bold border-b border-gray-400'>
                     <div className="w-1/3">Tên</div>
                     <div className="w-1/6">Số lượng</div> 
                     <div className="w-1/3">Giá</div> 
                   </div>
 
-                  {listServiceSelected.map(item => 
-                  <div key={item._id} className='flex text-center mt-1 hover:bg-gray-200'>
+                  {listServiceSelected?.map(item => {
+                  item.thanhTien = item.soluong*item.gia;
+                  return <div key={item._id} className='flex border-b border-gray-300 items-center text-center mt-1 hover:bg-gray-200'>
                     <div className="w-1/3">{item.ten_DV}</div>
                     <div className='w-1/6'>
                       <input type="number" 
@@ -224,23 +261,30 @@ function FromFacility(props) {
                       />
 
                     </div>
-                    <div className="w-1/3">{formatNumber(item.soluong*item.gia)}</div>
+                    <div className="w-1/3">{formatNumber(item.thanhTien)}</div>
                     <i className="w-[40px] ri-close-circle-fill text-lg text-red-600 cursor-pointer hover:scale-125" 
                         onClick={e => removeSelected(item)}></i>
-                  </div>)
+                  </div>})
                   }
 
 
                 </div>
                 <div className='flex'>
                   <button type='button' className='border-gray-600 flex-1 mb-0 bg-gray-200 border px-3 m-4 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white' onClick={e => setModalService(!modalService)}>Đóng</button>
-                  <button type='button' className='bg-green-600 m-4 flex-1 mb-0 py-1 rounded-lg text-white hover:bg-green-500'>Lưu</button>
+                  <button 
+                    type='button' 
+                    className='bg-green-600 m-4 flex-1 mb-0 py-1 
+                                  rounded-lg text-white hover:bg-green-500'
+                    onClick={e => saveServiceSelected()}
+                  >
+                    Lưu
+                  </button>
                 </div>
               </div>
             </div>
           </div>
           : ''}
-
+          {paymentModal ? <ConfirmCheckOut toggle={setPaymentModal} /> : ''}
         </form>
     </div>
   )
