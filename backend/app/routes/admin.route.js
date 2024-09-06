@@ -21,14 +21,14 @@ router.route("/staff/:id")
 
 //Sân thể thao
 router.route("/facility")
-    .get(admin.findAllFacility)
+    .get( admin.findAllFacility)
     .post( admin.createFacility)
 router.route("/facility/booked-exact")
     .get(admin.findAllFacilityBookingExact)
 router.route("/facility/booked")
     .get(admin.findAllFacilityBooking)
 router.route("/facility/:id")
-    .delete( admin.deleteOneFacility)
+    .delete(admin.deleteOneFacility)
     .get(admin.findOneFacility)
     .put( admin.updateFacility);
 

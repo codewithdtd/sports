@@ -74,7 +74,7 @@ exports.login = async (req, res, next) => {
                     role: result.chuc_vu
                 },  
                 process.env.JWT_ACCESS_TOKEN,
-                { expiresIn: "300s" }
+                { expiresIn: "1d" }
             );
             // refresh
             const refreshToken = jwt.sign(
@@ -122,7 +122,7 @@ exports.refreshToken = async (req, res, next) => {
                 role: result.chuc_vu
             },  
             process.env.JWT_ACCESS_TOKEN,
-            { expiresIn: "300s" }
+            { expiresIn: "3d" }
         );
         // refresh
         const newRefreshToken = jwt.sign(
@@ -145,6 +145,7 @@ exports.refreshToken = async (req, res, next) => {
 }
 
 exports.logout = async (req, res, next) => {
+    res.clearCookie("refreshToken");
     res.send({ message: "Logout" });
 };
 

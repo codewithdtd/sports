@@ -1,9 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from "react-redux";
-
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import staffService from '../services/staff.service';
 function Header(props) {
   const user = useSelector((state) => state.user.login.user);
+  const accessToken = user?.accessToken;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    await staffService.logout(dispatch, navigate, accessToken);
+  }
   return (
     <div className="header items-center pl-12 md:pl-0 mr-2 px-2 flex justify-between">
         <div className="header__left uppercase text-2xl font-bold">
@@ -22,7 +28,7 @@ function Header(props) {
               <li className='font-semibold p-2'>ID: 111111111</li>
               <li className=''><Link className='block p-2 hover:bg-slate-300' to="/info">Chỉnh sửa thông tin</Link></li>
               <li className=''><Link className='block p-2 hover:bg-slate-300' to="/changePass">Đổi mật khẩu</Link></li>
-              <li className=''><Link className='block p-2 hover:bg-slate-300' to="/">Đăng xuất</Link></li>
+              <li className=''><Link className='block p-2 hover:bg-slate-300' to="/" onClick={handleLogout}>Đăng xuất</Link></li>
             </ul>
         </div>
     </div>

@@ -13,11 +13,12 @@ const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
   khachHang: { type: Object, required: true },
-  trangThai: { type: String, default: 'Chưa thanh toán', },
+  trangThai: { type: String, default: 'Chưa duyệt', },
   san: { type: Object, required: true },
   thoiGianBatDau: { type: String, required: true },
   thoiGianKetThuc: { type: String, required: true },
   thanhTien: { type: Number, required: true },
+  hoiVien: { type: String, },
   ghiChu: { type: String },
   // datCoc: { type: Number },
   ngayDat: { type: String, required: true},

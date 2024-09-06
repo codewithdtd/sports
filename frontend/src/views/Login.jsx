@@ -13,7 +13,6 @@ const Login = () => {
         "sdt_NV": data.sdt_NV,
         "matKhau_NV": data.matKhau_NV,
       }
-      console.log(data);
       const response = await staffService.login(data, dispatch, navigate);
     } catch (err) {
       console.log(err);
