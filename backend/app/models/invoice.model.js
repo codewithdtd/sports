@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
 
 const invoiceSchema = new mongoose.Schema({
-  ma_DS: { type: String, required: true},
-  ma_NV: { type: String, require: true },
-  thoiGianCheckIn: { type: String, default: "-- : --" },
-  thoiGiaCheckOut: { type: String, default: "-- : --" },
-  bangGioMoiGio: { type: Number, required: true },
+  datSan: { type: Object, required: true},
+  nhanVien: { type: Object, require: true },
+  // dichVu: { type: [Object], },
+  // thoiGianCheckIn: { type: String, default: "-- : --" },
+  // thoiGiaCheckOut: { type: String, default: "-- : --" },
+  // bangGiaMoiGio: { type: Number, required: true },
   ghiChu: { type: String, },
   phuongThucThanhToan: { type: String, required: true},
+  maGiaoDich: { type: String, },
+  // giamGia: { type: Number, default: 0 },
   tongTien: { type: Number, required: true, default: 0},
   ngayTao_HD: { type: String, },
   da_xoa: { type: Boolean, default: false },
