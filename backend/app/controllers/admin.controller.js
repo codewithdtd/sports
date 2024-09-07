@@ -20,8 +20,11 @@ const convertToDate = (dateStr) => {
     return `${year}-${month}-${day}`; // JavaScript sử dụng tháng từ 0-11
 }
 const convertToDateReverse = (dateStr) => {
-    const [year, month, day] = dateStr.split('-');
-    return `${day}/${month}/${year}`;
+    if (dateStr.includes("-")) {
+        const [year, month, day] = dateStr.split('-');
+        return `${day}/${month}/${year}`;
+    }
+    return dateStr;
 }
 
 exports.createStaff = async (req, res, next) => {
@@ -350,14 +353,19 @@ exports.createBooking = async (req, res, next) => {
     const booking = new Bookings();
     try {
         const data = req.body;
-        const {san, ...other} = data;
+        const {san, dichVu, ...other} = data;
+        console.log(dichVu)
         let count = 0;
         // Xử lý sân
         for (const element of san) {
             const { thoiGianBatDau, thoiGianKetThuc, ngayDat, thanhTien, hinhAnh_San, ...otherTwo } = element;
+            const dichVu_San = dichVu
+                .filter(service => service.ma_San === otherTwo.ma_San)
+                .map(({ ma_San, ...other3 }) => other3);
             const newData = {
                 ...other,           
-                san: otherTwo,      
+                san: otherTwo, 
+                dichVu: dichVu_San,     
                 thoiGianBatDau,     
                 thoiGianKetThuc,
                 ngayDat: convertToDateReverse(ngayDat),
@@ -375,7 +383,10 @@ exports.createBooking = async (req, res, next) => {
 exports.updateBooking = async (req, res, next) => {
     const booking = new Bookings();
     try {
-        const result = await booking.update(req.params.id, req.body);
+        const updateBooking = req.body;
+        updateBooking.ngayDat =  convertToDateReverse(updateBooking.ngayDat)
+        console.log(updateBooking.ngayDat)
+        const result = await booking.update(req.params.id, updateBooking);
         // console.log(result)
         res.status(201).json(result);
     } catch (err) {

@@ -9,9 +9,11 @@ function FromBooking(props) {
   const [listBooked, setListBooked] = useState(null);
   const [filter, setFilter] = useState('');
   const [listSelected, setListSelected] = useState([]);
+  const [listService, setListService] = useState(null)
   const [listServiceSelected, setListServiceSelected] = useState([])
   const [listUser, setListUser] = useState([])
   const [chooseUser, setChooseUser] = useState(false)
+  const [missError, setMissError] = useState(false)
 
   const [time, setTime] = useState({
     ngayDat: '',
@@ -21,23 +23,35 @@ function FromBooking(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
+    if(listSelected.length > 0) 
+      data.san = listSelected;
+    if(!data.khachHang._id || data.san.length <= 0 ) {
+      console.log(data.khachHang._id)
+      console.log(data.san.length <= 0)
+      console.log('miss')
+      setMissError(true);
+      return 
+    }
+
     data._id ? data.phuongThuc = 'edit' : data.phuongThuc = 'create';
-    
+    data.dichVu = listServiceSelected;
     if(listSelected.length > 0) 
       data.san = listSelected;
       // setData({...data, thanhTien: calculateTimeDifference(data.thoiGianBatDau, data.thoiGianKetThuc)})
+    console.log(data);
     props.handleData(data); // Xử lý dữ liệu biểu mẫ
     setListSelected([]);
   };
 
   const addFac = (payload) => {
+    setMissError(false)
     payload.thoiGianBatDau = time.thoiGianBatDau;
     payload.thoiGianKetThuc = time.thoiGianKetThuc;
     payload.ngayDat = time.ngayDat;
     payload.thanhTien = payload.bangGiaMoiGio*calculateTimeDifference(time.thoiGianBatDau, time.thoiGianKetThuc);
-    const thanhTien = data.thanhTien + payload.bangGiaMoiGio*calculateTimeDifference(time.thoiGianBatDau, time.thoiGianKetThuc);
     setListSelected([...listSelected, payload]);
     setList(list.filter(item => item.ma_San !== payload.ma_San))
+    const thanhTien = data.thanhTien + payload.thanhTien;
     setData({...data, thanhTien: thanhTien})
   }
   const removeFac = (payload) => {
@@ -52,12 +66,15 @@ function FromBooking(props) {
     setList(field);
     const user = await userService.getAll();
     setListUser(user);
+    const services = await serviceService.getAll();
+    setListService(services);
     if(data._id) {
       setTime({
         ngayDat: convertDateFormat(data.ngayDat),
         thoiGianBatDau: data.thoiGianBatDau,
         thoiGianKetThuc: data.thoiGianKetThuc
       })
+      if(data.dichVu) setListServiceSelected(data.dichVu)
     }
   }
   // Lấy dữ liệu sân đã đặt
@@ -129,38 +146,57 @@ function FromBooking(props) {
   }
 
   // Xử lý dich vụ
-//  const getService = async () => {
-//     const services = await serviceService.getAll();
-//     setListService(services);
-//   }
+  // const getService = async () => {
+  //   const services = await serviceService.getAll();
+  //   setListService(services);
+  // }
 
-  const addSelected = (data) => {
-    setListServiceSelected((prevList) => {
-      // Kiểm tra xem đối tượng đã tồn tại trong mảng hay chưa
-      const existingItem = prevList.find(item => item._id === data._id);
-
-      if (existingItem) {
-        // Nếu đối tượng đã tồn tại, tăng số lượng lên 1
-        return prevList.map(item => 
-          item._id === data._id 
-            ? { ...item, soluong: item.soluong + 1 }
-            : item
-        );
-      } else {
-        // Nếu đối tượng chưa tồn tại, thêm đối tượng mới với số lượng là 1
-        data.soluong = 1;
-        return [...prevList, data];
+  const addSelected = (ser) => {
+    // Tính toán danh sách mới trước khi gọi setListServiceSelected
+    const updatedList = listServiceSelected.map(item => {
+      // Tìm nếu đối tượng đã tồn tại trong mảng
+      if (item._id === ser._id) {
+        return { ...item, soluong: item.soluong + 1 }; // Tăng số lượng nếu tồn tại
       }
+      return item;
     });
+
+    // Nếu đối tượng không tồn tại, thêm nó vào danh sách
+    if (!listServiceSelected.some(item => item._id === ser._id)) {
+      ser.soluong = 1;
+      updatedList.push(ser);
+    }
+
+    // Cập nhật state với danh sách mới
+    setListServiceSelected(updatedList);
+    
+
+    // Bây giờ bạn có thể console.log(updatedList) để thấy danh sách mới ngay lập tức
+    
+
+    setData({...data, thanhTien: data.thanhTien + ser.gia})
   }
-  const removeSelected = (data) =>{
-    setListServiceSelected(listServiceSelected.filter(item => item._id !== data._id));
+  const removeSelected = (ser) =>{
+    setListServiceSelected(listServiceSelected.filter(item => (item._id !== ser._id)));
+    // const thanhTien = listServiceSelected.reduce((a, c) => a + c.thanhTien, 0)
+    setData({...data, thanhTien: data.thanhTien - ser.thanhTien})
   }
+
+  // Hàm xử lý khi thay đổi số lượng
+  const handleQuantityChange = (id, newQuantity) => {
+    setListServiceSelected(prevList => 
+      prevList.map(item => 
+        item._id === id ? { ...item, soluong: newQuantity } : item
+      )
+    );
+  };
+
   useEffect(() => {
     setData(props.data);
     // if(data._id != '')
     //   setFilter(data.san.loai_San);
     getFacility();
+    console.log(props.data)
     // getService();
   }, [props.data]);
   
@@ -176,12 +212,12 @@ function FromBooking(props) {
 
   return (
     <div className='absolute bg-opacity-30 bg-black -translate-x-2 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
-        <form action="" className='relative flex flex-col bg-white p-2 px-6 w-fit max-h-[98%] overflow-y-scroll max-w-[98%] rounded-md m-auto' onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
+        <form action="" className='relative flex flex-col bg-white p-2 px-6 w-5/6 max-h-[98%] overflow-y-scroll max-w-[98%] rounded-md m-auto' onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
           <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
           <h1 className='text-center text-2xl font-bold p-5'>THÔNG TIN</h1>
           <div className={`flex flex-col lg:flex-row`}> 
             <div className='booking-customer lg:max-w-max mr-6'>  
-              { data._id == '' ?
+              {!data._id ?
               <div className='flex justify-between mb-2'>
                 <p className={`border-2 border-gray-400 p-1 px-2 rounded-lg cursor-pointer ${chooseUser == false ? 'bg-green-500 text-white' : ''}`} onClick={e => setChooseUser(false)}>Khách mới</p>
                 <p className={`border-2 border-gray-400 p-1 px-2 rounded-lg cursor-pointer ${chooseUser == true ? 'bg-green-500 text-white' : ''}`} onClick={e => setChooseUser(true)}>Khách cũ</p>
@@ -192,34 +228,35 @@ function FromBooking(props) {
               <div className='flex justify-between'>
                   <div className="flex flex-1">
                     <i className="mr-1 ri-user-3-fill"></i>
-                    <input name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.ho_KH} placeholder='Họ' onChange={e => setData({...data, khachHang: {...data.khachHang, ho_KH: e.target.value}})}/>
+                    <input required name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.ho_KH} placeholder='Họ' onChange={e => setData({...data, khachHang: {...data.khachHang, ho_KH: e.target.value}})}/>
                   </div>
                   <div className="flex flex-1">
                     <i className="mr-1 ri-user-3-fill"></i>
-                    <input name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.ten_KH} onChange={e => setData({...data, khachHang: {...data.khachHang, ten_KH: e.target.value}})} placeholder='Tên'/>
+                    <input required name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.ten_KH} onChange={e => setData({...data, khachHang: {...data.khachHang, ten_KH: e.target.value}})} placeholder='Tên'/>
                   </div>
                 </div>
                 <div className="flex">
                   <i className="mr-1 ri-mail-line"></i>
-                  <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.email_KH} onChange={e => setData({...data, khachHang: {...data.khachHang, email_KH: e.target.value}})} placeholder='Email (nếu có)'/>
+                  <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="email" value={data.khachHang.email_KH} onChange={e => setData({...data, khachHang: {...data.khachHang, email_KH: e.target.value}})} placeholder='Email (nếu có)'/>
                 </div>
                 <div className="flex">
                   <i className="mr-1 ri-phone-line"></i>
-                  <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.sdt_KH} onChange={e => setData({...data, khachHang: {...data.khachHang, sdt_KH: e.target.value}})} placeholder='Số điện thoại'/>
+                  <input required name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.sdt_KH} onChange={e => setData({...data, khachHang: {...data.khachHang, sdt_KH: e.target.value}})} placeholder='Số điện thoại'/>
                 </div>
               </div>
               : 
               <div className='flex'>
                 <i className="mr-1 ri-user-3-fill"></i>
-                <select name="" id="" 
+                <select required name="" id="" 
                   className='flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2'
                   onChange={e => {
                     const selectedUser = listUser.find(user => user._id === e.target.value);
                     setData({...data, khachHang: selectedUser});
                   }}
                 >
+                  <option value="">Khách hàng</option>
                   {listUser?.map(item => {
-                    return <option value={item._id}>{item.ho_KH} {item.ten_KH} {item.sdt_KH}</option>
+                    return <option key={item._id} value={item._id}>{item.ho_KH} {item.ten_KH} {item.sdt_KH}</option>
                   })}
                 </select>
               </div>
@@ -234,7 +271,11 @@ function FromBooking(props) {
                 </div>
                 <div className="flex">
                   <i className="mr-1 ri-money-dollar-circle-fill text-lg"></i>
-                  <input name='' readOnly className=' flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' type="number" value={data.san.bangGiaMoiGio*calculateTimeDifference(time.thoiGianBatDau, time.thoiGianKetThuc)} onChange={e => setData({...data, thanhTien: e.target.value})} placeholder='Tổng tiền'/>
+                  <input name='' readOnly className=' flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' 
+                          type="number" value={data.thanhTien} 
+                          onChange={e => setData({...data, thanhTien: e.target.value})} 
+                          placeholder='Tổng tiền'
+                  />
                 </div>
                 <div className={`${!data.trangThai ? 'hidden' : ''} flex font-bold ${data.trangThai == 'Đã hủy' ? 'text-red-500' : ''}`}>
                   <i className={data.trangThai == 'Đã hủy' ? 'mr-1 ri-close-line' : 'mr-1 ri-check-double-line'}></i>
@@ -254,21 +295,38 @@ function FromBooking(props) {
               <div className='flex justify-center'>
                 <div className='flex items-center'>
                   <i className="mr-1 ri-calendar-event-fill"></i>
-                  <input name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" value={time.ngayDat} onChange={e => setTime({...time, ngayDat: e.target.value})} />
+                  <input required name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" 
+                          value={time.ngayDat} 
+                          onChange={e => {
+                            setTime({...time, ngayDat: e.target.value}),
+                            setData({...data, ngayDat: e.target.value})
+                  }} />
                 </div>
                 <div className='flex items-center'>
                   Từ:
-                  <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' value={time.thoiGianBatDau} onChange={e => setTime({...time, thoiGianBatDau: e.target.value})} />
+                  <input required type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' 
+                      value={time.thoiGianBatDau} 
+                      onChange={e => {
+                        setTime({...time, thoiGianBatDau: e.target.value}),
+                        setData({...data, thoiGianBatDau: e.target.value})
+                      }} 
+                  />
                 </div>
                 <div className='flex items-center'>
                   Đến:
-                  <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' value={time.thoiGianKetThuc} onChange={e => setTime({...time, thoiGianKetThuc: e.target.value})} />
+                  <input required type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' 
+                      value={time.thoiGianKetThuc} 
+                      onChange={e => {
+                        setTime({...time, thoiGianKetThuc: e.target.value}),
+                        setData({...data, thoiGianKetThuc: e.target.value})
+                      }} 
+                  />
                 </div>
               </div>
               
               {!data._id ? 
                 <div className='flex gap-2 pt-2'>
-                  <div className='flex-1'>
+                  <div className='w-2/5 text-sm'>
                     <div className='flex justify-between py-1'>
                       <h1 className='font-bold'>Chọn sân</h1>
            
@@ -297,9 +355,10 @@ function FromBooking(props) {
                     }
                     </div>
                   </div>
-                  <div className='flex-1'>
+                  <div className='flex-1 text-sm'>
                     <h1 className='font-bold py-1'>Đã chọn</h1>
-                    <div name="" id="" className='flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2 h-36 overflow-y-scroll'>
+                    <div name="" id="" className={`flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2 h-36 overflow-y-scroll ${missError ? 'bg-red-200 border-red-600' : ''}`}>
+                    {missError ? <p>Chưa chọn sân</p> : ''}
                     {
                       listSelected.map(facility => {
                         return <div key={facility._id} className='border-b hover:bg-gray-200 border-gray-300 p-1 flex items-center'>
@@ -350,7 +409,7 @@ function FromBooking(props) {
                                     <p>{facility.ten_San}</p>
                                     <p>{formatNumber(facility.bangGiaMoiGio)}/giờ</p>
                                   </div>
-                                  <input type="radio" name="changeField" class="w-5 h-5" onChange={e => setData({...data, san: facility})}/>
+                                  <input type="radio" name="changeField" className="w-5 h-5" onChange={e => setData({...data, san: facility})}/>
                            
                               </div>
                       }) : 'Vui lòng nhập ngày, giờ để xem sân trống !!!'
@@ -362,9 +421,87 @@ function FromBooking(props) {
                 </div>
              
                 }    
-             
+
+          
+              <div className='flex-1 text-sm'>
+                <h1 className='text-center font-bold'>DỊCH VỤ</h1>
+                <div className='mt-0 flex-1 flex gap-2'>
+                  <div className='w-2/5'>     
+                    <input type="text" className='border border-gray-400 mb-2 rounded-md pl-2 w-full' placeholder='Tìm kiếm'/>
+                    <div className="border border-gray-500 rounded-lg h-32 lg:h-40 px-2 overflow-x-hidden overflow-y-scroll">
+                      <div className='flex text-center font-bold border-b border-gray-400 '>
+                        <div className="w-1/2">Tên</div>
+                        <div className="w-1/3">Giá</div> 
+                      </div>
+                      
+                      {listService ? listService?.map(item => 
+                      <div key={item._id} className='flex border-b border-gray-300 items-center text-center hover:bg-gray-200'>
+                        <div className="w-1/2">{item.ten_DV}</div>
+                        <div className="w-1/3">{formatNumber(item.gia)}</div>
+                        <i className="w-1/6 ri-add-circle-fill text-lg text-green-600 cursor-pointer hover:scale-125" onClick={e => addSelected(item)}></i>
+                      </div> ) 
+                      : '' }
+
+
+                    </div>
+                  </div>
+                  <div className='flex-1'>
+                    Đã chọn:
+                    <div className="border mt-2 border-gray-500 rounded-lg h-32 lg:h-40 overflow-x-hidden overflow-y-scroll px-2">
+                      <div className='flex text-center font-bold border-b border-gray-400'>
+                        {!data._id ? <div className='w-1/12'>Sân</div> : ''}
+                        <div className="w-4/12">Tên</div>
+                        <div className="w-3/12">Số lượng</div> 
+                        <div className="w-3/12">Giá</div> 
+                      </div>
+
+                      {listServiceSelected?.map((item, index)=> {
+                      item.thanhTien = item.soluong*item.gia;
+                      return <div key={index} className='flex border-b border-gray-300 items-center text-center mt-1 hover:bg-gray-200'>
+                        {!data._id ? 
+                        <div className='w-1/12'>
+                          <select 
+                            name="" 
+                            id="" 
+                            onChange={e => {
+                              const updatedList = listServiceSelected.map((service, i) => 
+                                i === index ? { ...service, ma_San: e.target.value } : service // Cập nhật item tại vị trí index
+                              );
+                              setListServiceSelected(updatedList); // Cập nhật danh sách
+                            }}
+                          >
+                            <option value="">Sân</option>
+                            {listSelected?.map((san) => 
+                              <option key={san.ma_San} value={san.ma_San}>{san.ma_San}</option>
+                            )}
+                          </select>
+                        </div>
+                        : ''}
+                        <div className="w-4/12">{item.ten_DV}</div>
+                        <div className='w-3/12'>
+                          <input required type="number" 
+                            className='border border-gray-500 w-1/2' 
+                            value={item.soluong}
+                            min={1}
+                            onChange={(e) => handleQuantityChange(item._id, parseInt(e.target.value, 10))}
+                          />
+
+                        </div>
+                        <div className="w-3/12">{formatNumber(item.thanhTien)}</div>
+                        <i className="ri-close-circle-fill text-lg text-red-600 cursor-pointer hover:scale-125" 
+                            onClick={e => removeSelected(item)}></i>
+                      </div>})
+                      }
+
+
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+
             </div>
-             
+            
               {/* <div>Sân
                  <div className='border border-gray-400 flex justify-around text-center'>
                    <p className='px-1 border border-gray-400'>{data.san.ma_San}</p>
@@ -373,7 +510,8 @@ function FromBooking(props) {
                    <p className='px-1 border border-gray-400'>{data.ngayDat}</p>
                  </div>
                </div>  */}
-         
+
+            
             
 
           </div>
