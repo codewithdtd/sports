@@ -23,6 +23,7 @@ const bookingSchema = new mongoose.Schema({
   thanhTien: { type: Number, required: true },
   hoiVien: { type: String, },
   ghiChu: { type: String },
+  dichVu: { type: Array, },
   // datCoc: { type: Number },
   ngayDat: { type: String, required: true},
   ngayTao: { type: String, },

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import FromBooking from '../components/FromBooking';
 import bookingService from '../services/booking.service';
+import Pagination from '../components/Pagination';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 const Booking = () => {
@@ -51,6 +52,17 @@ const Booking = () => {
       
   });
   const [search, setSearch] = useState('');
+  // Phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(list.length / 6);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+
 
   const handleData = async (data = {}) => {
     (data._id && data._id)
@@ -78,6 +90,7 @@ const Booking = () => {
         },
         thoiGianBatDau: "",
         thoiGianKetThuc: "",
+        dichVu: "",
         hoiVien: "",
         thanhTien: 0,
         ghiChu: "",
@@ -103,10 +116,10 @@ const Booking = () => {
   // Chuyển đổi thành dạng chuỗi
   const convertString = () => {
     return list.map((item) => {
-      const { ho, ten, email, sdt } = item.khachHang;
+      const { ho_KH, ten_KH, email_KH, sdt_KH } = item.khachHang;
       const { loai_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San } = item.san;
       const { trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, ngayTao } = item;
-      return [ ho, ten, email, sdt, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, ngayTao ].join(" ").toLowerCase();
+      return [ ho_KH, ten_KH, email_KH, sdt_KH, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, ngayTao ].join(" ").toLowerCase();
     });
   }
   // Lọc dữ liệu
@@ -197,7 +210,7 @@ const Booking = () => {
       {/* Lọc dữ liệu */}
       
 
-      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-300">
+      <div className="bg-white text-[10px] sm:text-sm md:text-base p-4 rounded-lg shadow-sm border border-gray-300">
         {/* Header bảngg */}
         <div className="flex justify-between py-2 border-b border-gray-300 text-center">
           <div className="w-1/12 font-semibold">STT</div>
@@ -237,8 +250,10 @@ const Booking = () => {
 
 
         {/* Nội dung bảng */}
-        {list.length > 0 ? filterFacility().map((facility, index) => 
-          <div key={facility._id} className="flex justify-between py-2 border-b border-gray-300 text-center items-center"> 
+        {list.length > 0 ? filterFacility().map((facility, index) => {
+        if((currentPage-1)*6 <= index && index < currentPage*6)
+       
+  return  <div key={facility._id} className="flex justify-between py-2 border-b border-gray-300 text-center items-center"> 
             <div className="w-1/12">{ index+1 }</div>
             <div className="w-1/6">
               {facility.khachHang.ho_KH + " " + facility.khachHang.ten_KH}
@@ -266,9 +281,14 @@ const Booking = () => {
               <i className="ri-delete-bin-2-line w-[40px] h-[40px] bg-red-600 text-white p-2 rounded-md" onClick={e => deleteBooking(facility)} ></i>
             </div>
           </div> 
-        ) : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
+        }) : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
         }
         </div>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
         {/* from nhập dữ liệu */}
       {edit ? <FromBooking bookingList={list} toggle={setEdit} handleData={handleData} data={fac} /> : '' }
     </div>
