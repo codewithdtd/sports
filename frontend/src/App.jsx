@@ -10,7 +10,7 @@ const App = () => {
   return (
     <div className='flex min-h-screen h-fit bg-gray-200'>
       {user ?
-      <div className='rounded-md h-full md:w-1/4 lg:w-[15%]'>
+      <div className='rounded-md h-full md:w-1/5 lg:w-[15%]'>
         <Navbar />
       </div> : ''}
       <div className={`${user ? 'p-2' : ''} flex-1 relative`}>

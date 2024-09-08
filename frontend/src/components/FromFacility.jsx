@@ -15,7 +15,9 @@ function FromFacility(props) {
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
     // console.log('click')
-    data.datSan.thoiGianCheckOut == '--:--' ? data.phuongThuc = 'edit' : data.phuongThuc = 'thanhToan';
+    (data.datSan.thoiGianCheckOut == '--:--' || !data.datSan.thoiGianCheckOut) 
+      ? data.phuongThuc = 'edit' 
+      : (data.phuongThuc = 'thanhToan');
     props.handleData(data); // Xử lý dữ liệu biểu mẫu
   };
 
@@ -143,6 +145,10 @@ function FromFacility(props) {
                   <p className='w-2/5'>Hội viên:</p>
                   <span className=''>VIP ??</span>
                 </div>
+                <div className='flex'>
+                  <p className='w-2/5'>Trạng thái:</p>
+                  <span className=''>Chưa thanh toán</span>
+                </div>
               </div>
               <div className='flex-1 text-sm sm:text-base'>
                 <div className='flex'>
@@ -159,16 +165,16 @@ function FromFacility(props) {
                   <p className='w-2/5'>Ngày đặt:</p>
                   <span className=''>{data.datSan ? data.datSan.ngayTao : ''}</span>
                 </div>
-              </div>
-            </div>
-            <div className='text-sm sm:text-base'>
-              <div className='flex'>
-                <p className='w-1/4 lg:w-2/5'>Thời gian nhận sân:</p>
-                <span>{data.datSan?.thoiGianCheckIn}</span>
-              </div>
-              <div className='flex'>
-                <p className='w-1/4 lg:w-2/5'>Thời gian trả sân:</p>
-                <span>{data.datSan?.thoiGianCheckOut}</span>
+                <div className='text-sm sm:text-base'>
+                  <div className='flex'>
+                    <p className='w-3/5'>Thời gian nhận sân:</p>
+                    <span>{data.datSan?.thoiGianCheckIn}</span>
+                  </div>
+                  <div className='flex'>
+                    <p className='w-3/5'>Thời gian trả sân:</p>
+                    <span>{data.datSan?.thoiGianCheckOut}</span>
+                  </div>
+                </div>
               </div>
             </div>
 

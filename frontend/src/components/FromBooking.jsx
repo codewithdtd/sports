@@ -25,8 +25,8 @@ function FromBooking(props) {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
     if(listSelected.length > 0) 
       data.san = listSelected;
-    if(!data.khachHang._id || data.san.length <= 0 ) {
-      console.log(data.khachHang._id)
+    if(!data.khachHang.ten_KH || data.san.length <= 0 ) {
+      console.log(data.khachHang.ten_KH)
       console.log(data.san.length <= 0)
       console.log('miss')
       setMissError(true);
@@ -155,14 +155,14 @@ function FromBooking(props) {
     // Tính toán danh sách mới trước khi gọi setListServiceSelected
     const updatedList = listServiceSelected.map(item => {
       // Tìm nếu đối tượng đã tồn tại trong mảng
-      if (item._id === ser._id) {
+      if (item._id === ser._id &&  item.ma_San === ser.ma_San) {
         return { ...item, soluong: item.soluong + 1 }; // Tăng số lượng nếu tồn tại
       }
       return item;
     });
 
     // Nếu đối tượng không tồn tại, thêm nó vào danh sách
-    if (!listServiceSelected.some(item => item._id === ser._id)) {
+    if (!listServiceSelected.some(item => item._id === ser._id && item.ma_San === ser.ma_San)) {
       ser.soluong = 1;
       updatedList.push(ser);
     }
@@ -177,7 +177,17 @@ function FromBooking(props) {
     setData({...data, thanhTien: data.thanhTien + ser.gia})
   }
   const removeSelected = (ser) =>{
-    setListServiceSelected(listServiceSelected.filter(item => (item._id !== ser._id)));
+    if (ser.ma_San) {
+    // Xóa phần tử có cả `_id` và `ma_San` trùng với `ser`
+      setListServiceSelected(listServiceSelected.filter(item => (
+        item._id !== ser._id || item.ma_San !== ser.ma_San
+      )));
+    } else {
+      // Nếu không có `ma_San`, chỉ xóa phần tử dựa vào `_id`
+      setListServiceSelected(listServiceSelected.filter(item => (
+        item._id !== ser._id
+      )));
+    }
     // const thanhTien = listServiceSelected.reduce((a, c) => a + c.thanhTien, 0)
     setData({...data, thanhTien: data.thanhTien - ser.thanhTien})
   }
@@ -185,9 +195,20 @@ function FromBooking(props) {
   // Hàm xử lý khi thay đổi số lượng
   const handleQuantityChange = (id, newQuantity) => {
     setListServiceSelected(prevList => 
-      prevList.map(item => 
-        item._id === id ? { ...item, soluong: newQuantity } : item
-      )
+      prevList.map(item => {
+        if (item._id === id) {
+          // Cập nhật lại `thanhTien`
+          setData(prevData => ({
+            ...prevData,
+            thanhTien: prevData.thanhTien + (newQuantity - item.soluong) * item.gia
+          }));
+          const updatedItem = { ...item, soluong: newQuantity }; // Cập nhật số lượng mới
+          
+
+          return updatedItem; // Trả về item đã cập nhật
+        }
+        return item; // Giữ nguyên các item khác
+      })
     );
   };
 
@@ -217,7 +238,7 @@ function FromBooking(props) {
           <h1 className='text-center text-2xl font-bold p-5'>THÔNG TIN</h1>
           <div className={`flex flex-col lg:flex-row`}> 
             <div className='booking-customer lg:max-w-max mr-6'>  
-              {!data._id ?
+              {!data._id ? 
               <div className='flex justify-between mb-2'>
                 <p className={`border-2 border-gray-400 p-1 px-2 rounded-lg cursor-pointer ${chooseUser == false ? 'bg-green-500 text-white' : ''}`} onClick={e => setChooseUser(false)}>Khách mới</p>
                 <p className={`border-2 border-gray-400 p-1 px-2 rounded-lg cursor-pointer ${chooseUser == true ? 'bg-green-500 text-white' : ''}`} onClick={e => setChooseUser(true)}>Khách cũ</p>
@@ -273,7 +294,7 @@ function FromBooking(props) {
                   <i className="mr-1 ri-money-dollar-circle-fill text-lg"></i>
                   <input name='' readOnly className=' flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' 
                           type="number" value={data.thanhTien} 
-                          onChange={e => setData({...data, thanhTien: e.target.value})} 
+                          onChange={e => setData({...data, thanhTien: e.target.value})}
                           placeholder='Tổng tiền'
                   />
                 </div>
@@ -409,7 +430,14 @@ function FromBooking(props) {
                                     <p>{facility.ten_San}</p>
                                     <p>{formatNumber(facility.bangGiaMoiGio)}/giờ</p>
                                   </div>
-                                  <input type="radio" name="changeField" className="w-5 h-5" onChange={e => setData({...data, san: facility})}/>
+                                  <input type="radio" name="changeField" 
+                                    className="w-5 h-5" 
+                                    onChange={e => {
+                                      const chenhLech = data.thanhTien - (data.san.bangGiaMoiGio - facility.bangGiaMoiGio)*calculateTimeDifference(data.thoiGianBatDau, data.thoiGianKetThuc);
+                                      console.log(chenhLech)
+                                      setData({...data, san: facility, thanhTien: chenhLech})
+                                    }}
+                                  />
                            
                               </div>
                       }) : 'Vui lòng nhập ngày, giờ để xem sân trống !!!'

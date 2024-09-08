@@ -67,10 +67,20 @@ class DBHandler {
               }
           },
           {
-              $match: {
+            $match: {
+              $or: [
+                {
+                  "datSan.trangThai": { $ne: "Đã hủy" },
                   "datSan.ngayDat": time.ngayDat,
-                  "datSan.thoiGianBatDau": time.thoiGianBatDau
-              }
+                  "datSan.thoiGianBatDau": { $lte: time.thoiGian },
+                  "datSan.thoiGianKetThuc": { $gte: time.thoiGian }
+                },
+                {
+                  "tinhTrang": "Đang sử dụng",
+                  "datSan.trangThai": "Nhận sân"
+                }
+              ]
+            }   
           }
       ]);
       return results;

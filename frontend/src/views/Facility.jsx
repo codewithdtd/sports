@@ -60,13 +60,17 @@ function Facility() {
       
     if(data.phuongThuc == 'edit') {
       console.log('edit')
-      if(await editBooing(data))
+      if(await editBooking(data))
         console.log('Đã cập nhật');
     }
     if(data.phuongThuc == 'thanhToan') {
       console.log('check out')
-      if(await createFacility(data))
-        console.log('check out');
+      data.tinhTrang = "Trống", 
+      data.datSan.trangThai = "Hoàn thành"
+      const bookingSuccess = await editBooking(data);
+      const facilitySuccess = await editFacility(data);
+
+      setFac(fac)
     }
     setEdit(!edit);  
   };
@@ -89,7 +93,6 @@ function Facility() {
 
     const searchTerms = search.toLowerCase().split(' ');
     const convertedStrings = convertString();
-    console.log(convertedStrings)
     const filteredFacilities = facilities.filter((item, index) =>
       // Kiểm tra xem mỗi từ trong chuỗi tìm kiếm có tồn tại trong mảng đã chuyển đổi không
       searchTerms.every(term =>
@@ -106,7 +109,7 @@ function Facility() {
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       return `${hours}:${minutes}`;
-      // return "17:00";
+      // return "21:12";
   }
 
   // Hàm để lấy ngày hiện tại và định dạng thành 'dd/mm/yyyy'
@@ -116,7 +119,7 @@ function Facility() {
       const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng 0-11, cần +1
       const year = now.getFullYear();
       return `${year}-${month}-${day}`;
-      // return `2024-09-04`;
+      // return `2024-09-07`;
   }
 
 
@@ -131,7 +134,7 @@ function Facility() {
   const getFacilityBooked = async () => {
     const time = {
       ngayDat: currentDate,
-      thoiGianBatDau: currentTime,
+      thoiGian: currentTime,
       thoiGianKetThuc: ''
     };
     try {
@@ -141,12 +144,11 @@ function Facility() {
       if (field && facilities.length > 0) {
         facilities.forEach(async (facility) => {
           // Kiểm tra xem id của facility có trong field không
-          if (facility.datSan && facility.datSan.thoiGianBatDau == currentTime && facility.tinhTrang == "Trống") {
+          if (facility.datSan && facility.tinhTrang == "Trống") {
             facility.tinhTrang = 'Đã đặt';
+            await editFacility(facility);
           }
-
           // Cập nhật facility mà không cần trả về
-          await editFacility(facility);
         });
       }
     } catch (error) {
@@ -156,23 +158,25 @@ function Facility() {
   // Kiểm tra xem có đúng giờ đặt trước chưa nếu có chuyển trạng thái sang đã đặt
 
 
-  const createFacility = async (data) => {
+  // const createFacility = async (data) => {
     // const newFac = await facilityService.create(data);
-    const newInvoice = {
-      datSan: data.datSan,
-      nhanVien: user
-    }
+    // const newInvoice = {
+    //   datSan: data.datSan,
+    //   nhanVien: user
+    // }
     // const newInvoice = await invoiceService.create(data);
-    return newFac;  
-  }
+  //   return newFac;  
+  // }
   const editFacility = async (data) => {
+    console.log("san: " + data.tinhTrang)
     const editFac = await facilityService.update(data._id, data);
-    // console.log(data)
-    return editFac;
+    console.log(editFac)
+    // return editFac;
   }
 
-  const editBooing = async (data) => {
+  const editBooking = async (data) => {
       console.log('have datSan')
+      console.log(data)
       const editBoooking = await bookingService.update(data.datSan._id, data.datSan);
   } 
   const deleteFacility = async (data) => {
@@ -186,15 +190,15 @@ function Facility() {
     console.log(1)
   }, [fac]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(getFormattedTime());
-      setCurrentDate(getFormattedDate());
-    }, 1000); // 60000ms = 1 phút
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentTime(getFormattedTime());
+  //     setCurrentDate(getFormattedDate());
+  //   }, 1000); // 60000ms = 1 phút
 
-    // Dọn dẹp bộ đếm thời gian khi component bị unmount
-    return () => clearInterval(interval);
-  }, []);
+  //   // Dọn dẹp bộ đếm thời gian khi component bị unmount
+  //   return () => clearInterval(interval);
+  // }, []);
   return (
     <div className='facility'>
       <Header name="Sân thể thao" />

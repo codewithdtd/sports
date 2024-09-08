@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import FromBooking from '../components/FromBooking';
 import bookingService from '../services/booking.service';
+import facilityService from '../services/facility.service';
 import Pagination from '../components/Pagination';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -11,11 +12,11 @@ const Booking = () => {
 
   const navigate = useNavigate();
 
-    useEffect(() => {
-      if(!user) {
-        navigate('/login');
-      }
-    })
+  useEffect(() => {
+    if(!user) {
+      navigate('/login');
+    }
+  })
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [list, setList] = useState([]);
@@ -54,15 +55,7 @@ const Booking = () => {
   const [search, setSearch] = useState('');
   // Phân trang
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(list.length / 6);
-
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-
+  
 
   const handleData = async (data = {}) => {
     (data._id && data._id)
@@ -99,8 +92,18 @@ const Booking = () => {
       });
     if(data.phuongThuc == 'edit') {
       console.log('edit')
-      if(await editBooking(data))
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const timeNow = `${hours}:${minutes}`
+      if(data.trangThai === 'Nhận sân') {
+        data.san.tinhTrang = "Đang sử dụng"
+        data.thoiGianCheckIn = timeNow;
+        await editFacility(data.san)
+      }
+      if(await editBooking(data)) {
         console.log('Đã cập nhật');
+      }
     }
     if(data.phuongThuc == 'create') {
       console.log('create')
@@ -139,6 +142,14 @@ const Booking = () => {
     return filteredlist;
   }
 
+  const totalPages = Math.ceil(filterFacility().length / 6);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   // GỌI SERVICE BACKEND
   // lấy dữ liệu
   const getBooking = async () => {
@@ -151,6 +162,10 @@ const Booking = () => {
   }
   const editBooking = async (data) => {
     const editFac = await bookingService.update(data._id, data);
+    return editFac;
+  }
+  const editFacility = async (data) => {
+    const editFac = await facilityService.update(data._id, data);
     return editFac;
   }
   const deleteBooking = async (data) => {
@@ -250,15 +265,18 @@ const Booking = () => {
 
 
         {/* Nội dung bảng */}
-        {list.length > 0 ? filterFacility().map((facility, index) => {
-        if((currentPage-1)*6 <= index && index < currentPage*6)
+        {list.length > 0 ? filterFacility().map((facility, index) => 
+        ((currentPage-1)*6 <= index && index < currentPage*6) ?
        
-  return  <div key={facility._id} className="flex justify-between py-2 border-b border-gray-300 text-center items-center"> 
+          <div key={facility._id} className="flex justify-between py-2 border-b border-gray-300 text-center items-center"> 
             <div className="w-1/12">{ index+1 }</div>
             <div className="w-1/6">
               {facility.khachHang.ho_KH + " " + facility.khachHang.ten_KH}
             </div>
-            <div className="w-1/6">{ formatNumber(parseInt(facility.thanhTien))}</div>
+            <div className="w-1/6">
+              { formatNumber(parseInt(facility.thanhTien))}
+              <p>{ facility.trangThaiThanhToan }</p>
+            </div>
             <div className="w-3/12">
   
               <div className='md:flex border-gray-500 items-center'>
@@ -281,7 +299,7 @@ const Booking = () => {
               <i className="ri-delete-bin-2-line w-[40px] h-[40px] bg-red-600 text-white p-2 rounded-md" onClick={e => deleteBooking(facility)} ></i>
             </div>
           </div> 
-        }) : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
+        : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
         }
         </div>
         <Pagination

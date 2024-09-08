@@ -47,10 +47,10 @@ class Bookings extends db {
       };
 
       // Nếu có điều kiện thời gian bắt đầu, thêm vào điều kiện truy vấn
-      if (payload.thoiGianBatDau != '') {
-          query.thoiGianBatDau = payload.thoiGianBatDau;
+      if (payload.thoiGian != '') {
+          query.thoiGianBatDau = { $gte: payload.thoiGian };
+          query.thoiGianKetThuc = { $lte: payload.thoiGian };
       }
-
       const result = await this.model.find(query);
       if (!result) {
         throw new Error('Document not found');
