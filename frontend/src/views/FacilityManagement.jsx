@@ -179,7 +179,7 @@ function FacilityManagement() {
         </button>
       </div>
       <div className='flex pb-2'>
-        <div className='flex items-center'>
+        {/* <div className='flex items-center'>
           <input name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" value={''} onChange={''}/>
         </div>
         <div className='flex items-center'>
@@ -189,7 +189,7 @@ function FacilityManagement() {
         <div className='flex items-center'>
           Đến:
           <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' />
-        </div>
+        </div> */}
       </div>
       {/* Lọc dữ liệu */}
       

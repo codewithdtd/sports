@@ -36,7 +36,7 @@ const Form = (props) => {
     <>
       <div className='h-screen grid grid-cols-2 from bg-gray-100'>
         <div className='form-left h-screen bg-gradient-to-r from-greenPrimary to-greenSeconday rounded-r-3xl'>
-          <div className="logo">
+          <div className="logo flex">
             <img className='w-[50px] m-4' src="./src/assets/img/Logo.svg" alt="" />
           </div>
           <div className='img-main'>

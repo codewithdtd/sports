@@ -271,7 +271,11 @@ function FromBooking(props) {
                 <select required name="" id="" 
                   className='flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2'
                   onChange={e => {
-                    const selectedUser = listUser.find(user => user._id === e.target.value);
+                    let selectedUser = listUser.find(user => user._id === e.target.value);
+                    selectedUser = selectedUser.map(user => {
+                      const {matKhau_KH, ...other } = user
+                      return other;
+                    })
                     setData({...data, khachHang: selectedUser});
                   }}
                 >
@@ -301,10 +305,10 @@ function FromBooking(props) {
                 <div className={`${!data.trangThai ? 'hidden' : ''} flex font-bold ${data.trangThai == 'Đã hủy' ? 'text-red-500' : ''}`}>
                   <i className={data.trangThai == 'Đã hủy' ? 'mr-1 ri-close-line' : 'mr-1 ri-check-double-line'}></i>
                   <select name="" id="" className='flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' onChange={e => setData({...data, trangThai: e.target.value})}>
-                    {/* <option value={data.trangThai}>{data.trangThai}</option> */}
+                    <option value={data.trangThai ? data.trangThai : ''}>{data.trangThai ? data.trangThai : 'Chọn'}</option>
                     <option value='Đã duyệt'>Đã duyệt</option>
                     <option value='Nhận sân'>Nhận sân</option>
-                    <option value='Đã thanh toán'>Đã thanh toán</option>
+                    <option value='Đã thanh toán'>Hoàn thành</option>
                     <option value='Đã hủy'>Đã hủy</option>
                   </select>
                 </div>

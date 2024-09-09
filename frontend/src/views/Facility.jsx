@@ -6,6 +6,7 @@ import FromFacility from '../components/FromFacility';
 import invoiceService from '../services/invoice.service';
 import bookingService from '../services/booking.service';
 import facilityService from '../services/facility.service';
+import Pagination from '../components/Pagination';
 
 function Facility() {
   const [filter, setFilter] = useState(false);
@@ -37,6 +38,7 @@ function Facility() {
   const [search, setSearch] = useState('');
   const [currentTime, setCurrentTime] = useState(getFormattedTime());
   const [currentDate, setCurrentDate] = useState(getFormattedDate());
+  const [currentPage, setCurrentPage] = useState(1);
 
 
   const backgroundSan = (data) => {
@@ -65,8 +67,9 @@ function Facility() {
     }
     if(data.phuongThuc == 'thanhToan') {
       console.log('check out')
-      data.tinhTrang = "Trống", 
-      data.datSan.trangThai = "Hoàn thành"
+      data.tinhTrang = "Trống";
+      data.datSan.trangThai = "Hoàn thành";
+      data.trangThaiThanhToan = 'Đã thanh toán';
       const bookingSuccess = await editBooking(data);
       const facilitySuccess = await editFacility(data);
       const invoiceSuccess = await createInvoice(data)
@@ -74,6 +77,7 @@ function Facility() {
     }
     setEdit(!edit);  
   };
+
   // định dạng số
   function formatNumber(num) {
     return new Intl.NumberFormat('vi-VN').format(num);
@@ -102,6 +106,13 @@ function Facility() {
     return filteredFacilities;
   }
 
+  const totalPages = Math.ceil(filterFacility().length / 10);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   // Hàm để lấy giờ hiện tại và định dạng thành 'HH:MM'
   function getFormattedTime() {
@@ -149,6 +160,7 @@ function Facility() {
             await editFacility(facility);
           }
           // Cập nhật facility mà không cần trả về
+          setFac(fac);
         });
       }
     } catch (error) {
@@ -161,6 +173,7 @@ function Facility() {
   const createInvoice = async (data) => {
     const newInvoice = {
       nhanVien: user.user,
+      khachHang: data.datSan.khachHang,
       datSan: data.datSan,
       ghiChu: data.datSan.ghiChu,
       phuongThucThanhToan: data.phuongThucThanhToan,
@@ -277,7 +290,7 @@ function Facility() {
               <p>{facility.ma_San}</p>
               <p>{facility.datSan ? facility.datSan.khachHang.ho_KH+' '+facility.datSan.khachHang.ten_KH : ''}</p>
             </div>
-            <div className='bg-white relative facility-item-name pl-1 min-h-24 sm:min-h-28 md:h-36 justify-center items-center bg-no-repeat bg-center flex text-lg font-extrabold'>
+            <div className='bg-white relative facility-item-name pl-1 min-h-20 sm:min-h-24 md:h-36 justify-center items-center bg-no-repeat bg-center flex text-lg font-extrabold'>
               <img src={backgroundSan(facility.loai_San)} className='absolute w-1/3 z-[0] opacity-50' alt="" /> 
               <p className='text-3xl z-[1] xl:text-4xl italic'>{facility.tinhTrang}</p>
             </div>
@@ -288,6 +301,11 @@ function Facility() {
           </div>
           ) : ''}
         </div>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
         {/* from nhập dữ liệu */}
       {edit ? <FromFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
     </div>

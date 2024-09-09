@@ -268,7 +268,7 @@ const Booking = () => {
         {list.length > 0 ? filterFacility().map((facility, index) => 
         ((currentPage-1)*6 <= index && index < currentPage*6) ?
        
-          <div key={facility._id} className="flex justify-between py-2 border-b border-gray-300 text-center items-center"> 
+          <div key={facility._id} className="flex justify-between py-2 max-h-[70px] border-b border-gray-300 text-center items-center"> 
             <div className="w-1/12">{ index+1 }</div>
             <div className="w-1/6">
               {facility.khachHang.ho_KH + " " + facility.khachHang.ten_KH}
@@ -280,7 +280,7 @@ const Booking = () => {
             <div className="w-3/12">
   
               <div className='md:flex border-gray-500 items-center'>
-                <p className='md:w-1/2'>{facility.san.ma_San} - {facility.san.ten_San}</p>
+                <p className='md:w-1/2'>{facility.san.ma_San}</p>
 
                 <div className='md:w-1/2'>
                   <p>{facility.thoiGianBatDau} - {facility.thoiGianKetThuc}</p>

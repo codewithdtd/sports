@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const invoiceSchema = new mongoose.Schema({
   datSan: { type: Object, required: true},
   nhanVien: { type: Object, require: true },
+  khachHang: { type: Object, require: true },
   // dichVu: { type: [Object], },
   // thoiGianCheckIn: { type: String, default: "-- : --" },
   // thoiGiaCheckOut: { type: String, default: "-- : --" },
