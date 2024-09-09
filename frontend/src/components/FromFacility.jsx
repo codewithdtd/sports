@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import serviceService from '../services/service.service';
 import ConfirmCheckOut from './ConfirmCheckOut';
+import { useSelector } from 'react-redux';
 
 function FromFacility(props) {
   const [data, setData] = useState(props.data);
@@ -11,13 +12,21 @@ function FromFacility(props) {
   const [timeStart, setTimeStart] = useState('--:--')
   const [timeEnd, setTimeEnd] = useState('--:--')
   const [paymentModal, setPaymentModal] = useState(false)
-
+  const user = useSelector((state)=> state.user.login.user)
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
     // console.log('click')
+    if(!data.datSan) {
+      console.log('Trống')
+      return;
+    }
     (data.datSan.thoiGianCheckOut == '--:--' || !data.datSan.thoiGianCheckOut) 
       ? data.phuongThuc = 'edit' 
       : (data.phuongThuc = 'thanhToan');
+
+    // if(data.phuongThuc = 'thanhToan') {
+
+    // }
     props.handleData(data); // Xử lý dữ liệu biểu mẫu
   };
 
@@ -26,6 +35,16 @@ function FromFacility(props) {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
+  }
+
+  const getDate = () => {
+    const now = new Date();
+
+    // Lấy ngày, tháng, năm
+    const day = String(now.getDate()).padStart(2, '0'); // Thêm 0 nếu số ngày nhỏ hơn 10
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
+    const year = now.getFullYear();
+    return `${day}/${month}/${year}`;
   }
 
   // định dạng số
@@ -127,9 +146,9 @@ function FromFacility(props) {
           <div className='flex-1'>
           <h1 className='text-center text-2xl font-bold pt-5 pb-2'>SÂN BD5S1</h1>
             <div className='flex justify-between text-sm border-b border-gray-400 mb-3 italic'>
-              <p>Nhân viên: Nguyễn Văn Web</p>
-              <p>02/09/2024 02:09PM</p>
-              <p>Chức vụ: Nhân viên</p>
+              <p>Nhân viên: {user?.user.ho_NV +' '+ user?.user.ten_NV }</p>
+              <p>{getDate()} {getTime()}</p>
+              <p>Chức vụ: {user?.user.chuc_vu}</p>
             </div>
             <div className="flex">
               <div className='flex-1 text-sm sm:text-base'>
@@ -147,7 +166,11 @@ function FromFacility(props) {
                 </div>
                 <div className='flex'>
                   <p className='w-2/5'>Trạng thái:</p>
-                  <span className=''>Chưa thanh toán</span>
+                  <span className=''>{data.datSan?.trangThaiThanhToan}</span>
+                </div>
+                <div className='flex'>
+                  <p className='w-2/5'>Ghi chú:</p>
+                  <span className=''>{data.datSan?.ghiChu}</span>
                 </div>
               </div>
               <div className='flex-1 text-sm sm:text-base'>
@@ -203,17 +226,32 @@ function FromFacility(props) {
                 onClick={e => openModalService()}
               >+ Thêm
               </button>
-              <p className='pb-1'>Tổng tiền: <b>{formatNumber(data.datSan?.thanhTien)}</b></p> 
+              <p className='pb-1'>Tổng tiền: <b>{formatNumber(data.datSan?.thanhTien || 0)}</b></p> 
               {/* <p className='pb-1'>Giảm giá: <b>0</b></p> 
               <p className='pb-1'>Thành tiền: <b>0</b></p>  */}
             </div>
-            <div className='flex'>
+            <div className='flex items-center'>
+              Phương thức thanh toán:
+              <select required className='border border-gray-500 ml-2 '
+                onChange={e => setData({...data, phuongThucThanhToan: e.target.value})}
+              >
+                <option value="">Chọn</option>
+                <option value="Momo">Momo</option>
+                <option value="VNPay">VNPay</option>
+                <option value="Tiền mặt">Tiền mặt</option>
+              </select>
+            </div>
+            <div className='flex mt-4'>
                 <button type='button' className='border-green-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-green-600 hover:bg-green-500 hover:text-white' 
                   onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckIn: getTime()}})}}>
                     Nhận sân
                 </button>
                 <button type='button' className='border-gray-600 flex-1 mx-2 bg-gray-200 border px-3 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white'
-                  onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckOut: getTime()}})}}>
+                  onClick={e => {
+                    if(data.datSan) {
+                      setData({...data, datSan: {...data.datSan, thoiGianCheckOut: getTime()}})
+                      setPaymentModal(true)
+                    }}}>
                   Trả sân
                 </button>
                 <button className='bg-green-600 flex-1 py-1 mx-2 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
@@ -273,8 +311,9 @@ function FromFacility(props) {
                   </div>})
                   }
 
-
+                  
                 </div>
+                
                 <div className='flex'>
                   <button type='button' className='border-gray-600 flex-1 mb-0 bg-gray-200 border px-3 m-4 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white' onClick={e => setModalService(!modalService)}>Đóng</button>
                   <button 
@@ -290,7 +329,8 @@ function FromFacility(props) {
             </div>
           </div>
           : ''}
-          {paymentModal ? <ConfirmCheckOut toggle={setPaymentModal} /> : ''}
+          
+          {/* {paymentModal ? <ConfirmCheckOut setData={setData} toggle={setPaymentModal} /> : ''} */}
         </form>
     </div>
   )

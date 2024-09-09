@@ -15,7 +15,7 @@ function Facility() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!user) {
+    if(!user || user.user.chuc_vu != 'admin') {
       navigate('/login');
     }
   })
@@ -69,7 +69,7 @@ function Facility() {
       data.datSan.trangThai = "Hoàn thành"
       const bookingSuccess = await editBooking(data);
       const facilitySuccess = await editFacility(data);
-
+      const invoiceSuccess = await createInvoice(data)
       setFac(fac)
     }
     setEdit(!edit);  
@@ -158,15 +158,17 @@ function Facility() {
   // Kiểm tra xem có đúng giờ đặt trước chưa nếu có chuyển trạng thái sang đã đặt
 
 
-  // const createFacility = async (data) => {
-    // const newFac = await facilityService.create(data);
-    // const newInvoice = {
-    //   datSan: data.datSan,
-    //   nhanVien: user
-    // }
-    // const newInvoice = await invoiceService.create(data);
-  //   return newFac;  
-  // }
+  const createInvoice = async (data) => {
+    const newInvoice = {
+      nhanVien: user.user,
+      datSan: data.datSan,
+      ghiChu: data.datSan.ghiChu,
+      phuongThucThanhToan: data.phuongThucThanhToan,
+      tongTien: data.datSan.thanhTien,
+    }
+
+    return await invoiceService.create(newInvoice);
+  }
   const editFacility = async (data) => {
     console.log("san: " + data.tinhTrang)
     const editFac = await facilityService.update(data._id, data);
@@ -175,10 +177,11 @@ function Facility() {
   }
 
   const editBooking = async (data) => {
-      console.log('have datSan')
-      console.log(data)
-      const editBoooking = await bookingService.update(data.datSan._id, data.datSan);
-  } 
+    console.log('have datSan')
+    console.log(data)
+    const newEditBooking = await bookingService.update(data.datSan._id, data.datSan);
+    return newEditBooking;
+ } 
   const deleteFacility = async (data) => {
     const deleteFac = await facilityService.delete(data._id);
     return deleteFac;

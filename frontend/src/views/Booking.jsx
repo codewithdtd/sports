@@ -292,7 +292,7 @@ const Booking = () => {
             </div>
             <div className="w-1/6">{ facility.ngayTao }</div>
             <div className="w-1/6">
-              <p className={`m-auto p-1 ${facility.tinhTrang == 'Đang sử dụng' ? 'text-white rounded-lg bg-green-600 w-full lg:w-3/4 shadow-md shadow-slate-500' : facility.trangThai == 'Đã thanh toán' ? 'text-white rounded-lg bg-green-500 w-full md:w-3/4 shadow-md shadow-slate-500' : 'text-white rounded-lg bg-gray-400 w-full md:w-3/4 shadow-md shadow-slate-500'}`}>{facility.trangThai}</p>
+              <p className={`m-auto p-1 ${facility.trangThai == 'Hoàn thành' ? 'text-white rounded-lg bg-green-500 w-full lg:w-3/4 shadow-md shadow-slate-500' : facility.trangThai == 'Đã hủy' ? 'text-white rounded-lg bg-red-500 w-full lg:w-3/4 shadow-md shadow-slate-500' : facility.trangThai == 'Đã duyệt' ? 'text-white rounded-lg bg-blue-500 w-full md:w-3/4 shadow-md shadow-slate-500' : 'text-white rounded-lg bg-gray-400 w-full md:w-3/4 shadow-md shadow-slate-500'}`}>{facility.trangThai}</p>
             </div>
             <div className="w-1/6 text-xl">
               <i className="ri-edit-box-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(facility)}></i>

@@ -9,7 +9,7 @@ const invoiceSchema = new mongoose.Schema({
   // bangGiaMoiGio: { type: Number, required: true },
   ghiChu: { type: String, },
   phuongThucThanhToan: { type: String, required: true},
-  maGiaoDich: { type: String, },
+  // maGiaoDich: { type: String, },
   // giamGia: { type: Number, default: 0 },
   tongTien: { type: Number, required: true, default: 0},
   ngayTao_HD: { type: String, },
