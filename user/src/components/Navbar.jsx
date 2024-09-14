@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import userService from '../services/user.service';
 
 const Navbar = () => {
-  const user = useSelector((state) => state.user.login.user);
+  const user = useSelector((state) => state.user?.login.user);
   const accessToken = user?.accessToken;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -13,10 +13,10 @@ const Navbar = () => {
     await userService.logout(dispatch, navigate, accessToken);
   }
   return (
-    <div className='flex shadow-md shadow-gray-500 justify-between w-full px-10 items-center h-fit py-3'>
+    <div className='flex sticky top-0 z-[1] bg-white shadow-md shadow-gray-500 justify-between w-full px-10 items-center h-fit py-3'>
       <NavLink to='/'>
         <div className="logo">
-          <img src="./src/assets/logo.svg" alt="" className='w-3/4' />
+          <img src="./src/assets/logo.svg" alt="" className='md:w-3/4' />
         </div>
       </NavLink>
       <div className='flex-1 text-center flex justify-center font-medium'>

@@ -79,3 +79,12 @@ input {
     background-color: black;
     opacity: 0.5;
 }
+
+/* booking */
+.booking {
+    text-shadow:
+            1px 1px 0px white,
+            -1px -1px 0px white,
+            -1px 1px 0px white,
+            1px -1px 0px white;
+}

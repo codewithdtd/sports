@@ -8,8 +8,10 @@ class BaseService {
             headers: { token: `Bearer ${accessToken}` }
         })).data;
     }
-    async create( data) {
-        return (await this.api.post("/", data)).data;
+    async create(data, accessToken = '') {
+        return (await this.api.post("/", data, {
+            headers: { token: `Bearer ${accessToken}` }
+        })).data;
     }
     // async deleteAll() {
     //     return (await this.api.delete("/")).data;

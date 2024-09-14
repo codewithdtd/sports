@@ -13,6 +13,7 @@ import Membership from '../views/Membership';
 import Booking from '../views/Booking';
 import Event from '../views/Event';
 import Contact from '../views/Contact';
+import BookingDetail from '../views/BookingDetail';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -37,7 +38,17 @@ export const router = createBrowserRouter([
       },
       {
         path: 'booking',
-        element: <Booking />
+        element: <Booking />,
+        // children: [
+        //   {
+        //     path: ':loai_san',
+        //     element: <BookingDetail />
+        //   },
+        // ]
+      },
+      {
+        path: 'booking/:loai_san',
+        element: <BookingDetail />
       },
       {
         path: 'event',

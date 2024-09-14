@@ -24,7 +24,8 @@ class UserService extends BaseService {
                 headers: { token: `Bearer ${accessToken}` }
             }));
             dispatch(logoutSuccess(logout));
-            persistor.purge().then(() => {
+            await persistor.purge().then(() => {
+                dispatch({ type: 'RESET_REDUX_STATE' });
                 console.log('Redux persist đã được xóa');
             });
             navigate("/")
