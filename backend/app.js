@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
     res.json({ message: "Luận văn tốt nghiệp Thành Đạt" });
 });
 
+app.use('/uploads', express.static('app/uploads'));
 
 app.use("/api/user", userRouter);
 

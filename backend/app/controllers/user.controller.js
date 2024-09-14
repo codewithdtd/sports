@@ -3,11 +3,21 @@ const Bookings = require("../services/booking.service");
 const { UserMemberships } = require("../services/membership.service");
 const { UserEvents } = require("../services/event.service");
 const Reviews = require("../services/review.service");
+const Carts = require("../services/cart.service"); 
 
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const bcrypt = require("bcrypt");
+
+
+const convertToDateReverse = (dateStr) => {
+    if (dateStr.includes("-")) {
+        const [year, month, day] = dateStr.split('-');
+        return `${day}/${month}/${year}`;
+    }
+    return dateStr;
+}
 
 exports.create = async (req, res, next) => {
     const users = new Users();
@@ -105,7 +115,7 @@ exports.refreshToken = async (req, res, next) => {
                 // role: result.role
             },  
             process.env.JWT_ACCESS_TOKEN,
-            { expiresIn: "300s" }
+            { expiresIn: "2d" }
         );
         // refresh
         const newRefreshToken = jwt.sign(
@@ -128,6 +138,7 @@ exports.refreshToken = async (req, res, next) => {
 }
 
 exports.logout = async (req, res, next) => {
+    res.clearCookie("refreshToken");
     res.send({ message: "Logout" });
 };
 
@@ -166,7 +177,9 @@ exports.deleteOne = async (req, res, next) => {
 exports.createBooking = async (req, res, next) => {
     const booking = new Bookings();
     try {
-        const result = await booking.create(req.body);
+        const newBooking = req.body;
+        newBooking.ngayDat = convertToDateReverse(newBooking.ngayDat)
+        const result = await booking.create(newBooking);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -370,6 +383,62 @@ exports.deleteOneReview = async (req, res, next) => {
     const review = new Reviews();
     try {
         const result = await review.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Giỏ hàng
+exports.createCart = async (req, res, next) => {
+    const cart = new Carts();
+    const newCart = req.body;
+    try {
+        const result = await cart.create(newCart);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateCart = async (req, res, next) => {
+    const cart = new Carts();
+    try {
+        const result = await cart.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllCart = async (req, res, next) => {
+    const cart = new Carts();
+    try {
+        const result = await cart.findAllUser(req.body.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneCart = async (req, res, next) => {
+    const cart = new Carts();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await cart.findOne(req.body)
+        else 
+            result = await cart.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneCart = async (req, res, next) => {
+    const cart = new Carts();
+    try {
+        const result = await cart.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });

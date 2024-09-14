@@ -20,6 +20,7 @@ import Event from '../views/Event';
 import Info from '../views/Info';
 import ChangePass from '../views/ChangePass';
 import FacilityManagement from '../views/FacilityManagement';
+import SportType from '../views/SportType';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: "facility",
         element: <Facility />,
+      },
+      {
+        path: "sportType",
+        element: <SportType />,
       },
       {
         path: "booking",

@@ -120,11 +120,11 @@ function FromBooking(props) {
       );
     }
 
-    if (listBooked) {
-      filteredList = filteredList.filter(item =>
-        !listBooked.some(booked => booked._id === item._id)
-      );
-    }
+    // if (listBooked) {
+    //   filteredList = filteredList.filter(item =>
+    //     !listBooked.some(booked => booked._id === item._id)
+    //   );
+    // }
 
     return filteredList;
   }

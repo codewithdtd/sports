@@ -3,6 +3,26 @@ const admin = require("../controllers/admin.controller");
 const middleware = require("../middleware/middleware");
 const router = express.Router();
 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './app/uploads/'); // Thư mục lưu trữ ảnh
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Tạo tên file duy nhất
+  },
+});
+
+const upload = multer({ 
+    storage: storage ,
+    limits: {
+        fileSize: 1024 * 1024 * 5, // Giới hạn kích thước file là 5MB
+    },
+});
+
 // NHÂN VIÊN
 router.route("/staff")
     .get(middleware.verifyAdmin, admin.findAllStaff)
@@ -127,4 +147,16 @@ router.route("/service/:id")
     .delete(admin.deleteOneService)
     .get(admin.findOneService)
     .put(admin.updateService);
+
+
+// Loại sân
+router.route("/sportType")
+    .get(admin.findAllSportType)
+    .post(upload.fields([{ name: 'hinhAnh', maxCount: 10 }, { name: 'hinhAnhDaiDien', maxCount: 1 }]), admin.createSportType)
+router.route("/sportType/:id")
+    .delete(admin.deleteOneSportType)
+    .get(admin.findOneSportType)
+    .put(upload.fields([{ name: 'hinhAnh' }, { name: 'hinhAnhDaiDien' }]), admin.updateSportType);
+router.route("/sportType/image/:id")
+    .delete(admin.deleteImageSportType)
 module.exports = router;

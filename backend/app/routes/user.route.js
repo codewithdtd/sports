@@ -10,14 +10,23 @@ router.route("/review")
 router.route("/review/:id")
     .get(user.findOneReview)
     .put(user.updateReview);
+
+// Giỏ hàng
+router.route("/cart")
+    .get(user.findAllCart)
+    .post(user.createCart)
+router.route("/cart/:id")
+    .get(user.findOneCart)
+    .put(user.updateCart);
    
+
 // Đặt Sân 
 router.route("/booking")
     .get(user.findAllBookingUser)
-    .post(middleware.verifyAdmin, user.createBooking)
+    .post(user.createBooking)
 router.route("/booking/:id")
     .get(user.findOneBooking)
-    .put(middleware.verifyAdmin, user.updateBooking);
+    .put(user.updateBooking);
    
 // Hội viên
 // 

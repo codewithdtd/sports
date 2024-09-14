@@ -19,22 +19,25 @@ class Bookings extends db {
   async findBookingBooked(payload) {
     try {
       let query = {
-        ngayDat: payload.ngayDat
+        ngayDat: payload.ngayDat,
+        thoiGianBatDau: { $gte: '08:00' },
+        thoiGianKetThuc: { $lte: '22:00' },
       };
-
       // Nếu có điều kiện thời gian bắt đầu, thêm vào điều kiện truy vấn
-      if (payload.thoiGianBatDau != '') {
+      if (payload.thoiGianBatDau != '' && payload.thoiGianBatDau) {
+          console.log('have')
           query.thoiGianBatDau = { $gte: payload.thoiGianBatDau };
       }
 
       // Nếu có điều kiện thời gian kết thúc, thêm vào điều kiện truy vấn
-      if (payload.thoiGianKetThuc != '') {
+      if (payload.thoiGianKetThuc != '' && payload.thoiGianKetThuc) {
           query.thoiGianKetThuc = { $lte: payload.thoiGianKetThuc };
       }
       const result = await this.model.find(query);
       if (!result) {
         throw new Error('Document not found');
       }
+      console.log(query)
       return result
     } catch (err) {
       throw new Error('Error finding document: ' + err.message);

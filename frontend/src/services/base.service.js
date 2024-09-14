@@ -1,4 +1,6 @@
 import createApiClient from "./api.service";
+import { sendRequest } from "./api.service";
+
 class BaseService {
     constructor(baseUrl) {
         this.api = createApiClient(baseUrl);
@@ -9,7 +11,7 @@ class BaseService {
         })).data;
     }
     async create( data) {
-        return (await this.api.post("/", data)).data;
+        return (await sendRequest(this.api.defaults.baseURL, data)).data;
     }
     // async deleteAll() {
     //     return (await this.api.delete("/")).data;

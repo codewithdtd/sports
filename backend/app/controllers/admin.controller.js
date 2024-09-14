@@ -8,12 +8,17 @@ const { Memberships, UserMemberships } = require("../services/membership.service
 const { Events, UserEvents } = require("../services/event.service");
 const Reviews = require("../services/review.service");
 const Services = require("../services/service.service");
+const SportTypes = require("../services/sportType.service");
 
 
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 const bcrypt = require("bcrypt");
+
+const fs = require('fs');
+const path = require('path');
+
 
 const convertToDate = (dateStr) => {
     const [day, month, year] = dateStr.split('/');
@@ -252,13 +257,31 @@ exports.findAllFacilityBooking = async (req, res, next) => {
         const listField = await facility.findAll();
         const time = req.query;
         time.ngayDat = convertToDateReverse(time.ngayDat);
-        const listBooking = await booking.findBookingBooked(time);
-        let result = listField;
+        // const listBooking = await booking.findBookingBooked(time);
+        const listBooking = await facility.findAllBooked(time);
+        let result = listField.map(field => field.toObject());
+        // Tạo một map từ listBooking để tra cứu nhanh
+        const bookingMap = new Map(listBooking.map(booking => [booking._id.toString(), booking]));
+        // console.log(bookingMap)
+
+        // Duyệt qua listField và thay thế các phần tử trùng lặp
+        result = result.map(field => {
+            // Chuyển đổi ObjectId thành chuỗi để so sánh
+            if (bookingMap.has(field._id.toString())) {
+                return {
+                    ...field,
+                    ...bookingMap.get(field._id.toString()) // Thay thế hoặc thêm các thuộc tính từ bookingMap
+                };
+            }
+            return field;
+        });
         
-        if(listBooking)
-            result = result.filter(field => {
-                return listBooking.some(element => field._id.toString() === element.san._id.toString());
-            });
+        
+
+        // if(listBooking)
+        //     result = result.filter(field => {
+        //         return listBooking.some(element => field._id.toString() === element.san._id.toString());
+        //     });
         
                 // return listBooking.some((booking) => {
                 //     const bookingDate = convertToDate(booking.ngayDat);
@@ -917,6 +940,153 @@ exports.deleteOneService = async (req, res, next) => {
     const service = new Services();
     try {
         const result = await service.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Loại sân
+exports.createSportType = async (req, res, next) => {
+    const sportType = new SportTypes();
+    // console.log(req.files['hinhAnhDaiDien'])
+    try {
+        const { ten_loai } = req.body;
+        if (!req.files) {
+            return res.status(400).json({ error: 'No files were uploaded.' });
+        }
+        // Kiểm tra và xử lý file hình ảnh chính
+        let hinhAnh = [];
+        if (req.files['hinhAnh']) {
+            // Kiểm tra xem req.files['hinhAnh'] có phải là một mảng không
+            if (Array.isArray(req.files['hinhAnh'])) {
+                hinhAnh = req.files['hinhAnh'].map((file) => file.filename); // Lấy tên file
+            } else {
+                // Nếu chỉ có một file, biến nó thành mảng
+                hinhAnh = [req.files['hinhAnh'].filename];
+            }
+        }
+
+        // Kiểm tra và xử lý file hình ảnh đại diện
+        let hinhAnhDaiDien = null;
+        if (req.files['hinhAnhDaiDien']) {
+            // Kiểm tra xem req.files['hinhAnhDaiDien'] có phải là một mảng không
+            if (Array.isArray(req.files['hinhAnhDaiDien'])) {
+                hinhAnhDaiDien = req.files['hinhAnhDaiDien'][0].filename; // Lấy tên file
+            } else {
+                // Nếu chỉ có một file, lấy tên file trực tiếp
+                hinhAnhDaiDien = req.files['hinhAnhDaiDien'].filename;
+            }
+        }
+
+        const newService = {
+            ten_loai: ten_loai,
+            hinhAnh: hinhAnh,
+            hinhAnhDaiDien: hinhAnhDaiDien
+        };
+        const result = await sportType.create(newService);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateSportType = async (req, res, next) => {
+    const sportType = new SportTypes();
+    try {
+        const { ten_loai } = req.body;
+        let newService = { ten_loai: ten_loai };
+        const existFile = await sportType.findById(req.params.id);
+
+        // Kiểm tra và xử lý file hình ảnh chính
+        if (req.files && req.files['hinhAnh']) {
+            let hinhAnh = [];
+            if (Array.isArray(req.files['hinhAnh'])) {
+                hinhAnh = req.files['hinhAnh'].map((file) => file.filename); // Lấy tên file
+            } else {
+                hinhAnh = [req.files['hinhAnh'].filename]; // Nếu chỉ có một file, biến nó thành mảng
+            }
+
+            // Chỉ thêm thuộc tính hinhAnh nếu có file
+            if (hinhAnh.length > 0) {
+                newService.hinhAnh = [...existFile.hinhAnh, ...hinhAnh]; // Thêm file mới vào mảng hình ảnh hiện tại
+            } else {
+                newService.hinhAnh = existFile.hinhAnh; // Nếu không có file mới, giữ nguyên mảng hình ảnh cũ
+            }
+        }
+
+        // Kiểm tra và xử lý file hình ảnh đại diện
+        if (req.files && req.files['hinhAnhDaiDien']) {
+            let hinhAnhDaiDien = null;
+            const oldAvatar = await sportType.findById(req.params.id);
+            if(oldAvatar.hinhAnhDaiDien) {
+                const appDir = path.dirname(__dirname);  //Thư mục cha
+                const filePath = path.join(appDir, 'uploads', oldAvatar.hinhAnhDaiDien);
+                fs.unlinkSync(filePath);
+            }
+            if (Array.isArray(req.files['hinhAnhDaiDien'])) {
+                hinhAnhDaiDien = req.files['hinhAnhDaiDien'][0].filename; // Lấy tên file
+            } else {
+                hinhAnhDaiDien = req.files['hinhAnhDaiDien'].filename; // Nếu chỉ có một file, lấy tên file trực tiếp
+            }
+    
+            // Chỉ thêm thuộc tính hinhAnhDaiDien nếu có file
+            if (hinhAnhDaiDien) {
+                newService.hinhAnhDaiDien = hinhAnhDaiDien;
+            }
+        }
+        const result = await sportType.update(req.params.id, newService);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteImageSportType = async (req, res, next) => {
+    const sportType = new SportTypes();
+    try {
+        const imagePath = req.query.hinhAnh;
+        const appDir = path.dirname(__dirname);  //Thư mục cha
+        const filePath = path.join(appDir, 'uploads', imagePath);
+        fs.unlinkSync(filePath);
+       
+
+        const result = await sportType.deleteImage(req.params.id, imagePath);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+exports.findAllSportType = async (req, res, next) => {
+    const sportType = new SportTypes();
+    try {
+        const result = await sportType.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneSportType = async (req, res, next) => {
+    const sportType = new SportTypes();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await sportType.findOne(req.body)
+        else 
+            result = await sportType.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneSportType = async (req, res, next) => {
+    const sportType = new SportTypes();
+    try {
+        const result = await sportType.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -89,6 +89,43 @@ class DBHandler {
     }
   }
 
+  async findAllBooked(time) {
+    try {
+      const results = await this.model.aggregate([
+          {
+              $addFields: {
+                  _idAsString: { $toString: "$_id" } // Chuyển ObjectId thành chuỗi
+              }
+          },
+          {
+              $lookup: {
+                  from: "dat_san", 
+                  localField: "_idAsString", 
+                  foreignField: "san._id", 
+                  as: "datSan" 
+              }
+          },
+          {
+              $unwind: {
+                  path: "$datSan", 
+                  preserveNullAndEmptyArrays: true 
+              }
+          },
+          {
+            $match: {
+              "datSan.trangThai": { $ne: "Đã hủy" },
+              "datSan.ngayDat": time.ngayDat,
+              "datSan.thoiGianBatDau": { $gte: '08:00' },
+              "datSan.thoiGianKetThuc": { $lte: '22:00' }
+            }   
+          }
+      ]);
+      return results;
+    } catch (err) {
+      throw new Error('Error finding document: ' + err.message);
+    }
+  }
+
 
   async update(id, data) {
     try {

@@ -232,7 +232,9 @@ function FromFacility(props) {
             </div>
             <div className='flex items-center'>
               Phương thức thanh toán:
-              <select required className='border border-gray-500 ml-2 '
+              <select 
+                required = {data.thoiGianKetThuc ? true : false} 
+                className='border border-gray-500 ml-2 '
                 onChange={e => setData({...data, phuongThucThanhToan: e.target.value})}
               >
                 <option value="">Chọn</option>
