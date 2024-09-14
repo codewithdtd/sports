@@ -62,8 +62,13 @@ function Facility() {
       
     if(data.phuongThuc == 'edit') {
       console.log('edit')
+      if(data.thoiGianCheckIn != '--:--') {
+        data.tinhTrang = 'Đang sử dụng';
+        await editFacility(data)
+      }
       if(await editBooking(data))
         console.log('Đã cập nhật');
+      setFac(fac)
     }
     if(data.phuongThuc == 'thanhToan') {
       console.log('check out')
