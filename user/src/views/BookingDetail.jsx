@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import facilityService from '../services/facility.service'
 import bookingService from '../services/booking.service'
+import serviceService from '../services/service.service'
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 import 'react-toastify/dist/ReactToastify.css';
+import FormService from '../components/FormService';
 
 
 const BookingDetail = () => {
@@ -15,6 +17,8 @@ const BookingDetail = () => {
   const [currentDate, setCurrentDate] = useState(getCurrentDate());
   const [checkedSlots, setCheckedSlots] = useState([]);
   const [bookingsByDate, setBookingsByDate] = useState({});
+  const [listService, setListService] = useState([])
+  const [modalService, setModalService] = useState(null)
 
   const navigate = useNavigate();
 
@@ -62,6 +66,9 @@ const BookingDetail = () => {
     let list = await facilityService.getAllBooked(date);
     list = list.filter(fac => fac.loai_San === loai_san)
     setListFac(list)
+
+    const service = await serviceService.getAll();
+    setListService(service)
   }
 
   // Xử lý đặt sân
@@ -78,6 +85,14 @@ const BookingDetail = () => {
       setCheckedSlots(checkedSlots.filter(slot => slot !== key));
     }
   };
+
+  const handleService = (data) => {
+    setBooking(prevBooking => 
+      prevBooking.map(item => 
+        item._id === data._id ? data : item
+      )
+    );
+  }
 
 
   const handleSubmit = async (e) => {
@@ -103,6 +118,7 @@ const BookingDetail = () => {
 
   const createBooking = async (data) => {
     try {
+      data.thanhTien = data.thanhTien + data.dichVu?.reduce((a, c) => a + c.thanhTien, 0)
       const result = await bookingService.create(data, accessToken);
       if (result) {
         return result;  // Trả về kết quả nếu thành công
@@ -175,7 +191,7 @@ const BookingDetail = () => {
               <p className='border border-gray-400 rounded-md p-1 px-2'>Tuần</p>
             </div>
           </div>
-          <div className='h-[50vh] md:h-[65vh] overflow-y-scroll'>
+          <div className='h-[45vh] md:h-[65vh] overflow-y-scroll'>
             <div className='flex border-b-2 text-center py-2 border-gray-400'>
               <div className='w-1/6 font-bold'>Bắt đầu</div>
               <div className='w-1/6 font-bold'>Kết thúc</div>
@@ -247,17 +263,34 @@ const BookingDetail = () => {
         </div>
         <div className='flex flex-col flex-1 pt-1'>
           Sân đã chọn:
-          <div className="flex-1 overflow-y-scroll border-2 px-2 min-h-60 border-gray-400 rounded-lg">
+          <div className="flex-1 overflow-y-scroll border-2 px-2 min-h-60 md:max-h-[65vh] max-h-80 border-gray-400 rounded-lg">
             {booking?.map((bk, index) => 
-              <div key={index} className='flex justify-around border-b border-gray-400'>
-                <p>{bk.ngayDat}</p>
-                <p>{bk.thoiGianBatDau} - {bk.thoiGianKetThuc}</p>
-                <p>{bk.san.ten_San}</p>
-                <p>{formatNumber(bk.thanhTien || 0)}</p>
+              <div key={index} className='flex flex-col justify-around'>
+                <div className='flex py-2 justify-around items-center border-b border-gray-400'>
+                  <p>{bk.ngayDat}</p>
+                  <p>{bk.thoiGianBatDau} - {bk.thoiGianKetThuc}</p>
+                  <p>{bk.san.ten_San}</p>
+                  <p>{formatNumber(bk.thanhTien || 0)}</p>
+                  <button type='button' onClick={e=> setModalService(bk)} className='border border-green-600 p-1 rounded-md text-green-600 hover:text-white hover:bg-green-500'>Thêm dịch vụ</button>
+                </div>
+                {bk.dichVu?.map((dichVu) => 
+                  <div key={dichVu._id} className='ml-7 flex border-b text-center justify-between p-2 border-l-2 border-gray-400'>
+                    <p className='flex-1'>{dichVu.ten_DV}</p>
+                    <p className='flex-1'>x {dichVu.soluong}</p>
+                    <p className='flex-1'>{formatNumber(dichVu.thanhTien)}</p>
+                  </div>
+                 )} 
+                {modalService ? <FormService toggle={setModalService} service={modalService} handle={handleService} /> : ''}
               </div>
             )}
           </div>
-          <p>Tổng tiền: <b>{formatNumber(booking.reduce((a, c) => a + c.san.bangGiaMoiGio, 0))}</b></p>
+          
+          <p>Tổng tiền: <b>{formatNumber(booking.reduce((a, c) => {
+              const tienSan = c.san?.bangGiaMoiGio || 0; // Tiền sân
+              const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
+              return a + tienSan + tienDichVu;
+            }, 0))}</b>
+          </p>
           <button className='bg-green-500 p-1 px-3 rounded-lg text-white font-bold'>Xác nhận</button>
         </div>
       </form>
