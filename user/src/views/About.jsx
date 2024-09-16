@@ -13,14 +13,14 @@ const About = () => {
             <p className='md:text-lg pb-8'>Sân bóng rổ: Các tín đồ bóng rổ sẽ được thỏa sức thể hiện tài năng của mình trên sân bóng rổ chuyên nghiệp tại DSport. Với không gian rộng rãi, thoáng mát, hệ thống rổ chuẩn, sân bóng rổ DSport là địa điểm lý tưởng để bạn rèn luyện kỹ năng cá nhân, tham gia các giải đấu hoặc đơn giản chỉ là chơi bóng cùng bạn bè.</p>
             <p className='md:text-lg '>Sân cầu lông và bóng chuyền: Nếu bạn yêu thích những môn thể thao đòi hỏi sự nhanh nhẹn và khéo léo, thì sân cầu lông và bóng chuyền tại DSport chắc chắn sẽ làm bạn hài lòng. Với những đường kẻ rõ ràng, lưới căng đều, sân cầu lông và bóng chuyền DSport sẽ giúp bạn nâng cao kỹ năng và có những giờ phút thư giãn thoải mái.</p>
           </div>
-          <div className="flex-1 flex flex-col items-center">
-            <img src="./src/assets/about.png" alt="" className='object-contain  pb-4'/>
-            <img src="./src/assets/about1.jpg" alt="" className='object-contain'/>
+          <div className="flex-1 flex flex-col items-center aspect-square rounded-lg overflow-hidden">
+            <img src="https://khudothisala.vn/wp-content/uploads/2020/06/san-tennis-sala1.jpg" alt="" className='object-cover h-full w-full'/>
+            {/* <img src="./src/assets/about1.jpg" alt="" className='object-contain'/> */}
           </div>
         </div>
         <div className='flex-1 pt-2 flex flex-col md:flex-row gap-4 items-center justify-center md:text-lg'>
-          <div className='flex-1'>
-            <img src="./src/assets/about2.jpg" alt="" className='object-contain' />
+          <div className='flex-1 rounded-lg overflow-hidden m-3'>
+            <img src="https://www.noithatmasta.com/uploaded/thiet%20ke%20shop%20the%20thao%20(2).jpg" alt="" className='object-cover h-full w-full' />
           </div>
           <div className='flex-1'>
             <p className='font-medium'>Không chỉ có sân bãi, DSport còn cung cấp nhiều tiện ích khác như:</p>
@@ -28,6 +28,12 @@ const About = () => {
               <li className='my-2' >Phòng thay đồ sạch sẽ: Được trang bị đầy đủ tiện nghi, giúp bạn thoải mái thay đồ trước và sau khi tập luyện.</li>
               <li className='my-2' >Khu vực nghỉ ngơi: Với không gian thoáng mát, bạn có thể thư giãn và trò chuyện cùng bạn bè sau khi chơi thể thao.</li>
               <li className='my-2' >Cho thuê dụng cụ thể thao: Nếu bạn chưa có dụng cụ thể thao, đừng lo lắng, DSport có dịch vụ cho thuê các loại vợt, bóng, giày thể thao...</li>
+            </ul>
+            <p className='font-medium'>Tại sao nên chọn DSport?</p>
+            <ul className='ml-4 list-disc'>
+              <li className='my-2' >Không gian hiện đại, chuyên nghiệp: DSport được thiết kế với không gian rộng rãi, thoáng mát, tạo cảm giác thoải mái cho người chơi.</li>
+              <li className='my-2' >Dụng cụ thể thao chất lượng: Tất cả các dụng cụ thể thao tại DSport đều được nhập khẩu từ các thương hiệu nổi tiếng, đảm bảo chất lượng tốt nhất.</li>
+              <li className='my-2' >Đội ngũ nhân viên nhiệt tình: Đội ngũ nhân viên của DSport luôn sẵn sàng hỗ trợ và tư vấn cho khách hàng.</li>
             </ul>
           </div>
         </div>
