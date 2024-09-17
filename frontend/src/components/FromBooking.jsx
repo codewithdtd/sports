@@ -23,6 +23,7 @@ function FromBooking(props) {
   const [customer, setCustomer] = useState(null);
   const [modalService, setModalService] = useState(null)
 
+  const [fieldChange, setFieldChange] = useState(null)
 
   const [currentDate, setCurrentDate] = useState(getCurrentDate());
   const startTime = 8; // 8:00
@@ -72,15 +73,24 @@ function FromBooking(props) {
    
     data._id ? data.phuongThuc = 'edit' : data.phuongThuc = 'create';
     // data.dichVu = listServiceSelected;
-    if(booking.length > 0) 
-      for(const item of booking) {
-        item.phuongThuc = 'create'
-        item.khachHang = customer;
-        const tienSan = item.san?.bangGiaMoiGio || 0; // Tiền sân
-        const tienDichVu = item.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
-        item.thanhTien = tienSan + tienDichVu;
-        props.handleData(item); // Xử lý dữ liệu biểu mẫ
-      }
+    if(!data._id)
+      if(booking.length > 0) 
+        for(const item of booking) {
+          item.phuongThuc = 'create'
+          item.khachHang = customer;
+          const tienSan = item.san?.bangGiaMoiGio || 0; // Tiền sân
+          const tienDichVu = item.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
+          item.thanhTien = tienSan + tienDichVu;
+          props.handleData(item); // Xử lý dữ liệu biểu mẫ
+        }
+    if(data._id) {
+      data.phuongThuc = 'edit'
+      const tienSan = data.san?.bangGiaMoiGio || 0; // Tiền sân
+      const tienDichVu = data.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
+      data.thanhTien = tienSan + tienDichVu;
+      props.handleData(data); // Xử lý dữ liệu biểu mẫ
+      
+    }
       // setData({...data, thanhTien: calculateTimeDifference(data.thoiGianBatDau, data.thoiGianKetThuc)})
     // props.handleData(data); // Xử lý dữ liệu biểu mẫ
     setBooking([])
@@ -236,8 +246,21 @@ function FromBooking(props) {
 
     if (checked) {
       // Thêm phần tử vào danh sách đặt sân và đánh dấu slot này đã được check
-      setBooking([...booking, data]);
-      setCheckedSlots([...checkedSlots, key]);
+      if(props.data._id) {
+        setBooking([])
+        // setFieldChange(data)
+        setData({...props.data, san: data.san, thoiGianBatDau: data.thoiGianBatDau, thoiGianKetThuc: data.thoiGianKetThuc, ngayDat: data.ngayDat})
+      }
+      // setBooking([...booking, data]);
+      // setCheckedSlots([...checkedSlots, key]);
+      setBooking(prevBooking => [
+        ...prevBooking.filter(item => !(item.thoiGianBatDau === data.thoiGianBatDau && item.san._id === data.san._id && item.ngayDat === data.ngayDat)),
+        data
+      ]);
+      setCheckedSlots(prevCheckedSlots => [
+        ...prevCheckedSlots.filter(slot => slot !== key),
+        key
+      ]);
     } else {
       // Xóa phần tử khỏi danh sách đặt sân và bỏ đánh dấu slot đã được check
       setBooking(booking.filter(item => !(item.thoiGianBatDau === data.thoiGianBatDau && item.san._id === data.san._id && item.ngayDat === data.ngayDat)));
@@ -361,14 +384,14 @@ function FromBooking(props) {
                   <i className="mr-1 ri-sticky-note-line"></i>
                   <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ghiChu} onChange={e => setData({...data, ghiChu: e.target.value})} placeholder='Ghi chú'/>
                 </div>
-                <div className="flex">
+                {/* <div className="flex">
                   <i className="mr-1 ri-money-dollar-circle-fill text-lg"></i>
                   <input name='' readOnly className=' flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' 
                           type="number" value={data.thanhTien} 
                           onChange={e => setData({...data, thanhTien: e.target.value})}
                           placeholder='Tổng tiền'
                   />
-                </div>
+                </div> */}
                 <div className={`${!data.trangThai ? 'hidden' : ''} flex font-bold ${data.trangThai == 'Đã hủy' ? 'text-red-500' : ''}`}>
                   <i className={data.trangThai == 'Đã hủy' ? 'mr-1 ri-close-line' : 'mr-1 ri-check-double-line'}></i>
                   <select name="" id="" className='flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' onChange={e => setData({...data, trangThai: e.target.value})}>
@@ -550,24 +573,13 @@ function FromBooking(props) {
                                 }
                               </div>
                               <div className='mx-2'>
-                                {/* <button type='button'
-                                  onClick={e => handleBooking({
-                                    thoiGianBatDau: slot.formattedTimeStart,
-                                    thoiGianKetThuc: slot.formattedTimeEnd,
-                                    khachHang: user.user,
-                                    san: san,
-                                    ngayDat: currentDate,
-                                    thanhTien: san.bangGiaMoiGio
-                                  })}
-                                >
-                                  <i class="ri-add-circle-fill"></i>
-                                </button> */}
+            
                                 <input type="checkbox" className='w-5 h-5' 
                                   checked={checkedSlots.includes(`${san._id}_${slot.formattedTimeStart}_${currentDate}`)} 
                                   onChange={e => handleBooking({
                                     thoiGianBatDau: slot.formattedTimeStart,
                                     thoiGianKetThuc: slot.formattedTimeEnd,
-                                    khachHang: user.user,
+                                    khachHang: data.khachHang,
                                     san: san,
                                     ngayDat: currentDate,
                                     thanhTien: san.bangGiaMoiGio
@@ -598,16 +610,24 @@ function FromBooking(props) {
                           <p>{bk.ngayDat}</p>
                           <p>{bk.thoiGianBatDau} - {bk.thoiGianKetThuc}</p>
                           <p>{bk.san.ten_San}</p>
-                          <p>{formatNumber(bk.thanhTien || 0)}</p>
+                          <p>{formatNumber(bk.san.bangGiaMoiGio || 0)}</p>
                           <button type='button' onClick={e=> setModalService(bk)} className='border border-green-600 p-1 rounded-md text-green-600 hover:text-white hover:bg-green-500'>Thêm dịch vụ</button>
                         </div>
-                        {bk.dichVu?.map((dichVu) => 
+                        {!data._id ? bk.dichVu?.map((dichVu) => 
                           <div key={dichVu._id} className='ml-7 flex border-b text-center justify-between p-2 border-l-2 border-gray-400'>
                             <p className='flex-1'>{dichVu.ten_DV}</p>
                             <p className='flex-1'>x {dichVu.soluong}</p>
                             <p className='flex-1'>{formatNumber(dichVu.thanhTien)}</p>
                           </div>
-                        )} 
+                        )
+                        : data.dichVu?.map((dichVu) => 
+                          <div key={dichVu._id} className='ml-7 flex border-b text-center justify-between p-2 border-l-2 border-gray-400'>
+                            <p className='flex-1'>{dichVu.ten_DV}</p>
+                            <p className='flex-1'>x {dichVu.soluong}</p>
+                            <p className='flex-1'>{formatNumber(dichVu.thanhTien)}</p>
+                          </div>
+                        )}
+                      
                         {modalService ? <FormService toggle={setModalService} service={modalService} handle={handleService} /> : ''}
                       </div>
                     )}
@@ -615,7 +635,8 @@ function FromBooking(props) {
                   
                   <p>Tổng tiền: <b>{formatNumber(booking.reduce((a, c) => {
                       const tienSan = c.san?.bangGiaMoiGio || 0; // Tiền sân
-                      const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
+                      const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || data.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0);  // Tiền dịch vụ
+                      
                       return a + tienSan + tienDichVu;
                     }, 0))}</b>
                   </p>
