@@ -81,3 +81,26 @@ input {
             -1px 1px 0px white,
             1px -1px 0px white;
 }
+
+@media print {
+    body * {
+        visibility: hidden;
+        /* Ẩn tất cả các phần tử */
+    }
+
+    .print,
+    .print * {
+        visibility: visible;
+        /* Hiển thị các phần tử có class print */
+    }
+
+    .print {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+    .no-print {
+        display: none;
+    }
+}
