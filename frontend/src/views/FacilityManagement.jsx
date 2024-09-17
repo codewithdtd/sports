@@ -199,7 +199,7 @@ function FacilityManagement() {
         {/* Header bảngg */}
         <div className="flex justify-between py-2 border-b border-gray-300 text-center">
           <div className="w-1/12 font-semibold">STT</div>
-          <div className="hidden sm:block w-1/6 md:w-[10%] font-semibold">HÌNH ẢNH</div>
+          {/* <div className="hidden sm:block w-1/6 md:w-[10%] font-semibold">HÌNH ẢNH</div> */}
           <div className="w-1/6 font-semibold flex justify-center">
             TÊN
             <div className="">
@@ -232,17 +232,17 @@ function FacilityManagement() {
         ((currentPage-1)*4 <= index && index < currentPage*4) ?
           <div key={facility._id} className="hover:bg-slate-200 text-sm md:text-base flex flex-grow justify-between py-2 border-b border-gray-300 text-center items-center"> 
             <div className="w-1/12">{ index+1 }</div>
-            <div className="w-1/6 md:w-[10%] hidden sm:block">
+            {/* <div className="w-1/6 md:w-[10%] hidden sm:block">
               {
               facility.hinhAnh_San 
               ? <img src={facility.hinhAnh_San} alt="" />
               : <img src="https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg" alt="" />
               }
-              </div>
+              </div> */}
             <div className="w-1/6">
               { facility.ten_San }
-              <p className='hidden lg:block'>Loại sân: {facility.loai_San}</p>
-              <p className='hidden md:block'>{facility.khuVuc}</p>
+              <p className='lg:block'>Loại sân: {facility.loai_San}</p>
+              <p className='md:block'>{facility.khuVuc}</p>
             </div>
             <div className="w-1/6">{ formatNumber(parseInt(facility.bangGiaMoiGio))}</div>
             <div className="w-1/6 flex">

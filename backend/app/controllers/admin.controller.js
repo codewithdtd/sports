@@ -375,30 +375,33 @@ exports.deleteOneFacility = async (req, res, next) => {
 exports.createBooking = async (req, res, next) => {
     const booking = new Bookings();
     try {
-        const data = req.body;
-        const {san, dichVu, ...other} = data;
-        console.log(dichVu)
-        let count = 0;
-        // Xử lý sân
-        for (const element of san) {
-            const { thoiGianBatDau, thoiGianKetThuc, ngayDat, thanhTien, hinhAnh_San, ...otherTwo } = element;
-            const dichVu_San = dichVu
-                .filter(service => service.ma_San === otherTwo.ma_San)
-                .map(({ ma_San, ...other3 }) => other3);
-            const newData = {
-                ...other,           
-                san: otherTwo, 
-                dichVu: dichVu_San,     
-                thoiGianBatDau,     
-                thoiGianKetThuc,
-                ngayDat: convertToDateReverse(ngayDat),
-                thanhTien,
-            }; 
-            if (await booking.create(newData)) {
-                count++;
-            }
-        }
-        res.status(201).json({ success: true, count});
+        // const data = req.body;
+        // const {san, dichVu, ...other} = data;
+        // console.log(dichVu)
+        // let count = 0;
+        // // Xử lý sân
+        // for (const element of san) {
+        //     const { thoiGianBatDau, thoiGianKetThuc, ngayDat, thanhTien, hinhAnh_San, ...otherTwo } = element;
+        //     const dichVu_San = dichVu
+        //         .filter(service => service.ma_San === otherTwo.ma_San)
+        //         .map(({ ma_San, ...other3 }) => other3);
+        //     const newData = {
+        //         ...other,           
+        //         san: otherTwo, 
+        //         dichVu: dichVu_San,     
+        //         thoiGianBatDau,     
+        //         thoiGianKetThuc,
+        //         ngayDat: convertToDateReverse(ngayDat),
+        //         thanhTien,
+        //     }; 
+        //     if (await booking.create(newData)) {
+        //         count++;
+        //     }
+        // }
+        const newBooking = req.body;
+        newBooking.ngayDat = convertToDateReverse(newBooking.ngayDat)
+        const result = await booking.create(newBooking);
+        res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

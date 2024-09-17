@@ -5,6 +5,9 @@ class Booking extends BaseService {
     constructor() {
         super('/api/admin/booking'); 
     }
+    async create(data) {
+        return (await this.api.post('/', data)).data;
+    }
     // async getAll(dispatch) {
     //     try {
     //         dispatch(bookingStart());

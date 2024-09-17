@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
-
+import React, { useState, useEffect } from 'react';
+import sportTypeService from '../services/sportType.service';
 function FromFacility(props) {
   const [data, setData] = useState(props.data);
   const [preImg, setPreImg] = useState(null);
   const [show, setShow] = useState(false);
+  const [sportType, setSportType] = useState(null)
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -18,10 +19,16 @@ function FromFacility(props) {
     props.handleData(data); // Xử lý dữ liệu biểu mẫu
   };
 
+  const getSportType =  async () => {
+    const spType = await sportTypeService.getAll();
+    setSportType(spType);
+  }
+
 
 
   useEffect(() => {
     setData(props.data);
+    getSportType();
     setShow(true)
   }, [props.data]);
 
@@ -40,7 +47,13 @@ function FromFacility(props) {
             </div>
             <div className="flex">
               <label htmlFor="" className='w-1/4'>Loại sân:</label>
-              <input name='loai_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.loai_San} onChange={e => setData({...data, loai_San: e.target.value})}/>
+              {/* <input name='loai_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.loai_San} onChange={e => setData({...data, loai_San: e.target.value})}/> */}
+              <select name="" id="" className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2'>
+                <option value="">Loại sân</option>
+                {sportType?.map((item) => 
+                  <option value="">{item.ten_loai}</option>
+                )}
+              </select>
             </div>
             <div className="flex">
               <label htmlFor="" className='w-1/4'>Khu vực:</label>
@@ -60,7 +73,7 @@ function FromFacility(props) {
               <label htmlFor="" className='w-1/4'>Giá mỗi giờ:</label>
               <input name='bangGiaMoiGio' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="number" value={data.bangGiaMoiGio} onChange={e => setData({...data, bangGiaMoiGio: e.target.value})}/>
             </div>
-            <div className="flex">
+            {/* <div className="flex">
               <label htmlFor="" className='w-1/4'>Hình ảnh:</label>
               <div className='w-3/4 flex flex-col'>
                 <img src={data.hinhAnh_San} alt="" className='w-1/2'/>
@@ -70,7 +83,7 @@ function FromFacility(props) {
                 </label>
                 <input id='file-upload' className='hidden' type="file" onChange={e => handleFileUpload(e)} />
               </div>
-            </div>
+            </div> */}
             <button className='bg-green-600 m-4 py-1 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
         </form>
     </div>

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import facilityService from '../services/facility.service';
 import serviceService from '../services/service.service';
 import userService from '../services/user.service';
+import FormService from './FormService';
+
+
 
 function FromBooking(props) {
   const [data, setData] = useState(props.data);
@@ -14,6 +17,35 @@ function FromBooking(props) {
   const [listUser, setListUser] = useState([])
   const [chooseUser, setChooseUser] = useState(false)
   const [missError, setMissError] = useState(false)
+  const [checkedSlots, setCheckedSlots] = useState([]);
+  const [bookingsByDate, setBookingsByDate] = useState({});
+  const [booking, setBooking] = useState([data]);
+  const [customer, setCustomer] = useState(null);
+  const [modalService, setModalService] = useState(null)
+
+
+  const [currentDate, setCurrentDate] = useState(getCurrentDate());
+  const startTime = 8; // 8:00
+  const endTime = 22; // 22:00
+  const interval = filter == 'Bóng đá' ?  1.5 : 1; // 1 giờ 30 phút
+
+  const timeSlots = [];
+
+  // Dùng vòng lặp để tạo các thời gian với khoảng cách 1 giờ 30 phút
+  for (let time = startTime; time <= endTime && (time+interval) <= endTime ; time += interval) {
+    // Lấy giờ và phút
+    const hour = Math.floor(time);
+    const minute = (time % 1) * 60;
+
+    // Láy giờ phút kết thúc
+    const hourEnd = Math.floor(time+interval);
+    const minuteEnd = ((time+interval) % 1) * 60;
+    // Format lại giờ cho đẹp
+    const formattedTimeStart = `${hour.toString().padStart(2, '0')}:${minute === 0 ? '00' : minute}`;
+    const formattedTimeEnd = `${hourEnd.toString().padStart(2, '0')}:${minuteEnd === 0 ? '00' : minuteEnd}`;
+    // Tạo thời gian và thêm vào mảng
+    timeSlots.push({formattedTimeStart,formattedTimeEnd});
+  }
 
   const [time, setTime] = useState({
     ngayDat: '',
@@ -21,65 +53,53 @@ function FromBooking(props) {
     thoiGianKetThuc: '',
   });
 
+  // Lấy thời gian hiện tại
+  function getCurrentDate() {
+    const today = new Date();
+    
+    const year = today.getFullYear(); // Lấy năm
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Lấy tháng (bắt đầu từ 0 nên cần +1) và định dạng thành 2 chữ số
+    const day = String(today.getDate()).padStart(2, '0'); // Lấy ngày và định dạng thành 2 chữ số
+
+    return `${year}-${month}-${day}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
-    if(listSelected.length > 0) 
-      data.san = listSelected;
-    if(!data.khachHang.ten_KH || data.san.length <= 0 ) {
-      console.log(data.khachHang.ten_KH)
-      console.log(data.san.length <= 0)
-      console.log('miss')
-      setMissError(true);
-      return 
-    }
-
+    // if(listSelected.length > 0) 
+    //   data.san = listSelected;
+  
+   
     data._id ? data.phuongThuc = 'edit' : data.phuongThuc = 'create';
-    data.dichVu = listServiceSelected;
-    if(listSelected.length > 0) 
-      data.san = listSelected;
+    // data.dichVu = listServiceSelected;
+    if(booking.length > 0) 
+      for(const item of booking) {
+        item.phuongThuc = 'create'
+        item.khachHang = customer;
+        const tienSan = item.san?.bangGiaMoiGio || 0; // Tiền sân
+        const tienDichVu = item.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
+        item.thanhTien = tienSan + tienDichVu;
+        props.handleData(item); // Xử lý dữ liệu biểu mẫ
+      }
       // setData({...data, thanhTien: calculateTimeDifference(data.thoiGianBatDau, data.thoiGianKetThuc)})
-    console.log(data);
-    props.handleData(data); // Xử lý dữ liệu biểu mẫ
+    // props.handleData(data); // Xử lý dữ liệu biểu mẫ
+    setBooking([])
     setListSelected([]);
   };
 
-  const addFac = (payload) => {
-    setMissError(false)
-    payload.thoiGianBatDau = time.thoiGianBatDau;
-    payload.thoiGianKetThuc = time.thoiGianKetThuc;
-    payload.ngayDat = time.ngayDat;
-    payload.thanhTien = payload.bangGiaMoiGio*calculateTimeDifference(time.thoiGianBatDau, time.thoiGianKetThuc);
-    setListSelected([...listSelected, payload]);
-    setList(list.filter(item => item.ma_San !== payload.ma_San))
-    const thanhTien = data.thanhTien + payload.thanhTien;
-    setData({...data, thanhTien: thanhTien})
-  }
-  const removeFac = (payload) => {
-    setListSelected(listSelected.filter(facility => facility.ma_San !== payload.ma_San));
-    setList([...list, payload]);
-    setData({...data, thanhTien: data.thanhTien-payload.bangGiaMoiGio*calculateTimeDifference(time.thoiGianBatDau, time.thoiGianKetThuc)})
-  }
-  
+
   // lấy dữ liệu sân
   const getFacility = async () => {
-    const field = await facilityService.getAll();
+    const field = await facilityService.getAllBooked({ngayDat: currentDate});
     setList(field);
     const user = await userService.getAll();
     setListUser(user);
     const services = await serviceService.getAll();
     setListService(services);
-    if(data._id) {
-      setTime({
-        ngayDat: convertDateFormat(data.ngayDat),
-        thoiGianBatDau: data.thoiGianBatDau,
-        thoiGianKetThuc: data.thoiGianKetThuc
-      })
-      if(data.dichVu) setListServiceSelected(data.dichVu)
-    }
   }
   // Lấy dữ liệu sân đã đặt
   const getFacilityBooked = async () => {
-    const field = await facilityService.getAllBooked(time);
+    const field = await facilityService.getAllBooked({ngayDat: currentDate});
     setListBooked(field);
   }
 
@@ -106,9 +126,8 @@ function FromBooking(props) {
   // Lọc dữ liệu
   const filterList = () => {
     let filteredList = [];
-    if (time.ngayDat && time.thoiGianBatDau && time.thoiGianKetThuc)
-      filteredList = list;
-
+    
+    filteredList = list;
     if (filter !== '') {  
       const terms = filter.toLowerCase().split(' ');
       const convertedStrings = convertString();
@@ -212,6 +231,53 @@ function FromBooking(props) {
     );
   };
 
+  const handleBooking = (data, checked) => {
+    const key = `${data.san._id}_${data.thoiGianBatDau}_${data.ngayDat}`;  // Tạo key duy nhất cho mỗi sân và thời gian
+
+    if (checked) {
+      // Thêm phần tử vào danh sách đặt sân và đánh dấu slot này đã được check
+      setBooking([...booking, data]);
+      setCheckedSlots([...checkedSlots, key]);
+    } else {
+      // Xóa phần tử khỏi danh sách đặt sân và bỏ đánh dấu slot đã được check
+      setBooking(booking.filter(item => !(item.thoiGianBatDau === data.thoiGianBatDau && item.san._id === data.san._id && item.ngayDat === data.ngayDat)));
+      setCheckedSlots(checkedSlots.filter(slot => slot !== key));
+    }
+  };
+
+  const handleService = (data) => {
+    setBooking(prevBooking => 
+      prevBooking.map(item => 
+        item._id === data._id ? data : item
+      )
+    );
+  }
+  useEffect(() => {
+    // Lưu trạng thái trước khi thay đổi currentDate
+    if (booking.length || checkedSlots.length) {
+      setBookingsByDate(prev => ({
+        ...prev,
+        [currentDate]: {
+          booking,
+          checkedSlots
+        }
+      }));
+    }
+  }, [currentDate, booking, checkedSlots]);
+
+
+  useEffect(() => {
+    if (bookingsByDate[currentDate]) {
+      // setBooking(bookingsByDate[currentDate].booking);
+      setCheckedSlots(bookingsByDate[currentDate].checkedSlots);  // checkedSlots bao gồm san._id
+    } else {
+      // setBooking([]);
+      setCheckedSlots([]);
+    }
+
+    getFacility();
+  }, [currentDate]);
+
   useEffect(() => {
     setData(props.data);
     // if(data._id != '')
@@ -219,7 +285,7 @@ function FromBooking(props) {
     getFacility();
     console.log(props.data)
     // getService();
-  }, [props.data]);
+  }, [props.data, currentDate]);
   
   useEffect(() => {
     filterList();
@@ -233,7 +299,7 @@ function FromBooking(props) {
 
   return (
     <div className='absolute bg-opacity-30 bg-black -translate-x-2 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
-        <form action="" className='relative flex flex-col bg-white p-2 px-6 w-5/6 max-h-[98%] overflow-y-scroll max-w-[98%] rounded-md m-auto' onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
+        <form action="" className='relative flex flex-col bg-white p-2 px-6 w-11/12 max-h-[98%] overflow-y-scroll max-w-[98%] rounded-md m-auto' onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
           <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
           <h1 className='text-center text-2xl font-bold p-5'>THÔNG TIN</h1>
           <div className={`flex flex-col lg:flex-row`}> 
@@ -272,11 +338,12 @@ function FromBooking(props) {
                   className='flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2'
                   onChange={e => {
                     let selectedUser = listUser.find(user => user._id === e.target.value);
-                    selectedUser = selectedUser.map(user => {
-                      const {matKhau_KH, ...other } = user
-                      return other;
-                    })
+                    if(selectedUser){
+                      const {matKhau_KH, ...other } = selectedUser
+                      selectedUser = other;
+                    }
                     setData({...data, khachHang: selectedUser});
+                    setCustomer(selectedUser);
                   }}
                 >
                   <option value="">Khách hàng</option>
@@ -317,46 +384,15 @@ function FromBooking(props) {
             
             {/* {!data._id ?  */}
             <div className='lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0 border-t pt-6 border-gray-400 w-full'>
-              <div className='flex justify-center'>
-                <div className='flex items-center'>
-                  <i className="mr-1 ri-calendar-event-fill"></i>
-                  <input required name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" 
-                          value={time.ngayDat} 
-                          onChange={e => {
-                            setTime({...time, ngayDat: e.target.value}),
-                            setData({...data, ngayDat: e.target.value})
-                  }} />
-                </div>
-                <div className='flex items-center'>
-                  Từ:
-                  <input required type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' 
-                      value={time.thoiGianBatDau} 
-                      onChange={e => {
-                        setTime({...time, thoiGianBatDau: e.target.value}),
-                        setData({...data, thoiGianBatDau: e.target.value})
-                      }} 
-                  />
-                </div>
-                <div className='flex items-center'>
-                  Đến:
-                  <input required type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' 
-                      value={time.thoiGianKetThuc} 
-                      onChange={e => {
-                        setTime({...time, thoiGianKetThuc: e.target.value}),
-                        setData({...data, thoiGianKetThuc: e.target.value})
-                      }} 
-                  />
-                </div>
-              </div>
               
               {!data._id ? 
-                <div className='flex gap-2 pt-2'>
-                  <div className='w-2/5 text-sm'>
+                <div className='flex gap-2'>
+                  <div className='flex-1 text-sm'>
                     <div className='flex justify-between py-1'>
                       <h1 className='font-bold'>Chọn sân</h1>
            
                       <select name="filter" id="" onChange={e => setFilter(e.target.value)} className='bg-gray-300 rounded-md border border-gray-400'>
-                        <option value="Chọn sân">Chọn sân</option>
+                        <option value="">Chọn sân</option>
                         <option value="Bóng đá">Bóng đá</option>
                         <option value="Bóng chuyền">Bóng chuyền</option>
                         <option value="Bóng rổ">Bóng rổ</option>
@@ -365,39 +401,78 @@ function FromBooking(props) {
                     
       
                     </div>
-                    <div name="" id="" className='flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2 h-36 overflow-y-scroll'>
-                    {time.ngayDat && time.thoiGianBatDau && time.thoiGianKetThuc ?
-                      filterList().map(facility => {
-                        return <div key={facility._id} className='border-b hover:bg-gray-200 border-gray-300 p-1 flex items-center'>
-                                  <p className='w-1/4 inline-block'>{facility.ma_San}</p>
-                                  <div className='w-3/5 pl-1 inline-block'>
-                                    <p>{facility.ten_San}</p>
-                                    <p>{formatNumber(facility.bangGiaMoiGio)}/giờ</p>
-                                  </div>
-                                  <i className="ml-1 ri-add-circle-fill text-lg text-green-600 cursor-pointer hover:scale-125" onClick={e => addFac(facility)}></i>
+                    <div name="" id="" className='flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2'>
+                      <div className='flex-1'>
+                        <div className='flex justify-between'>
+                          <div>
+                            <input type="date" className='border border-gray-400 rounded-md p-1' value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
+                            
+                          </div>
+                          {/* <div>
+                            <p className='border border-gray-400 rounded-md p-1 px-2'>Tuần</p>
+                          </div> */}
+                        </div>
+                        <div className='max-h-[35vh] overflow-y-scroll'>
+                          <div className='flex border-b-2 text-center py-2 border-gray-400'>
+                            <div className='w-1/6 font-bold'>Bắt đầu</div>
+                            <div className='w-1/6 font-bold'>Kết thúc</div>
+                            <div className='flex-1 font-bold'>Sân</div>
+                            <div className='flex-1 font-bold'>Giá</div>
+                            <div className='flex-1 font-bold'>Tình trạng</div>
+                            <div className='mx-4'></div>
+                          </div>
+                          {timeSlots.map((slot, index) => (
+                          <div className={`flex items-center border-b text-center border-gray-400`} key={index}>
+                            <div className='w-1/6'>
+                              {slot.formattedTimeStart}
+                            </div>
+                            <div className='w-1/6'>
+                              {slot.formattedTimeEnd}
+                            </div>
+                            <div className="flex-1">
+                              {filterList()?.map((san) => 
+                              <div className={`flex py-2 border border-gray-400
+                                  ${
+                                    san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                                    ? 'bg-gray-300' : ''
+                                  }
+                                `} 
+                                key={san._id}
+                              >
+                                <div className="flex-1">
+                                  {san.ten_San }
+                                </div>
+                                <div className="flex-1">{formatNumber(san.bangGiaMoiGio || 0)}</div>
+                                <div className="flex-1">
+                                  {
+                                    san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                                    ? 'Đã đặt' : 'Trống'
+                                  }
+                                </div>
+                                <div className='mx-2'>
+                                  <input type="checkbox" className='w-5 h-5' 
+                                    checked={checkedSlots.includes(`${san._id}_${slot.formattedTimeStart}_${currentDate}`)} 
+                                    onChange={e => handleBooking({
+                                      thoiGianBatDau: slot.formattedTimeStart,
+                                      thoiGianKetThuc: slot.formattedTimeEnd,
+                                      khachHang: customer,
+                                      san: san,
+                                      ngayDat: currentDate,
+                                      thanhTien: san.bangGiaMoiGio
+                                    }, e.target.checked)}
+                                    disabled={san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd}
+                                  />
+                                </div>
                               </div>
-                      }) : 'Vui lòng nhập ngày, giờ để xem sân trống !!!'
-                    }
+                              )}
+                            </div>
+                          </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className='flex-1 text-sm'>
-                    <h1 className='font-bold py-1'>Đã chọn</h1>
-                    <div name="" id="" className={`flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2 h-36 overflow-y-scroll ${missError ? 'bg-red-200 border-red-600' : ''}`}>
-                    {missError ? <p>Chưa chọn sân</p> : ''}
-                    {
-                      listSelected.map(facility => {
-                        return <div key={facility._id} className='border-b hover:bg-gray-200 border-gray-300 p-1 flex items-center'>
-                                  <p className='w-1/4 inline-block'>{facility.ma_San}</p>
-                                  <div className='w-3/5 pl-1 inline-block'>
-                                    <p>{facility.ten_San}</p>
-                                    <p>{formatNumber(facility.bangGiaMoiGio)}/giờ</p>
-                                  </div>
-                                  <i className="ml-1 ri-close-circle-fill text-lg text-red-600 cursor-pointer hover:scale-125" onClick={e => removeFac(facility)}></i>
-                              </div>
-                      })
-                    }
-                    </div>
-                  </div>
+                  
                 </div>
                 : 
 
@@ -416,7 +491,7 @@ function FromBooking(props) {
 
                       <h1 className='font-bold'>ĐỔI SÂN</h1>
                       <select name="filter" id="" onChange={e => setFilter(e.target.value)} className='bg-gray-300 rounded-md border border-gray-400'>
-                        <option value="Chọn sân">Chọn sân</option>
+                        <option value="">Chọn sân</option>
                         <option value="Bóng đá">Bóng đá</option>
                         <option value="Bóng chuyền">Bóng chuyền</option>
                         <option value="Bóng rổ">Bóng rổ</option>
@@ -425,127 +500,128 @@ function FromBooking(props) {
                     
       
                     </div>
-                    <div name="" id="" className='flex-1 border border-gray-400 mb-2 rounded-xl p-1 h-40 pl-2 overflow-y-scroll'>
-                    {time.ngayDat && time.thoiGianBatDau && time.thoiGianKetThuc ?
-                      filterList().map(facility => {
-                        return <div key={facility._id} className='border-b hover:bg-gray-200 border-gray-300 p-1 flex items-center'>
-                                  <p className='w-1/4 inline-block'>{facility.ma_San}</p>
-                                  <div className='w-3/5 pl-1 inline-block'>
-                                    <p>{facility.ten_San}</p>
-                                    <p>{formatNumber(facility.bangGiaMoiGio)}/giờ</p>
-                                  </div>
-                                  <input type="radio" name="changeField" 
-                                    className="w-5 h-5" 
-                                    onChange={e => {
-                                      const chenhLech = data.thanhTien - (data.san.bangGiaMoiGio - facility.bangGiaMoiGio)*calculateTimeDifference(data.thoiGianBatDau, data.thoiGianKetThuc);
-                                      console.log(chenhLech)
-                                      setData({...data, san: facility, thanhTien: chenhLech})
-                                    }}
-                                  />
-                           
+                    <div name="" id="" className='flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2'>
+                    <div className='flex-1'>
+                      
+                      <div className='flex justify-between'>
+                        <div>
+                          <input type="date" className='border border-gray-400 rounded-md p-1' value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
+                         
+                        </div>
+                        {/* <div>
+                          <p className='border border-gray-400 rounded-md p-1 px-2'>Tuần</p>
+                        </div> */}
+                      </div>
+                      <div className='max-h-[35vh] overflow-y-scroll'>
+                        <div className='flex border-b-2 text-center py-2 border-gray-400'>
+                          <div className='w-1/6 font-bold'>Bắt đầu</div>
+                          <div className='w-1/6 font-bold'>Kết thúc</div>
+                          <div className='flex-1 font-bold'>Sân</div>
+                          <div className='flex-1 font-bold'>Giá</div>
+                          <div className='flex-1 font-bold'>Tình trạng</div>
+                          <div className='mx-4'></div>
+                        </div>
+                        {timeSlots.map((slot, index) => (
+                        <div className={`flex items-center border-b text-center border-gray-400`} key={index}>
+                          <div className='w-1/6'>
+                            {slot.formattedTimeStart}
+                          </div>
+                          <div className='w-1/6'>
+                            {slot.formattedTimeEnd}
+                          </div>
+                          <div className="flex-1">
+                            {filterList()?.map((san) => 
+                            <div className={`flex py-2 border border-gray-400
+                                ${
+                                  san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                                  ? 'bg-gray-300' : ''
+                                }
+                              `} 
+                              key={san._id}
+                            >
+                              <div className="flex-1">
+                                {san.ten_San }
                               </div>
-                      }) : 'Vui lòng nhập ngày, giờ để xem sân trống !!!'
-                    }
+                              <div className="flex-1">{formatNumber(san.bangGiaMoiGio || 0)}</div>
+                              <div className="flex-1">
+                                {
+                                  san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                                  ? 'Đã đặt' : 'Trống'
+                                }
+                              </div>
+                              <div className='mx-2'>
+                                {/* <button type='button'
+                                  onClick={e => handleBooking({
+                                    thoiGianBatDau: slot.formattedTimeStart,
+                                    thoiGianKetThuc: slot.formattedTimeEnd,
+                                    khachHang: user.user,
+                                    san: san,
+                                    ngayDat: currentDate,
+                                    thanhTien: san.bangGiaMoiGio
+                                  })}
+                                >
+                                  <i class="ri-add-circle-fill"></i>
+                                </button> */}
+                                <input type="checkbox" className='w-5 h-5' 
+                                  checked={checkedSlots.includes(`${san._id}_${slot.formattedTimeStart}_${currentDate}`)} 
+                                  onChange={e => handleBooking({
+                                    thoiGianBatDau: slot.formattedTimeStart,
+                                    thoiGianKetThuc: slot.formattedTimeEnd,
+                                    khachHang: user.user,
+                                    san: san,
+                                    ngayDat: currentDate,
+                                    thanhTien: san.bangGiaMoiGio
+                                  }, e.target.checked)}
+                                  disabled={san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd}
+                                />
+                              </div>
+                            </div>
+                            )}
+                          </div>
+                        </div>
+                        ))}
+                      </div>
                     </div>
-                    
-
+                    </div>
                   </div>
                 </div>
              
                 }    
 
           
-              <div className='flex-1 text-sm'>
-                <h1 className='text-center font-bold'>DỊCH VỤ</h1>
-                <div className='mt-0 flex-1 flex gap-2'>
-                  <div className='w-2/5'>     
-                    <input type="text" className='border border-gray-400 mb-2 rounded-md pl-2 w-full' placeholder='Tìm kiếm'/>
-                    <div className="border border-gray-500 rounded-lg h-32 lg:h-40 px-2 overflow-x-hidden overflow-y-scroll">
-                      <div className='flex text-center font-bold border-b border-gray-400 '>
-                        <div className="w-1/2">Tên</div>
-                        <div className="w-1/3">Giá</div> 
-                      </div>
-                      
-                      {listService ? listService?.map(item => 
-                      <div key={item._id} className='flex border-b border-gray-300 items-center text-center hover:bg-gray-200'>
-                        <div className="w-1/2">{item.ten_DV}</div>
-                        <div className="w-1/3">{formatNumber(item.gia)}</div>
-                        <i className="w-1/6 ri-add-circle-fill text-lg text-green-600 cursor-pointer hover:scale-125" onClick={e => addSelected(item)}></i>
-                      </div> ) 
-                      : '' }
-
-
-                    </div>
-                  </div>
-                  <div className='flex-1'>
-                    Đã chọn:
-                    <div className="border mt-2 border-gray-500 rounded-lg h-32 lg:h-40 overflow-x-hidden overflow-y-scroll px-2">
-                      <div className='flex text-center font-bold border-b border-gray-400'>
-                        {!data._id ? <div className='w-1/12'>Sân</div> : ''}
-                        <div className="w-4/12">Tên</div>
-                        <div className="w-3/12">Số lượng</div> 
-                        <div className="w-3/12">Giá</div> 
-                      </div>
-
-                      {listServiceSelected?.map((item, index)=> {
-                      item.thanhTien = item.soluong*item.gia;
-                      return <div key={index} className='flex border-b border-gray-300 items-center text-center mt-1 hover:bg-gray-200'>
-                        {!data._id ? 
-                        <div className='w-1/12'>
-                          <select 
-                            name="" 
-                            id="" 
-                            onChange={e => {
-                              const updatedList = listServiceSelected.map((service, i) => 
-                                i === index ? { ...service, ma_San: e.target.value } : service // Cập nhật item tại vị trí index
-                              );
-                              setListServiceSelected(updatedList); // Cập nhật danh sách
-                            }}
-                          >
-                            <option value="">Sân</option>
-                            {listSelected?.map((san) => 
-                              <option key={san.ma_San} value={san.ma_San}>{san.ma_San}</option>
-                            )}
-                          </select>
+              <div className='flex flex-col flex-1 pt-1'>
+                Sân đã chọn:
+                  <div className="flex-1 overflow-y-scroll border-2 px-2 min-h-60 border-gray-400 rounded-lg">
+                    {booking?.map((bk, index) => 
+                      <div key={index} className='flex flex-col justify-around'>
+                        <div className='flex py-2 justify-around items-center border-b border-gray-400'>
+                          <p>{bk.ngayDat}</p>
+                          <p>{bk.thoiGianBatDau} - {bk.thoiGianKetThuc}</p>
+                          <p>{bk.san.ten_San}</p>
+                          <p>{formatNumber(bk.thanhTien || 0)}</p>
+                          <button type='button' onClick={e=> setModalService(bk)} className='border border-green-600 p-1 rounded-md text-green-600 hover:text-white hover:bg-green-500'>Thêm dịch vụ</button>
                         </div>
-                        : ''}
-                        <div className="w-4/12">{item.ten_DV}</div>
-                        <div className='w-3/12'>
-                          <input required type="number" 
-                            className='border border-gray-500 w-1/2' 
-                            value={item.soluong}
-                            min={1}
-                            onChange={(e) => handleQuantityChange(item._id, parseInt(e.target.value, 10))}
-                          />
-
-                        </div>
-                        <div className="w-3/12">{formatNumber(item.thanhTien)}</div>
-                        <i className="ri-close-circle-fill text-lg text-red-600 cursor-pointer hover:scale-125" 
-                            onClick={e => removeSelected(item)}></i>
-                      </div>})
-                      }
-
-
-                    </div>
-                    
+                        {bk.dichVu?.map((dichVu) => 
+                          <div key={dichVu._id} className='ml-7 flex border-b text-center justify-between p-2 border-l-2 border-gray-400'>
+                            <p className='flex-1'>{dichVu.ten_DV}</p>
+                            <p className='flex-1'>x {dichVu.soluong}</p>
+                            <p className='flex-1'>{formatNumber(dichVu.thanhTien)}</p>
+                          </div>
+                        )} 
+                        {modalService ? <FormService toggle={setModalService} service={modalService} handle={handleService} /> : ''}
+                      </div>
+                    )}
                   </div>
-                </div>
+                  
+                  <p>Tổng tiền: <b>{formatNumber(booking.reduce((a, c) => {
+                      const tienSan = c.san?.bangGiaMoiGio || 0; // Tiền sân
+                      const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
+                      return a + tienSan + tienDichVu;
+                    }, 0))}</b>
+                  </p>
               </div>
 
             </div>
-            
-              {/* <div>Sân
-                 <div className='border border-gray-400 flex justify-around text-center'>
-                   <p className='px-1 border border-gray-400'>{data.san.ma_San}</p>
-                   <p className='px-1 border border-gray-400 flex-1'>{data.san.ten_San}</p>
-                   <p className='px-1 border border-gray-400 flex-1'>{data.thoiGianBatDau} - {data.thoiGianKetThuc}</p>
-                   <p className='px-1 border border-gray-400'>{data.ngayDat}</p>
-                 </div>
-               </div>  */}
-
-            
-            
-
           </div>
         <button className='bg-green-600 m-4 py-1 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
       </form>
