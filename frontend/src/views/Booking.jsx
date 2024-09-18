@@ -263,7 +263,7 @@ const Booking = () => {
             </div>
           </div>
           <div className="w-1/6">
-            <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i>
+            {/* <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i> */}
           </div>
         </div>
 

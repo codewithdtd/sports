@@ -72,6 +72,7 @@ function FacilityManagement() {
       if(await createFacility(data))
         console.log('Đã thêm mới');
     }
+    setFac(fac);
     setEdit(!edit);  
   };
   // định dạng số
@@ -222,7 +223,7 @@ function FacilityManagement() {
             </div>
           </div>
           <div className="w-1/6">
-            <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i>
+            {/* <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i> */}
           </div>
         </div>
 
