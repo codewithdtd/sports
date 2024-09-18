@@ -14,6 +14,8 @@ const Invoice = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [merge, setMerge] = useState(false)
   const [listMerge, setListMerge] = useState([])
+  const [isChecked, setIsChecked] = useState({});
+
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
 
@@ -66,12 +68,28 @@ const Invoice = () => {
   const mergeInvoice = () => {
     setMerge(!merge)
     setListMerge([])
+    setIsChecked({})
   }
   const handleMerge = (data, checked) => {
-    if(checked)
-      setListMerge([...listMerge, data])
+    if(checked) {
+      const isMatch = listMerge.some(item => 
+        item.khachHang.sdt_KH === data.khachHang.sdt_KH &&
+        item.datSan.ngayDat === data.datSan.ngayDat &&
+        item.datSan.thoiGianBatDau === data.datSan.thoiGianBatDau &&
+        item.datSan.thoiGianKetThuc === data.datSan.thoiGianKetThuc
+      );
+      if (listMerge.length === 0 || isMatch) {
+        setListMerge([...listMerge, data]); 
+        setIsChecked(prevState => ({ ...prevState, [data._id]: true }));
+      } else {
+        console.log(isMatch)
+        console.log("Lỗi: Không thêm được.");
+        setIsChecked(prevState => ({ ...prevState, [data._id]: false }));
+      }
+    }
     else {
       setListMerge(listMerge.filter(item => item._id != data._id))
+      setIsChecked(prevState => ({ ...prevState, [data._id]: false }));
     }
     console.log(listMerge)
   }
@@ -171,7 +189,7 @@ const Invoice = () => {
             </div>
           </div>
           <div className="w-1/6">
-            <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i>
+            {/* <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i> */}
           </div>
         </div>
 
@@ -199,13 +217,19 @@ const Invoice = () => {
             {/* <i className="ri-delete-bin-2-line w-[40px] h-[40px] bg-red-600 text-white p-2 rounded-md" onClick={e => deleteBooking(facility)} ></i> */}
           </div>
           
-          {merge ? <input type="checkbox" className='w-4 h-4' onChange={e => handleMerge(item, e.target.checked)} /> : '' }
+          {merge ? 
+          <input 
+              type="checkbox" 
+              className='w-4 h-4' 
+              onChange={e => handleMerge(item, e.target.checked)} 
+              checked={!!isChecked[item._id]}
+          /> : '' }
           
         </div>
         : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
         }
       </div>
-      {merge ? <button className='float-end border text-green-600 rounded-md border-green-500 p-1 m-1'>Xuất hóa đơn</button> : ''}
+      {merge ? <button className='float-end border text-green-600 rounded-md border-green-500 p-1 m-1' onClick={e => {if(listMerge.length > 0) setEdit(!edit)}}>Xuất hóa đơn</button> : ''}
 
       {/* Phân trang */}
       <Pagination
@@ -215,7 +239,7 @@ const Invoice = () => {
         />
 
     
-      {edit ? <FormInvoice toggle={setEdit} data={fac} listDate={listMerge} /> : '' }
+      {edit ? <FormInvoice toggle={setEdit} data={fac} listData={listMerge} /> : '' }
       
     </div>
   )
