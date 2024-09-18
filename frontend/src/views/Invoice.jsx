@@ -12,7 +12,8 @@ const Invoice = () => {
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [merge, setMerge] = useState(false)
+  const [listMerge, setListMerge] = useState([])
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
 
@@ -61,6 +62,19 @@ const Invoice = () => {
     setFac(data);
     setEdit(!edit);  
   };
+
+  const mergeInvoice = () => {
+    setMerge(!merge)
+    setListMerge([])
+  }
+  const handleMerge = (data, checked) => {
+    if(checked)
+      setListMerge([...listMerge, data])
+    else {
+      setListMerge(listMerge.filter(item => item._id != data._id))
+    }
+    console.log(listMerge)
+  }
   // Lấy dữ liệu từ server
   const getInvoice = async () => {
     const data = await invoiceService.getAll();
@@ -114,10 +128,10 @@ const Invoice = () => {
           </div>
         : '' }
         </div> 
-        <button className="bg-green-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-green-700 w-10 h-10 m-auto rounded-xl"
-                onClick={e => handleData()}
+        <button className="bg-green-500 ml-3 p-2 text-white cursor-pointer hover:bg-green-700 m-auto rounded-lg"
+              onClick={mergeInvoice}  
         >
-          +
+          Gộp hóa đơn
         </button>
       </div>
 
@@ -184,10 +198,14 @@ const Invoice = () => {
             <i className="ri-eye-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(item)}></i>
             {/* <i className="ri-delete-bin-2-line w-[40px] h-[40px] bg-red-600 text-white p-2 rounded-md" onClick={e => deleteBooking(facility)} ></i> */}
           </div>
+          
+          {merge ? <input type="checkbox" className='w-4 h-4' onChange={e => handleMerge(item, e.target.checked)} /> : '' }
+          
         </div>
         : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
         }
       </div>
+      {merge ? <button className='float-end border text-green-600 rounded-md border-green-500 p-1 m-1'>Xuất hóa đơn</button> : ''}
 
       {/* Phân trang */}
       <Pagination
@@ -197,7 +215,7 @@ const Invoice = () => {
         />
 
     
-      {edit ? <FormInvoice toggle={setEdit} data={fac} /> : '' }
+      {edit ? <FormInvoice toggle={setEdit} data={fac} listDate={listMerge} /> : '' }
       
     </div>
   )

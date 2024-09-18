@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import Header from '../components/Header'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import FromFacilityManagement from '../components/FromFacilityManagement';
+import FormFacilityManagement from '../components/FormFacilityManagement';
 import facilityService from '../services/facility.service';
 import Pagination from'../components/Pagination';
 function FacilityManagement() {
@@ -264,7 +264,7 @@ function FacilityManagement() {
           onPageChange={handlePageChange}
         />
         {/* from nhập dữ liệu */}
-      {edit ? <FromFacilityManagement toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
+      {edit ? <FormFacilityManagement toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
     </div>
   )
 }

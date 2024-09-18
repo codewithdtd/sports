@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import sportTypeService from '../services/sportType.service';
 import Pagination from '../components/Pagination';
-import FromSportType from '../components/FromSportType';
+import FormSportType from '../components/FormSportType';
 
 const SportType = () => {
   const user = useSelector((state)=> state.user.login.user)
@@ -169,7 +169,7 @@ const SportType = () => {
           onPageChange={handlePageChange}
         />
 
-      {edit ? <FromSportType bookingList={list} toggle={setEdit} handleData={handleData} data={fac} /> : '' }
+      {edit ? <FormSportType bookingList={list} toggle={setEdit} handleData={handleData} data={fac} /> : '' }
 
     </div>
   )

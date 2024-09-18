@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import FromBooking from '../components/FromBooking';
+import FormBooking from '../components/FormBooking';
 import bookingService from '../services/booking.service';
 import facilityService from '../services/facility.service';
 import Pagination from '../components/Pagination';
@@ -312,7 +312,7 @@ const Booking = () => {
           onPageChange={handlePageChange}
         />
         {/* from nhập dữ liệu */}
-      {edit ? <FromBooking bookingList={list} toggle={setEdit} handleData={handleData} data={fac} /> : '' }
+      {edit ? <FormBooking bookingList={list} toggle={setEdit} handleData={handleData} data={fac} /> : '' }
     </div>
   )
 }
