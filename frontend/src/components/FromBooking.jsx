@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import facilityService from '../services/facility.service';
 import serviceService from '../services/service.service';
 import userService from '../services/user.service';
+import sportTypeService from '../services/sportType.service';
 import FormService from './FormService';
 
 
@@ -19,12 +20,12 @@ function FromBooking(props) {
   const [missError, setMissError] = useState(false)
   const [checkedSlots, setCheckedSlots] = useState([]);
   const [bookingsByDate, setBookingsByDate] = useState({});
-  const [booking, setBooking] = useState([data]);
+  const [booking, setBooking] = useState([]);
   const [customer, setCustomer] = useState(null);
   const [modalService, setModalService] = useState(null)
-
+  const [listSportType, setListSportType] = useState(null) 
   const [fieldChange, setFieldChange] = useState(null)
-
+  const [validateDate, setValidateDate] = useState(false)
   const [currentDate, setCurrentDate] = useState(getCurrentDate());
   const startTime = 8; // 8:00
   const endTime = 22; // 22:00
@@ -67,8 +68,15 @@ function FromBooking(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
-    // if(listSelected.length > 0) 
-    //   data.san = listSelected;
+    if(booking.length <= 0) {
+      console.log('miss');
+      setMissError(true)
+      return;
+    }
+    if(validateDate) {
+      console.log('ngày lỗi')
+      return;
+    }
   
    
     data._id ? data.phuongThuc = 'edit' : data.phuongThuc = 'create';
@@ -106,6 +114,11 @@ function FromBooking(props) {
     setListUser(user);
     const services = await serviceService.getAll();
     setListService(services);
+    const sportType = await sportTypeService.getAll();
+    setListSportType(sportType);
+    if(data._id) {
+      setBooking([data])
+    }
   }
   // Lấy dữ liệu sân đã đặt
   const getFacilityBooked = async () => {
@@ -245,6 +258,11 @@ function FromBooking(props) {
     const key = `${data.san._id}_${data.thoiGianBatDau}_${data.ngayDat}`;  // Tạo key duy nhất cho mỗi sân và thời gian
 
     if (checked) {
+      if(data.ngayDat < getCurrentDate()) {
+        setValidateDate(true)
+        return;
+      }
+      setValidateDate(false)
       // Thêm phần tử vào danh sách đặt sân và đánh dấu slot này đã được check
       if(props.data._id) {
         setBooking([])
@@ -268,12 +286,36 @@ function FromBooking(props) {
     }
   };
 
+  const handleChangeField = (data) => {
+    const key = `${data.san._id}_${data.thoiGianBatDau}_${data.ngayDat}`;  // Tạo key duy nhất cho mỗi sân và thời gian
+
+    if(props.data._id) {
+        setBooking([])
+        // setFieldChange(data)
+        setData({...props.data, san: data.san, thoiGianBatDau: data.thoiGianBatDau, thoiGianKetThuc: data.thoiGianKetThuc, ngayDat: data.ngayDat})
+    }
+    // setBooking([...booking, data]);
+    // setCheckedSlots([...checkedSlots, key]);
+    setBooking(prevBooking => [
+      ...prevBooking.filter(item => !(item.thoiGianBatDau === data.thoiGianBatDau && item.san._id === data.san._id && item.ngayDat === data.ngayDat)),
+      data
+    ]);
+  }
+
   const handleService = (data) => {
     setBooking(prevBooking => 
       prevBooking.map(item => 
         item._id === data._id ? data : item
       )
     );
+  }
+
+  const checkValidateDate = (date) => {
+    if(date >= getCurrentDate) {
+      console.log(date)
+      setCurrentDate(date)
+    } else 
+      setValidateDate(true)
   }
   useEffect(() => {
     // Lưu trạng thái trước khi thay đổi currentDate
@@ -416,10 +458,9 @@ function FromBooking(props) {
            
                       <select name="filter" id="" onChange={e => setFilter(e.target.value)} className='bg-gray-300 rounded-md border border-gray-400'>
                         <option value="">Chọn sân</option>
-                        <option value="Bóng đá">Bóng đá</option>
-                        <option value="Bóng chuyền">Bóng chuyền</option>
-                        <option value="Bóng rổ">Bóng rổ</option>
-                        <option value="Cầu lông">Cầu lông</option>
+                        {listSportType?.map(sportType => 
+                        <option value={sportType.ten_loai}>{sportType.ten_loai}</option>
+                        )}
                       </select>
                     
       
@@ -428,8 +469,8 @@ function FromBooking(props) {
                       <div className='flex-1'>
                         <div className='flex justify-between'>
                           <div>
-                            <input type="date" className='border border-gray-400 rounded-md p-1' value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
-                            
+                            <input min={getCurrentDate()} type="date" className={`border rounded-md p-1 ${validateDate ? 'border-red-400 bg-red-100' : 'border-gray-400'}`} value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
+                            {validateDate ? <p className='text-red-500'>Vui lòng chọn ngày chính xác</p> : ''}
                           </div>
                           {/* <div>
                             <p className='border border-gray-400 rounded-md p-1 px-2'>Tuần</p>
@@ -515,10 +556,9 @@ function FromBooking(props) {
                       <h1 className='font-bold'>ĐỔI SÂN</h1>
                       <select name="filter" id="" onChange={e => setFilter(e.target.value)} className='bg-gray-300 rounded-md border border-gray-400'>
                         <option value="">Chọn sân</option>
-                        <option value="Bóng đá">Bóng đá</option>
-                        <option value="Bóng chuyền">Bóng chuyền</option>
-                        <option value="Bóng rổ">Bóng rổ</option>
-                        <option value="Cầu lông">Cầu lông</option>
+                        {listSportType?.map(sportType => 
+                        <option value={sportType.ten_loai}>{sportType.ten_loai}</option>
+                        )}
                       </select>
                     
       
@@ -528,8 +568,8 @@ function FromBooking(props) {
                       
                       <div className='flex justify-between'>
                         <div>
-                          <input type="date" className='border border-gray-400 rounded-md p-1' value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
-                         
+                          <input min={getCurrentDate()} type="date" className={`border rounded-md p-1 ${validateDate ? 'border-red-400 bg-red-100' : 'border-gray-400'}`} value={currentDate} onChange={e => checkValidateDate(e.target.value)} />
+                          {validateDate ? <p className='text-red-500'>Vui lòng chọn ngày chính xác</p> : ''}
                         </div>
                         {/* <div>
                           <p className='border border-gray-400 rounded-md p-1 px-2'>Tuần</p>
@@ -574,16 +614,16 @@ function FromBooking(props) {
                               </div>
                               <div className='mx-2'>
             
-                                <input type="checkbox" className='w-5 h-5' 
-                                  checked={checkedSlots.includes(`${san._id}_${slot.formattedTimeStart}_${currentDate}`)} 
-                                  onChange={e => handleBooking({
+                                <input type="radio" className='w-5 h-5' name='change'
+                                  // checked={checkedSlots.includes(`${san._id}_${slot.formattedTimeStart}_${currentDate}`)} 
+                                  onChange={e => handleChangeField({
                                     thoiGianBatDau: slot.formattedTimeStart,
                                     thoiGianKetThuc: slot.formattedTimeEnd,
                                     khachHang: data.khachHang,
                                     san: san,
                                     ngayDat: currentDate,
                                     thanhTien: san.bangGiaMoiGio
-                                  }, e.target.checked)}
+                                  })}
                                   disabled={san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd}
                                 />
                               </div>
@@ -601,9 +641,10 @@ function FromBooking(props) {
                 }    
 
           
-              <div className='flex flex-col flex-1 pt-1'>
+              <div className={`flex flex-col flex-1 pt-1`}>
                 Sân đã chọn:
-                  <div className="flex-1 overflow-y-scroll border-2 px-2 min-h-60 border-gray-400 rounded-lg">
+                  <div className={`flex-1 overflow-y-scroll border-2 px-2 min-h-60 rounded-lg ${missError ? 'border-red-400 bg-red-100' : 'border-gray-400 '}`}>
+                    {missError ? <p className='text-red-600'>Chưa chọn sân</p> : ''}
                     {booking?.map((bk, index) => 
                       <div key={index} className='flex flex-col justify-around'>
                         <div className='flex py-2 justify-around items-center border-b border-gray-400'>

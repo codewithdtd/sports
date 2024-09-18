@@ -60,7 +60,38 @@ const Booking = () => {
   const handleData = async (data = {}) => {
     (data.khachHang)
       ? setFac(data) 
-      : '';
+      : setFac({
+          khachHang: {
+            ho_KH: "",
+            ten_KH: "",
+            email_KH: "",
+            sdt_KH: "",
+            hinhAnh_KH: "",
+          },
+          trangThai: "",
+          san: {
+            _id: "",
+            ten_San: "",
+            loai_San: "",
+            tinhTrang: "",
+            khuVuc: "",
+            hinhAnh_San: "",
+            ngayTao_San: "",
+            ngayCapNhat_San: "",
+            bangGiaMoiGio: 0,
+            ma_San: ""
+          },
+          thoiGianBatDau: "",
+          thoiGianKetThuc: "",
+          thoiGianCheckIn: "",
+          thoiGianCheckOut: "",
+          hoiVien: "",
+          thanhTien: 0,
+          ghiChu: "",
+          ngayDat: "",
+          ngayTao: "",
+            
+        });
       console.log(data)
     if(data.phuongThuc == 'edit') {
       console.log('edit')
