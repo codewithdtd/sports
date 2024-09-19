@@ -51,28 +51,29 @@ function FacilityManagement() {
 
   const handleFacility = async (data = {}) => {
     console.log(data);
-    (data != {})
-      ? setFac(data) 
-      : setFac({
-          _id: null,
-          ten_San: "",
-          loai_San: "",
-          tinhTrang: "",
-          khuVuc: "",
-          hinhAnh_San: "",
-          bangGiaMoiGio: 0,
-        });
+    setFac(data)
+    // !data._id
+    //   ? setFac({
+    //       _id: null,
+    //       ten_San: "",
+    //       loai_San: "",
+    //       tinhTrang: "",
+    //       khuVuc: "",
+    //       hinhAnh_San: "",
+    //       bangGiaMoiGio: 0,
+    //     })
+    //   : setFac(data) 
     if(data.phuongThuc == 'edit') {
       console.log('edit')
       if(await editFacility(data))
         console.log('Đã cập nhật');
+      // setFac(fac)
     }
     if(data.phuongThuc == 'create') {
       console.log('create')
       if(await createFacility(data))
         console.log('Đã thêm mới');
     }
-    setFac(fac);
     setEdit(!edit);  
   };
   // định dạng số

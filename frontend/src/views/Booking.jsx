@@ -6,6 +6,7 @@ import facilityService from '../services/facility.service';
 import Pagination from '../components/Pagination';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import serviceService from '../services/service.service';
 const Booking = () => {
   // const dispatch = useDispatch();
   const user = useSelector((state)=> state.user.login.user)
@@ -111,7 +112,14 @@ const Booking = () => {
     if(data.phuongThuc == 'create') {
       console.log('create')
       console.log(data)
-      if(await createBooking(data))
+      const updatedServices = await Promise.all(
+        data.dichVu?.map(async (service) => {
+          service.tonKho -= service.soluong;
+          // service.choMuon += service.soluong;
+          return await serviceService.update(service._id, service);
+        })
+      );
+      if(await createBooking(data) && updatedServices)
         console.log('Đã thêm mới');
     }
     setEdit(!edit);  

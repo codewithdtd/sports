@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 
 const serviceSchema = new mongoose.Schema({
   ten_DV: { type: String, required: true },
-  dungCu: { type: Object, required: true },
+  // dungCu: { type: Object, required: true },
+  tonKho: { type: Number, required: true },
+  // choMuon: { type: Number, default: 0 },
   gia: { type: Number, required: true },
   ngayTao_DV: { type: String },
   da_xoa: { type: Boolean, default: false },

@@ -28,6 +28,7 @@ function FromFacility(props) {
 
   useEffect(() => {
     setData(props.data);
+    console.log(props.data)
     getSportType();
     setShow(true)
   }, [props.data]);
@@ -48,10 +49,12 @@ function FromFacility(props) {
             <div className="flex">
               <label htmlFor="" className='w-1/4'>Loại sân:</label>
               {/* <input name='loai_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.loai_San} onChange={e => setData({...data, loai_San: e.target.value})}/> */}
-              <select name="" id="" className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2'>
+              <select name="" id="" className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2'
+                onChange={e => setData({...data, loai_San: e.target.value})}
+              >
                 <option value="">Loại sân</option>
                 {sportType?.map((item) => 
-                  <option value="">{item.ten_loai}</option>
+                  <option value={item.ten_loai}>{item.ten_loai}</option>
                 )}
               </select>
             </div>

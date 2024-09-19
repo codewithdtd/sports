@@ -6,12 +6,14 @@ import FormFacility from '../components/FormFacility';
 import invoiceService from '../services/invoice.service';
 import bookingService from '../services/booking.service';
 import facilityService from '../services/facility.service';
+import sportTypeService from '../services/sportType.service';
 import Pagination from '../components/Pagination';
 
 function Facility() {
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [facilities, setFacilities] = useState([]);
+  const [sportType, setSportType] = useState([]);
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
 
@@ -42,18 +44,20 @@ function Facility() {
 
 
   const backgroundSan = (data) => {
-    switch (data) {
-      case 'Bóng đá':
-        return './src/assets/img/football.png';
-      case 'Bóng rổ':
-        return './src/assets/img/basketball-ball.png';
-      case 'Bóng chuyền':
-        return './src/assets/img/volleyball-ball.png';
-      case 'Cầu lông':
-        return './src/assets/img/shuttlecock.png';
-      default: 
-        break;
-    }
+    // switch (data) {
+    //   case 'Bóng đá':
+    //     return './src/assets/img/football.png';
+    //   case 'Bóng rổ':
+    //     return './src/assets/img/basketball-ball.png';
+    //   case 'Bóng chuyền':
+    //     return './src/assets/img/volleyball-ball.png';
+    //   case 'Cầu lông':
+    //     return './src/assets/img/shuttlecock.png';
+    //   default: 
+    //     break;
+    // }
+    const foundSport = sportType.find(item => item.ten_loai === data);
+    return foundSport ? foundSport.hinhAnhDaiDien : null;
   } 
 
   const handleFacility = async (data = {}) => {
@@ -144,6 +148,8 @@ function Facility() {
   const getFacility = async () => {
     const data = await facilityService.getAll();
     setFacilities(data);
+    const sp = await sportTypeService.getAll()
+    setSportType(sp)
     console.log('tải lại')
   }
     // Lấy dữ liệu sân đã đặt
@@ -296,7 +302,7 @@ function Facility() {
               <p>{facility.datSan ? facility.datSan.khachHang.ho_KH+' '+facility.datSan.khachHang.ten_KH : ''}</p>
             </div>
             <div className='bg-white relative facility-item-name pl-1 min-h-20 sm:min-h-24 md:h-36 justify-center items-center bg-no-repeat bg-center flex text-lg font-extrabold'>
-              <img src={backgroundSan(facility.loai_San)} className='absolute w-1/3 z-[0] opacity-50' alt="" /> 
+              <img src={`http://localhost:3000/uploads/${backgroundSan(facility.loai_San)}`} className='absolute w-1/2 z-[0] opacity-70' alt="" /> 
               <p className='text-3xl z-[1] xl:text-4xl italic'>{facility.tinhTrang}</p>
             </div>
             <div className='z-10 text-sm sm:text-base px-1 sm:flex justify-between'>

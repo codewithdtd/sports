@@ -14,7 +14,8 @@ const FormInvoice = (props) => {
   }, [])
   return (
     <div className='bg-black bg-opacity-50 w-full h-full absolute flex top-0 left-0' onClick={e => props.toggle(false)}>
-        <div className='bg-white m-auto print p-2 rounded-lg text-center' onClick={e => e.stopPropagation()}>
+        <div className='relative bg-white m-auto print p-2 rounded-lg text-center' onClick={e => e.stopPropagation()}>
+            <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
             <h1 className="font-bold text-2xl text-center">HÓA ĐƠN</h1>
             <div className='flex text-start justify-between gap-14'>
                 <div>
@@ -72,7 +73,7 @@ const FormInvoice = (props) => {
                 )  
                 }
                 <p className='text-end'>
-                    Tổng tiền: <b>{formatNumber(props.data.tongTien || props.listData?.reduce((a, c) => a + c.tongTien, 0))}</b>
+                    Tổng tiền: <b>{formatNumber(props.listData.length == 0 ? props.data.tongTien : props.listData?.reduce((a, c) => a + c.tongTien, 0))}</b>
                 </p>
             </div>
             <button type='button' className='bg-green-600 no-print p-1 px-3 rounded-md text-white' onClick={print}>Xuất hóa đơn</button>

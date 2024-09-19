@@ -6,8 +6,11 @@ import invoiceService from '../services/invoice.service';
 import Pagination from '../components/Pagination';
 import FormInvoice from '../components/FormInvoice';
 
+import { ExportReactCSV } from '../components/ExportReactCSV';
+
 const Invoice = () => {
   const [list, setList] = useState([]);
+  const [listCSV, setListCSV] = useState([]);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -32,7 +35,36 @@ const Invoice = () => {
       const { ho_NV, ten_NV, email_NV, sdt_NV } = item.nhanVien;
       const { loai_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San } = item.datSan.san;
       const { trangThai, thoiGianBatDau, thoiGianKetThuc,thoiGianCheckIn, thoiGianCheckOut, thanhTien, ghiChu, ngayDat } = item.datSan;
-      return [ ho_NV, ten_NV, email_NV, sdt_NV, ho_KH, ten_KH, email_KH, sdt_KH, loai_San, thoiGianCheckIn, thoiGianCheckOut, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, item.ngayTao_H, item.phuongThucThanhToan, item.tongTien ].join(" ").toLowerCase();
+      const newCSV = {
+        _id: item._id, 
+        ho_NV: ho_NV, 
+        ten_NV: ten_NV, 
+        email_NV: email_NV, 
+        sdt_NV: sdt_NV, 
+        ho_KH: ho_KH, 
+        ten_KH: ten_KH, 
+        email_KH: email_KH, 
+        sdt_KH: sdt_KH, 
+        loai_San: loai_San, 
+        thoiGianCheckIn: thoiGianCheckIn, 
+        thoiGianCheckOut: thoiGianCheckOut, 
+        tinhTrang: tinhTrang, 
+        khuVuc: khuVuc, 
+        bangGiaMoiGio: bangGiaMoiGio, 
+        hinhAnh_San: hinhAnh_San, 
+        ngayTao_San: ngayTao_San, 
+        ngayCapNhat_San: ngayCapNhat_San, 
+        trangThai: trangThai, 
+        thoiGianBatDau: thoiGianBatDau, 
+        thoiGianKetThuc: thoiGianKetThuc, 
+        thanhTien: thanhTien, 
+        ghiChu: ghiChu, 
+        ngayDat: ngayDat, 
+        ngayTao_HD: item.ngayTao_H, 
+        phuongThucThanhToan: item.phuongThucThanhToan, 
+        tongTien: item.tongTien };
+      setListCSV([...listCSV, newCSV]);
+      return [ ho_NV, ten_NV, email_NV, sdt_NV, ho_KH, ten_KH, email_KH, sdt_KH, loai_San, thoiGianCheckIn, thoiGianCheckOut, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, item.ngayTao_HD, item.phuongThucThanhToan, item.tongTien ].join(" ").toLowerCase();
     });
   }
   // Lọc dữ liệu
@@ -97,6 +129,27 @@ const Invoice = () => {
   const getInvoice = async () => {
     const data = await invoiceService.getAll();
     setList(data);
+
+    data.map((item) => {
+      const { ho_KH, ten_KH, email_KH, sdt_KH } = item.khachHang;
+      const { ho_NV, ten_NV, email_NV, sdt_NV } = item.nhanVien;
+      const { ten_San, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, ngayTao_San, ngayCapNhat_San, ma_San } = item.datSan.san;
+      const { trangThai, thoiGianBatDau, thoiGianKetThuc, thoiGianCheckIn, thoiGianCheckOut, thanhTien, ghiChu, ngayDat } = item.datSan;
+
+      const newCSV = {
+        _id: item._id,
+        ho_NV, ten_NV, email_NV, sdt_NV,
+        ho_KH, ten_KH, email_KH, sdt_KH,
+        ten_San, ma_San, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, 
+        ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc,
+        thoiGianCheckIn, thoiGianCheckOut, thanhTien, ghiChu, ngayDat,
+        ngayTao_HD: item.ngayTao_HD,
+        phuongThucThanhToan: item.phuongThucThanhToan,
+        tongTien: item.tongTien
+      };
+
+      setListCSV(prevListCSV => [...prevListCSV, newCSV]); // Sử dụng callback để đảm bảo đúng trạng thái của listCSV
+    });
   }
   useEffect(() => {
     if(!user) {
@@ -105,7 +158,7 @@ const Invoice = () => {
   })
   useEffect(() => {
     getInvoice();
-  }, [list]);
+  }, []);
   return (
     <div>
       <Header name="Quản lý hóa đơn" />
@@ -213,23 +266,27 @@ const Invoice = () => {
             {formatNumber(item.tongTien)}
           </div>
           <div className="w-1/6">
+          {!merge ?
             <i className="ri-eye-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(item)}></i>
-            {/* <i className="ri-delete-bin-2-line w-[40px] h-[40px] bg-red-600 text-white p-2 rounded-md" onClick={e => deleteBooking(facility)} ></i> */}
+           
+           : <input 
+                type="checkbox" 
+                className='w-4 h-4' 
+                onChange={e => handleMerge(item, e.target.checked)} 
+                checked={!!isChecked[item._id]}
+            />
+          }
           </div>
           
-          {merge ? 
-          <input 
-              type="checkbox" 
-              className='w-4 h-4' 
-              onChange={e => handleMerge(item, e.target.checked)} 
-              checked={!!isChecked[item._id]}
-          /> : '' }
+          
+          
           
         </div>
         : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
         }
-      </div>
+      <ExportReactCSV csvData={listCSV} fileName={'HoaDon'} />
       {merge ? <button className='float-end border text-green-600 rounded-md border-green-500 p-1 m-1' onClick={e => {if(listMerge.length > 0) setEdit(!edit)}}>Xuất hóa đơn</button> : ''}
+      </div>
 
       {/* Phân trang */}
       <Pagination
@@ -237,6 +294,7 @@ const Invoice = () => {
           currentPage={currentPage}
           onPageChange={handlePageChange}
         />
+
 
     
       {edit ? <FormInvoice toggle={setEdit} data={fac} listData={listMerge} /> : '' }
