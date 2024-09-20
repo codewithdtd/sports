@@ -22,14 +22,6 @@ const Navbar = () => {
       }
   };
 
-  const toggleNav = {
-    position: "absolute",
-    background: "white",
-    top: "100%",
-    left: 0,
-    width: '50%',
-  }
-
    useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 780) {
@@ -62,11 +54,11 @@ const Navbar = () => {
           <img src="./src/assets/logo.svg" alt="" className='md:w-3/4' />
         </div>
       </NavLink>
-      {isOpen ? 
-        <div className='flex-1 flex md:flex-row flex-col 
+        <div className={`flex-1 flex md:flex-row flex-col 
           text-center justify-center font-medium
-          md:relative absolute bg-white top-full left-0 w-1/3 md:w-auto
-          shadow-sm shadow-gray-700 md:shadow-none z-10'
+          md:relative absolute bg-white top-full w-1/3 md:w-auto
+          shadow-sm shadow-gray-700 md:shadow-none z-10 transition-all
+          ${isOpen ? 'left-0' : '-left-full md:left-0'}`}
         >
           <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="/">TRANG CHỦ</NavLink>
           <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="about">GIỚI THIỆU</NavLink>
@@ -75,7 +67,6 @@ const Navbar = () => {
           <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="membership">HỘI VIÊN</NavLink>
           <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="contact">LIÊN HỆ</NavLink>
         </div>
-      : ''}
       {!user ? 
       <div className='flex text-center'>
         <NavLink className='border-[2px] p-1 px-4 font-bold text-white border-green-500 bg-green-500 rounded-full mr-3 hover:bg-green-600' to='login'>ĐĂNG NHẬP</NavLink>
