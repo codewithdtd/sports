@@ -29,7 +29,8 @@ class DBHandler {
 
   async findOne(data) {
     try {
-      const results = await this.model.findOne(data);
+      const find = {...data, "da_xoa": false}
+      const results = await this.model.findOne(find);
       return results;
     } catch (err) {
       throw new Error('Error finding document: ' + err.message);

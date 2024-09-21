@@ -3,7 +3,6 @@ import Header from '../components/Header'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import userService from '../services/user.service';
-import FormEquipment from '../components/FormEquipment';
 import Pagination from '../components/Pagination';
 import FormCustomer from '../components/FormCustomer';
 const Customer = () => {

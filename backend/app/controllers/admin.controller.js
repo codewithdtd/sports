@@ -35,13 +35,17 @@ const convertToDateReverse = (dateStr) => {
 exports.createStaff = async (req, res, next) => {
     const staff = new Staffs();
     const newStaff = req.body;
-    console.log(newStaff)
-    console.log(req.body)
     salt = await bcrypt.genSalt(10);
     newStaff.matKhau_NV = await bcrypt.hash(newStaff.matKhau_NV, salt);
     try {
-        const result = await staff.create(newStaff);
-        res.status(201).json(result);
+        const exits = await staff.findOne({sdt_NV: newStaff.sdt_NV})
+        if(exits) {
+            res.status(409).json({error: 'Tài khoản đã được đăng ký!!!'})
+        }
+        else {
+            const result = await staff.create(newStaff);
+            res.status(201).json(result);
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

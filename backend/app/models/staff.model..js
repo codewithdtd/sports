@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const staffSchema = new mongoose.Schema({
   ho_NV: { type: String, required: true},
   ten_NV: { type: String, required: true},
-  email_NV: { type: String, unique: true },
-  sdt_NV: { type: String, required: true, unique: true },
+  email_NV: { type: String, },
+  sdt_NV: { type: String, required: true, },
   matKhau_NV: { type: String, required: true },
   hinhAnh_NV: { type: String, },
   chuc_vu: { type: String, default: "Nhân viên" },
