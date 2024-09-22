@@ -25,7 +25,7 @@ function Header(props) {
               </div>
             </div>
             <ul className='hidden z-[1] group-hover:block absolute top-[100%] right-0 w-40 sm:w-full bg-white shadow-lg rounded-xl overflow-hidden'>
-              <li className='font-semibold p-2 text-[13px]'>ID: { user.user._id }</li>
+              <li className='font-semibold p-2 text-[13px]'>ID: { user?.user._id }</li>
               <li className=''><Link className='block p-2 hover:bg-slate-300' to="/info">Chỉnh sửa thông tin</Link></li>
               <li className=''><Link className='block p-2 hover:bg-slate-300' to="/changePass">Đổi mật khẩu</Link></li>
               <li className=''><Link className='block p-2 hover:bg-slate-300' to="/" onClick={handleLogout}>Đăng xuất</Link></li>
