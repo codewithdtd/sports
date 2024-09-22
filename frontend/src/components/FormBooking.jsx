@@ -256,7 +256,6 @@ function FromBooking(props) {
 
   const handleBooking = (data, checked) => {
     const key = `${data.san._id}_${data.thoiGianBatDau}_${data.ngayDat}`;  // Tạo key duy nhất cho mỗi sân và thời gian
-
     if (checked) {
       if(data.ngayDat < getCurrentDate()) {
         setValidateDate(true)
@@ -288,7 +287,6 @@ function FromBooking(props) {
 
   const handleChangeField = (data) => {
     const key = `${data.san._id}_${data.thoiGianBatDau}_${data.ngayDat}`;  // Tạo key duy nhất cho mỗi sân và thời gian
-
     if(props.data._id) {
         setBooking([])
         // setFieldChange(data)
@@ -676,7 +674,7 @@ function FromBooking(props) {
                   
                   <p>Tổng tiền: <b>{formatNumber(booking.reduce((a, c) => {
                       const tienSan = c.san?.bangGiaMoiGio || 0; // Tiền sân
-                      const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || data.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0);  // Tiền dịch vụ
+                      const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || data.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0;  // Tiền dịch vụ
                       
                       return a + tienSan + tienDichVu;
                     }, 0))}</b>

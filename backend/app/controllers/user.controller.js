@@ -274,6 +274,15 @@ exports.findOneUserMembership = async (req, res, next) => {
     }
 };
 
+exports.deleteOneUserMembership = async (req, res, next) => {
+    const userMembership = new UserMemberships();
+    try {
+        const result = await userMembership.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
 // Đăng ký giải đấu
 // 

@@ -33,6 +33,13 @@ class UserService extends BaseService {
             console.log(error)
         }
     }
+    async update( id, data, accessToken) {
+        return (await this.api.put(`/${id}`, data, {
+            headers: {
+                token: `Bearer ${accessToken}`
+            }
+        })).data;
+    }
 }
 
 export default new UserService();

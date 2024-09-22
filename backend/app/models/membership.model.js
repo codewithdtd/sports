@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 const membershipSchema = new mongoose.Schema({
   ten_GoiHV: { type: String, required: true, unique: true },
   gia_GoiHV: { type: Number, required: true },
-  thoiHan: { type: String, },
-  quyenLoi: { type: String },
+  thoiHan: { type: Number, },
+  quyenLoi: { type: Object, },
   ngayTao_GoiHV: { type: String },
   da_xoa: { type: Boolean, default: false },
 });

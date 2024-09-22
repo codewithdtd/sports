@@ -35,7 +35,8 @@ router.route("/userMembership")
     .post(user.createUserMembership)
 router.route("/userMembership/:id")
     .get(user.findOneUserMembership)
-    .put(user.updateUserMembership);
+    .put(user.updateUserMembership)
+    .delete(user.deleteOneUserMembership);
 
 // Tài khoản cá nhân
 router.route("/login").post(user.login);
