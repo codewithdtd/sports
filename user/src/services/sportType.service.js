@@ -1,9 +1,9 @@
 import BaseService from "./base.service";
 
-class Cart extends BaseService {
+class SportType extends BaseService {
     constructor() {
         super('/api/admin/sportType'); 
     }
 }
 
-export default new Cart();
+export default new SportType();

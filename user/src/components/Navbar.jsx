@@ -12,23 +12,63 @@ const Navbar = () => {
   const handleLogout = async () => {
     await userService.logout(dispatch, navigate, accessToken);
   }
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+    if (window.innerWidth >= 780) {
+        setIsOpen(true);
+      }
+  };
+
+   useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 780) {
+        setIsOpen(true);
+      } else {
+        setIsOpen(false);
+      }
+    };
+
+    // Initial check when the component mounts
+    handleResize();
+
+    // Add event listener for resizing
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
   return (
-    <div className='flex sticky top-0 z-[1] bg-white shadow-md shadow-gray-500 justify-between w-full px-10 items-center h-fit py-3'>
+    <div className='flex sticky top-0 z-[2] bg-white shadow-md shadow-gray-500 justify-between w-full px-10 items-center h-fit py-3'>
+      <div className='block md:hidden text-green-600 absolute mx-2 w-[30px] left-0  text-center rounded-lg' onClick={toggleMenu}>
+          <i className="ri-menu-line text-xl font-bold"></i>
+      </div>
       <NavLink to='/'>
         <div className="logo">
           <img src="./src/assets/logo.svg" alt="" className='md:w-3/4' />
         </div>
       </NavLink>
-      <div className='flex-1 text-center flex justify-center font-medium'>
-        <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link px-5 hover:text-green-600 font-medium`} to="/">TRANG CHỦ</NavLink>
-        <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link px-5 hover:text-green-600 font-medium`} to="about">GIỚI THIỆU</NavLink>
-        <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link px-5 hover:text-green-600 font-medium`} to="booking">ĐẶT SÂN</NavLink>
-        <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link px-5 hover:text-green-600 font-medium`} to="event">SỰ KIỆN</NavLink>
-        <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link px-5 hover:text-green-600 font-medium`} to="membership">HỘI VIÊN</NavLink>
-        <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link px-5 hover:text-green-600 font-medium`} to="contact">LIÊN HỆ</NavLink>
-      </div>
+        <div className={`flex-1 flex md:flex-row flex-col 
+          text-center justify-center font-medium
+          md:relative absolute bg-white top-full w-1/3 md:w-auto
+          shadow-sm shadow-gray-700 md:shadow-none z-10 transition-all
+          ${isOpen ? 'left-0' : '-left-full md:left-0'}`}
+        >
+          <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="/">TRANG CHỦ</NavLink>
+          <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="about">GIỚI THIỆU</NavLink>
+          <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="booking">ĐẶT SÂN</NavLink>
+          <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="event">SỰ KIỆN</NavLink>
+          <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="membership">HỘI VIÊN</NavLink>
+          <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="contact">LIÊN HỆ</NavLink>
+        </div>
       {!user ? 
-      <div>
+      <div className='flex text-center'>
         <NavLink className='border-[2px] p-1 px-4 font-bold text-white border-green-500 bg-green-500 rounded-full mr-3 hover:bg-green-600' to='login'>ĐĂNG NHẬP</NavLink>
         <NavLink className='border-[2px] p-1 px-4 font-bold text-green-500 border-green-500 rounded-full hover:bg-green-500 hover:text-white' to='signup'>ĐĂNG KÝ</NavLink>
       </div>

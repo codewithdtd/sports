@@ -35,35 +35,35 @@ const Invoice = () => {
       const { ho_NV, ten_NV, email_NV, sdt_NV } = item.nhanVien;
       const { loai_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San } = item.datSan.san;
       const { trangThai, thoiGianBatDau, thoiGianKetThuc,thoiGianCheckIn, thoiGianCheckOut, thanhTien, ghiChu, ngayDat } = item.datSan;
-      const newCSV = {
-        _id: item._id, 
-        ho_NV: ho_NV, 
-        ten_NV: ten_NV, 
-        email_NV: email_NV, 
-        sdt_NV: sdt_NV, 
-        ho_KH: ho_KH, 
-        ten_KH: ten_KH, 
-        email_KH: email_KH, 
-        sdt_KH: sdt_KH, 
-        loai_San: loai_San, 
-        thoiGianCheckIn: thoiGianCheckIn, 
-        thoiGianCheckOut: thoiGianCheckOut, 
-        tinhTrang: tinhTrang, 
-        khuVuc: khuVuc, 
-        bangGiaMoiGio: bangGiaMoiGio, 
-        hinhAnh_San: hinhAnh_San, 
-        ngayTao_San: ngayTao_San, 
-        ngayCapNhat_San: ngayCapNhat_San, 
-        trangThai: trangThai, 
-        thoiGianBatDau: thoiGianBatDau, 
-        thoiGianKetThuc: thoiGianKetThuc, 
-        thanhTien: thanhTien, 
-        ghiChu: ghiChu, 
-        ngayDat: ngayDat, 
-        ngayTao_HD: item.ngayTao_H, 
-        phuongThucThanhToan: item.phuongThucThanhToan, 
-        tongTien: item.tongTien };
-      setListCSV([...listCSV, newCSV]);
+      // const newCSV = {
+      //   _id: item._id, 
+      //   ho_NV: ho_NV, 
+      //   ten_NV: ten_NV, 
+      //   email_NV: email_NV, 
+      //   sdt_NV: sdt_NV, 
+      //   ho_KH: ho_KH, 
+      //   ten_KH: ten_KH, 
+      //   email_KH: email_KH, 
+      //   sdt_KH: sdt_KH, 
+      //   loai_San: loai_San, 
+      //   thoiGianCheckIn: thoiGianCheckIn, 
+      //   thoiGianCheckOut: thoiGianCheckOut, 
+      //   tinhTrang: tinhTrang, 
+      //   khuVuc: khuVuc, 
+      //   bangGiaMoiGio: bangGiaMoiGio, 
+      //   hinhAnh_San: hinhAnh_San, 
+      //   ngayTao_San: ngayTao_San, 
+      //   ngayCapNhat_San: ngayCapNhat_San, 
+      //   trangThai: trangThai, 
+      //   thoiGianBatDau: thoiGianBatDau, 
+      //   thoiGianKetThuc: thoiGianKetThuc, 
+      //   thanhTien: thanhTien, 
+      //   ghiChu: ghiChu, 
+      //   ngayDat: ngayDat, 
+      //   ngayTao_HD: item.ngayTao_H, 
+      //   phuongThucThanhToan: item.phuongThucThanhToan, 
+      //   tongTien: item.tongTien };
+      // setListCSV([...listCSV, newCSV]);
       return [ ho_NV, ten_NV, email_NV, sdt_NV, ho_KH, ten_KH, email_KH, sdt_KH, loai_San, thoiGianCheckIn, thoiGianCheckOut, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, item.ngayTao_HD, item.phuongThucThanhToan, item.tongTien ].join(" ").toLowerCase();
     });
   }
@@ -138,14 +138,14 @@ const Invoice = () => {
 
       const newCSV = {
         _id: item._id,
-        ho_NV, ten_NV, email_NV, sdt_NV,
-        ho_KH, ten_KH, email_KH, sdt_KH,
-        ten_San, ma_San, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, 
-        ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc,
-        thoiGianCheckIn, thoiGianCheckOut, thanhTien, ghiChu, ngayDat,
-        ngayTao_HD: item.ngayTao_HD,
-        phuongThucThanhToan: item.phuongThucThanhToan,
-        tongTien: item.tongTien
+        'Họ nhân viên': ho_NV,'Tên nhân viên': ten_NV,'Email nhân viên': email_NV,'Số điện thoại nhân viên': sdt_NV,
+        'Họ khách hàng': ho_KH,'Tên khách hàng': ten_KH, 'Email khách hàng': email_KH,'Số điện thoại khách hàng': sdt_KH,
+        'Tên sân': ten_San, 'Mã sân': ma_San, 'Loại sân': loai_San, 'Khu vực': khuVuc, 'Giá mỗi giờ': bangGiaMoiGio, 
+        'Trạng thái thanh toán': trangThai, 'Thời gian bắt đầu': thoiGianBatDau, 'Thời gian kết thúc': thoiGianKetThuc,
+        'Thời gian nhận sân': thoiGianCheckIn, 'Thời gian trả sân': thoiGianCheckOut, 'Ngày đặt': ngayDat, 'Thành tiền': thanhTien, 'Ghi chú': ghiChu,
+        'Ngày tạo hóa đơn': item.ngayTao_HD,
+        'Phương thức thanh toán': item.phuongThucThanhToan,
+        'Tổng tiền': item.tongTien
       };
 
       setListCSV(prevListCSV => [...prevListCSV, newCSV]); // Sử dụng callback để đảm bảo đúng trạng thái của listCSV

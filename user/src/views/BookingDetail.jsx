@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import facilityService from '../services/facility.service'
+import sportTypeService from '../services/sportType.service'
 import bookingService from '../services/booking.service'
 import serviceService from '../services/service.service'
 import { useDispatch, useSelector } from "react-redux";
@@ -9,10 +10,12 @@ import { useNavigate } from 'react-router-dom';
 
 import 'react-toastify/dist/ReactToastify.css';
 import FormService from '../components/FormService';
-
+import { Slide } from 'react-slideshow-image';
+import 'react-slideshow-image/dist/styles.css'
 
 const BookingDetail = () => {
   const [listFac, setListFac] = useState([]);
+  const [field, setField] = useState({})
   const [booking, setBooking] = useState([]);
   const [currentDate, setCurrentDate] = useState(getCurrentDate());
   const [checkedSlots, setCheckedSlots] = useState([]);
@@ -62,9 +65,12 @@ const BookingDetail = () => {
 
 // Cơ sở dữ liệu
   const getFacility = async () => {
+    const fields = await sportTypeService.get(loai_san);
+    setField(fields)
+
     const date = {ngayDat: currentDate};
     let list = await facilityService.getAllBooked(date);
-    list = list.filter(fac => fac.loai_San === loai_san)
+    list = list.filter(fac => fac.loai_San === fields.ten_loai)
     setListFac(list)
 
     const service = await serviceService.getAll();
@@ -159,17 +165,44 @@ const BookingDetail = () => {
     }
 
     getFacility();
-  }, [currentDate]);
+  }, [currentDate, listFac]);
 
+  const buttonStyle = {
+      // width: "15px",
+      "font-size": '30px',
+      // height: "30px",
+      'justify-content': 'center',
+      'align-items': 'center',
+      'border-radius': '100%',
+      display: 'flex',
+      'z-index': '1',
+      background: 'rgb(218 218 218)',
+      height: '40px',
+      width: '40px',
+      border: '0px'
+  };
 
+  const properties = {
+      prevArrow: <button style={{ ...buttonStyle }}><i className="ri-arrow-drop-left-line"></i></button>,
+      nextArrow: <button style={{ ...buttonStyle }}><i className="ri-arrow-drop-right-line"></i></button>
+  }
 
   return (
     <div className='m-3 p-4 border-2 border-gray-400 bg-white rounded-lg shadow-lg shadow-gray-400'>
       <ToastContainer autoClose='2000' />
+      <div className=''>
+        <Slide {...properties} slidesToScroll={1} slidesToShow={4} indicators={true}>     
+        {field.hinhAnh?.map((item) => 
+          <div className='w-full px-3 flex justify-center'>
+            <img key={item} src={`http://localhost:3000/uploads/${item}`} className='px-2 object-cover w-full h-full aspect-[3/2]' alt="" />
+          </div>
+        )}
+        </Slide>
+      </div>
       <form className='flex flex-col md:flex-row gap-3' action="" onSubmit={e => handleSubmit(e)}>
         <div className='flex-1'>
           <h1 className='text-center text-green-500 font-bold text-3xl uppercase'>
-            {loai_san}
+            {field.ten_loai}
           </h1>
           <div className='flex justify-between'>
             <div>
