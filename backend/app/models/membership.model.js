@@ -37,8 +37,8 @@ const Membership = mongoose.model('goi_hoi_vien', membershipSchema, collectionNa
 const userMembershipSchema = new mongoose.Schema({
   ma_KH: { type: String, required: true },
   ma_GoiHV: { type: String, required: true },
-  ngayBatDau_HV: { type: String, },
-  ngayKetThuc_HV: { type: String, required: true},
+  ngayBatDau: { type: String, },
+  ngayKetThuc: { type: String, required: true},
   trangThai: { type: String, },
   giaHan: { type: Boolean, default: false },
   da_xoa: { type: Boolean, default: false },
@@ -47,7 +47,7 @@ const userMembershipSchema = new mongoose.Schema({
 
 
 userMembershipSchema.pre('save', function (next) {
-  if (!this.ngayBatDau_HV) {
+  if (!this.ngayBatDau) {
     const currentDate = new Date();
     const day = String(currentDate.getDate()).padStart(2, '0');
     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
@@ -56,7 +56,10 @@ userMembershipSchema.pre('save', function (next) {
     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
-    this.ngayBatDau_HV = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    this.ngayBatDau = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  }
+  if(!this.trangThai) {
+    this.trangThai = 'Kích hoạt';
   }
   next();
 });

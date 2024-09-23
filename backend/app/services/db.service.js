@@ -36,10 +36,28 @@ class DBHandler {
       throw new Error('Error finding document: ' + err.message);
     }
   }
+  
+  async find(data) {
+    try {
+      const find = {...data, "da_xoa": false}
+      const results = await this.model.find(find);
+      return results;
+    } catch (err) {
+      throw new Error('Error finding document: ' + err.message);
+    }
+  }
 
   async findAll() {
     try {
       const results = await this.model.find({ "da_xoa": false });
+      return results;
+    } catch (err) {
+      throw new Error('Error finding document: ' + err.message);
+    }
+  }
+  async findAllDelete() {
+    try {
+      const results = await this.model.find({});
       return results;
     } catch (err) {
       throw new Error('Error finding document: ' + err.message);

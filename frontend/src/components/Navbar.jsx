@@ -45,77 +45,83 @@ function Navbar() {
             </div>
             <ul className="navigation__link">
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`} to="/">
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/">
                         <i className="ml-5 ri-pie-chart-2-fill mr-2"></i> 
                         <span>Báo cáo</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`} to="/facility" end>
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/facility" end>
                         <i className="ml-5 ri-football-line mr-2"></i> 
                         <span>Sân thể thao</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`} to="/sportType" end>
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/sportType" end>
                         <i className="ml-5 ri-bubble-chart-fill mr-2"></i>
                         <span>Phân loại sân</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`} to="/facilityManagement" end>
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/facilityManagement" end>
                         <i className="ml-5 ri-folder-settings-line mr-2"></i> 
                         <span>Quản lý sân</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/booking" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/booking" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-time-line mr-2"></i> 
                         <span>Đặt sân</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`} to="/invoice">
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/invoice">
                         <i className="ml-5 ri-bill-line mr-2"></i> 
                         <span>Hóa đơn</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/equipment" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/equipment" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-tools-line mr-2"></i> 
                         <span>Kho</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/review" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/review" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-feedback-line mr-2"></i> 
                         <span>Đánh giá</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/customer" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/customer" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-user-line mr-2"></i> 
                         <span>Khách hàng</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/staff" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/staff" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-folder-user-line mr-2"></i> 
                         <span>Nhân viên</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/membership" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/membership" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                        <i className="ml-5 ri-shield-user-line mr-2"></i> 
+                        <span>Gói hội viên</span>
+                    </NavLink>
+                </li>
+                <li className="navigation__link__items">
+                    <NavLink onClick={toggleMenu} to="/userMembership" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-shield-user-fill mr-2"></i> 
                         <span>Hội viên</span>
                     </NavLink>
                 </li>
-                <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/event" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-2 block m-2 rounded-xl text- font-medium`}>
+                {/* <li className="navigation__link__items">
+                    <NavLink onClick={toggleMenu} to="/event" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-calendar-event-fill mr-2"></i> 
                         <span>Sự kiện</span>
                     </NavLink>
-                </li>
+                </li> */}
             </ul>
         </div>
     </div>

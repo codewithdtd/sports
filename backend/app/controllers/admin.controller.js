@@ -9,6 +9,7 @@ const { Events, UserEvents } = require("../services/event.service");
 const Reviews = require("../services/review.service");
 const Services = require("../services/service.service");
 const SportTypes = require("../services/sportType.service");
+const Customers = require("../services/user.service");
 
 
 const ApiError = require("../api-error");
@@ -670,9 +671,30 @@ exports.deleteOneMembership = async (req, res, next) => {
 // 
 exports.createUserMembership = async (req, res, next) => {
     const userMembership = new UserMemberships();
-    const newUserMembership = req.body;
+    const membership = new Memberships();
+    
     try {
+        const newUserMembership = req.body;
+        const goiHV = await membership.findById(newUserMembership.ma_GoiHV);
+        newUserMembership.ngayBatDau = convertToDateReverse(newUserMembership.ngayBatDau)
+        function parseDate(str) {
+            const [day, month, year] = str.split('/').map(Number); // Tách ngày, tháng, năm
+            return new Date(year, month - 1, day); // Tạo đối tượng Date (tháng bắt đầu từ 0)
+        }
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');  // Lấy ngày và thêm số 0 nếu cần
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`; // Trả về chuỗi theo định dạng dd/mm/yyyy
+        }
+        const ngayBatDau = parseDate(newUserMembership.ngayBatDau);
+    
+        const ngayKetThuc = new Date(ngayBatDau);
+        ngayKetThuc.setDate(ngayBatDau.getDate() + goiHV._doc.thoiHan);
+        newUserMembership.ngayKetThuc = formatDate(ngayKetThuc);
+        
         const result = await userMembership.create(newUserMembership);
+        console.log(result)
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -691,9 +713,49 @@ exports.updateUserMembership = async (req, res, next) => {
 
 exports.findAllUserMembership = async (req, res, next) => {
     const userMembership = new UserMemberships();
+    const membership = new Memberships();
+    const customer = new Customers();
     try {
-        const result = await userMembership.findAll();
-        res.status(201).json(result);
+        let result = await userMembership.findAll();
+        if(req.body) 
+            result = await userMembership.find(req.body);
+        function tinhChenhLechNgay(ngayNhap) {
+            const [day, month, year] = ngayNhap.split('/').map(Number);
+            const date1 = new Date(year, month - 1, day);  // Ngày bạn nhập (dd/mm/yyyy)
+            const date2 = new Date();            // Ngày hiện tại
+
+            // Tính số mili-giây giữa hai ngày
+            const diffInMs = date1 - date2;
+
+            // Chuyển mili-giây thành số ngày
+            const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); // Làm tròn lên
+
+            return diffInDays;
+        }
+        
+        const newResult = [];
+        for (const element of result) {
+            const goiHV = await membership.findById(element.ma_GoiHV);
+            const khachHang = await customer.findById(element.ma_KH);
+            const { matKhau_KH, ...other } = khachHang._doc;
+            
+            if(tinhChenhLechNgay(element._doc.ngayKetThuc) < 1) {
+                element.trangThai = 'Hết hạn';
+                await userMembership.update(element._doc._id, element._doc)
+            } 
+            if(tinhChenhLechNgay(element._doc.ngayKetThuc) < 4 && tinhChenhLechNgay(element._doc.ngayKetThuc) > 0 ) {
+                element.trangThai = 'Sắp hết hạn';
+                await userMembership.update(element._doc._id, element._doc)
+            }
+            // Thêm thông tin khách hàng và gói hội viên vào kết quả
+            newResult.push({
+                ...element._doc,
+                soNgay: tinhChenhLechNgay(element._doc.ngayKetThuc),  // Lấy dữ liệu từ bản ghi hiện tại
+                goiHV: goiHV._doc,            // Thông tin gói hội viên
+                khachHang: other       // Thông tin khách hàng
+            });
+        }
+        res.status(201).json(newResult);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -701,13 +763,25 @@ exports.findAllUserMembership = async (req, res, next) => {
 
 exports.findOneUserMembership = async (req, res, next) => {
     const userMembership = new UserMemberships();
+    const membership = new Memberships();
+    const customer = new Customers();
     try {
         let result;
         if(!req.params.id) 
             result = await userMembership.findOne(req.body)
         else 
             result = await userMembership.findById(req.params.id) 
-        res.status(201).json(result);
+
+        const goiHV = await membership.findById(result.ma_GoiHV);
+        const khachHang = await customer.findById(result.ma_KH);
+        const { matKhau_KH, ...other } = khachHang._doc;
+
+        const newResult = {
+            ...result._doc,
+            goiHV: goiHV._doc,
+            khachHang: other
+        }
+        res.status(201).json(newResult);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

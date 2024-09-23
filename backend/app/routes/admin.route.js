@@ -103,6 +103,8 @@ router.route("/membership/:id")
 
 // Hội viên
 // 
+router.route("/userMembership/filter")
+    .post(admin.findAllUserMembership)
 router.route("/userMembership")
     .get(admin.findAllUserMembership)
     .post(admin.createUserMembership)

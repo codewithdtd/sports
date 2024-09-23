@@ -37,6 +37,14 @@ class UserMemberships extends db {
   constructor() {
     super(UserMembership);
   }
+  async findAll() {
+    try {
+      const results = await this.model.find({ "da_xoa": false });
+      return results;
+    } catch (err) {
+      throw new Error('Error finding document: ' + err.message);
+    }
+  }
 }
 
 module.exports = { Memberships, UserMemberships };

@@ -21,6 +21,7 @@ import Info from '../views/Info';
 import ChangePass from '../views/ChangePass';
 import FacilityManagement from '../views/FacilityManagement';
 import SportType from '../views/SportType';
+import UserMembership from '../views/UserMembership';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
       {
         path: "membership",
         element: <Membership />,
+      },
+      {
+        path: "userMembership",
+        element: <UserMembership />,
       },
       {
         path: "event",
