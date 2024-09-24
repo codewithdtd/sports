@@ -7,7 +7,7 @@ import serviceService from '../services/service.service'
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
+import { Link } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css';
 import FormService from '../components/FormService';
 import { Slide } from 'react-slideshow-image';
@@ -22,6 +22,7 @@ const BookingDetail = () => {
   const [bookingsByDate, setBookingsByDate] = useState({});
   const [listService, setListService] = useState([])
   const [modalService, setModalService] = useState(null)
+  const [validateDate, setValidateDate] = useState(false)
 
   const navigate = useNavigate();
 
@@ -80,15 +81,24 @@ const BookingDetail = () => {
   // Xử lý đặt sân
   const handleBooking = (data, checked) => {
     const key = `${data.san._id}_${data.thoiGianBatDau}_${data.ngayDat}`;  // Tạo key duy nhất cho mỗi sân và thời gian
-
     if (checked) {
+      if(data.ngayDat < getCurrentDate()) {
+        setValidateDate(true)
+        return;
+      }
+      setValidateDate(false)
       // Thêm phần tử vào danh sách đặt sân và đánh dấu slot này đã được check
-      setBooking([...booking, data]);
-      setCheckedSlots([...checkedSlots, key]);
+      setBooking(prevBooking => [...prevBooking, data]);
+      setCheckedSlots(prevCheckedSlots => [...prevCheckedSlots, key]);
     } else {
       // Xóa phần tử khỏi danh sách đặt sân và bỏ đánh dấu slot đã được check
-      setBooking(booking.filter(item => !(item.thoiGianBatDau === data.thoiGianBatDau && item.san._id === data.san._id && item.ngayDat === data.ngayDat)));
-      setCheckedSlots(checkedSlots.filter(slot => slot !== key));
+      setBooking(prevBooking => prevBooking.filter(item => !(item.thoiGianBatDau === data.thoiGianBatDau && item.san._id === data.san._id && item.ngayDat === data.ngayDat)));
+      // setCheckedSlots(prevCheckedSlots => prevCheckedSlots.filter(slot => slot !== key));
+      setCheckedSlots(prevCheckedSlots => 
+        prevCheckedSlots.filter(slot => {
+          return slot !== key
+        }) 
+      );
     }
   };
 
@@ -135,6 +145,34 @@ const BookingDetail = () => {
     }
   }
 
+  function getCurrentDate() {
+    const today = new Date();
+    
+    const year = today.getFullYear(); // Lấy năm
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Lấy tháng (bắt đầu từ 0 nên cần +1) và định dạng thành 2 chữ số
+    const day = String(today.getDate()).padStart(2, '0'); // Lấy ngày và định dạng thành 2 chữ số
+
+    return `${year}-${month}-${day}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
+  }
+
+  function getCurrentTime() {
+    const today = new Date();
+    
+    const hour = today.getHours(); 
+    const minute = today.getMinutes();
+    return `${hour}:${minute}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
+  }
+
+  const handleDate= (date) => {
+    if(date >= getCurrentDate()) {
+      setValidateDate(false)
+      setCurrentDate(date)
+    }
+    else {
+      setValidateDate(true)
+    }
+  }
+
   // useEffect(()=> {
   //   setBooking([]);
   //   setCheckedSlots([]);
@@ -143,7 +181,7 @@ const BookingDetail = () => {
 
   useEffect(() => {
     // Lưu trạng thái trước khi thay đổi currentDate
-    if (booking.length || checkedSlots.length) {
+    if (booking.length > 0 || checkedSlots.length > 0) {
       setBookingsByDate(prev => ({
         ...prev,
         [currentDate]: {
@@ -157,6 +195,7 @@ const BookingDetail = () => {
 
   useEffect(() => {
     if (bookingsByDate[currentDate]) {
+      console.log(bookingsByDate[currentDate])
       // setBooking(bookingsByDate[currentDate].booking);
       setCheckedSlots(bookingsByDate[currentDate].checkedSlots);  // checkedSlots bao gồm san._id
     } else {
@@ -164,18 +203,24 @@ const BookingDetail = () => {
       setCheckedSlots([]);
     }
 
+    // getFacility();
+  }, [currentDate]);
+
+  useEffect(() => {
+    // Gọi getFacility sau khi checkedSlots được cập nhật
     getFacility();
-  }, [currentDate, listFac]);
+  }, [listFac]);
+
 
   const buttonStyle = {
       // width: "15px",
-      "font-size": '30px',
+      "fontSize": '30px',
       // height: "30px",
-      'justify-content': 'center',
-      'align-items': 'center',
-      'border-radius': '100%',
+      'justifyContent': 'center',
+      'alignItems': 'center',
+      'borderRadius': '100%',
       display: 'flex',
-      'z-index': '1',
+      'zIndex': '1',
       background: 'rgb(218 218 218)',
       height: '40px',
       width: '40px',
@@ -190,10 +235,13 @@ const BookingDetail = () => {
   return (
     <div className='m-3 p-4 border-2 border-gray-400 bg-white rounded-lg shadow-lg shadow-gray-400'>
       <ToastContainer autoClose='2000' />
+      <div className='mb-3 text-green-600 font-bold'>
+        <Link to={'/booking'}>{'< '}Quay lại</Link>
+      </div>
       <div className=''>
         <Slide {...properties} slidesToScroll={1} slidesToShow={4} indicators={true}>     
-        {field.hinhAnh?.map((item) => 
-          <div className='w-full px-3 flex justify-center'>
+        {field.hinhAnh?.map((item, index) => 
+          <div key={index} className='w-full px-3 flex justify-center'>
             <img key={item} src={`http://localhost:3000/uploads/${item}`} className='px-2 object-cover w-full h-full aspect-[3/2]' alt="" />
           </div>
         )}
@@ -206,7 +254,8 @@ const BookingDetail = () => {
           </h1>
           <div className='flex justify-between'>
             <div>
-              <input type="date" className='border border-gray-400 rounded-md p-1' value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
+              <input type="date" min={getCurrentDate()} className={`border border-gray-400 rounded-md p-1 ${validateDate ? 'bg-red-300': ''}`} value={currentDate} onChange={e => handleDate(e.target.value)} />
+              {validateDate ? <p className='text-red-600'>Chọn ngày hiện tại trở lên</p> : ''}
               {/* <select className='mx-4 border border-gray-400 rounded-md p-1' name="" id="">
                 <option value="">Bắt đầu</option>
                 {timeSlots.map((slot, index) => 
@@ -220,9 +269,6 @@ const BookingDetail = () => {
                 )}
               </select> */}
             </div>
-            <div>
-              <p className='border border-gray-400 rounded-md p-1 px-2'>Tuần</p>
-            </div>
           </div>
           <div className='h-[45vh] md:h-[65vh] overflow-y-scroll'>
             <div className='flex border-b-2 text-center py-2 border-gray-400'>
@@ -233,7 +279,10 @@ const BookingDetail = () => {
               <div className='flex-1 font-bold'>Tình trạng</div>
               <div className='mx-4'></div>
             </div>
-            {timeSlots.map((slot, index) => (
+            {timeSlots.map((slot, index) => 
+            (currentDate === getCurrentDate() ? 
+              (slot.formattedTimeStart > getCurrentTime()) : true) 
+              ? 
             <div className={`flex items-center border-b text-center border-gray-400`} key={index}>
               <div className='w-1/6'>
                 {slot.formattedTimeStart}
@@ -291,7 +340,7 @@ const BookingDetail = () => {
                 )}
               </div>
             </div>
-            ))}
+            : '')}
           </div>
         </div>
         <div className='flex flex-col flex-1 pt-1'>
@@ -306,7 +355,7 @@ const BookingDetail = () => {
                   <p>{formatNumber(bk.thanhTien || 0)}</p>
                   <button type='button' onClick={e=> setModalService(bk)} className='border border-green-600 p-1 rounded-md text-green-600 hover:text-white hover:bg-green-500'>Thêm dịch vụ</button>
                 </div>
-                {bk.dichVu?.map((dichVu) => 
+                {bk.dichVu?.map((dichVu, index) => 
                   <div key={dichVu._id} className='ml-7 flex border-b text-center justify-between p-2 border-l-2 border-gray-400'>
                     <p className='flex-1'>{dichVu.ten_DV}</p>
                     <p className='flex-1'>x {dichVu.soluong}</p>
