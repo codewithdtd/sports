@@ -7,7 +7,7 @@ class Bookings extends db {
   }
   async findAllBookingUser(id) {
     try {
-      const result = await this.model.find({"ma_KH": id});
+      const result = await this.model.find({"khachHang._id": id});
       if (!result) {
         throw new Error('Document not found');
       }

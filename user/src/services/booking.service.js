@@ -4,17 +4,11 @@ class Booking extends BaseService {
     constructor() {
         super('/api/user/booking'); 
     }
-    // async getAll(dispatch) {
-    //     try {
-    //         dispatch(bookingStart());
-    //         const booking = (await this.api.post('/', data)).data;
-    //         console.log(booking);
-    //         dispatch(bookingSuccess(booking));
-    //         return booking;
-    //     } catch (error) {
-    //         dispatch(bookingFailed())
-    //     }
-    // }
+    async getAll(id ,accessToken) {
+        return (await this.api.get("/", {params: id}, {
+            headers: { token: `Bearer ${accessToken}` }
+        })).data;
+    }
 }
 
 export default new Booking();

@@ -67,7 +67,7 @@ exports.login = async (req, res, next) => {
                     // role: result.role
                 },  
                 process.env.JWT_ACCESS_TOKEN,
-                { expiresIn: "300s" }
+                { expiresIn: "1d" }
             );
             // refresh
             const refreshToken = jwt.sign(
@@ -206,7 +206,8 @@ exports.findAllBooking = async (req, res, next) => {
 exports.findAllBookingUser = async (req, res, next) => {
     const booking = new Bookings();
     try {
-        const result = await booking.findAllBookingUser(req.body.id);
+        console.log(req.query)
+        const result = await booking.findAllBookingUser(req.query.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });

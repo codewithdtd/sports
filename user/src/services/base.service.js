@@ -19,8 +19,10 @@ class BaseService {
     async get( id) {
         return (await this.api.get(`/${id}`)).data;
     }
-    async update( id, data) {
-        return (await this.api.put(`/${id}`, data)).data;
+    async update( id, data, accessToken = '') {
+        return (await this.api.put(`/${id}`, data, {
+            headers: { token: `Bearer ${accessToken}` }
+        })).data;
     }
     async delete( id) {
         return (await this.api.delete(`/${id}`)).data;

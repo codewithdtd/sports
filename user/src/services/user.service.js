@@ -1,10 +1,26 @@
-import { loginFailed, loginStart, loginSuccess, logoutStart, logoutSuccess, logoutFailed } from "../stores/userSlice";
+import { updateSuccess, loginFailed, loginStart, loginSuccess, logoutStart, logoutSuccess, logoutFailed } from "../stores/userSlice";
 import BaseService from "./base.service";
 import { persistor } from '../stores/store'; 
 
 class UserService extends BaseService {
     constructor() {
         super('/api/user'); 
+    }
+    async update( id, data, accessToken = '', dispatch, navigate) {
+        try {
+            const user = (await this.api.put(`/${id}`, data, {
+                headers: { token: `Bearer ${accessToken}` }
+            })).data;
+            const action = {
+                ...user,
+                accessToken: accessToken
+            }
+            dispatch(updateSuccess(action))
+            navigate("/")
+            return user;
+        } catch (error) {
+            console.log(error)
+        }
     }
     async login(data, dispatch, navigate) {
         try {

@@ -43,6 +43,8 @@ exports.verifyAdmin = async (req, res, next) => {
                 );
             }
             req.user = user;
+            console.log('verify: ')
+            console.log(req.user)
         })
     }
     else {

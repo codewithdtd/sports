@@ -74,17 +74,18 @@ const Navbar = () => {
         <NavLink className='border-[2px] p-1 px-4 font-bold text-green-500 border-green-500 rounded-full hover:bg-green-500 hover:text-white' to='signup'>ĐĂNG KÝ</NavLink>
       </div>
       : 
-      <div className="header__right group relative flex flex-col">
+      <div className="header__right group relative min-w-[200px] flex flex-col">
         <div className='flex items-center'>
           <div className="header__item header__user flex w-[50px] h-[50px] rounded-full overflow-hidden">
-              <img src="./src/assets/background.png" alt="" className="object-contain"/>
+              <img src="./src/assets/avatar.png" alt="" className="object-contain"/>
           </div>
           <div className='ml-2 hidden sm:block'>
-              {user?.user.ho_KH+' '+user?.user.ten_KH} <i className="ri-arrow-down-s-line"></i>
+              {user?.user?.ho_KH+' '+user?.user?.ten_KH} <i className="ri-arrow-down-s-line"></i>
           </div>
         </div>
         <ul className='hidden z-[1] group-hover:block absolute top-[100%] right-0 w-40 sm:w-full bg-white shadow-lg rounded-xl overflow-hidden'>
-          <li className='font-semibold p-2 overflow-visible'>ID: {user?.user._id}</li>
+          <li className='font-semibold p-2 overflow-visible text-[13px]'>ID: {user?.user?._id}</li>
+          <li className=''><Link className='block p-2 hover:bg-slate-300' to="/history">Lịch sử đặt sân</Link></li>
           <li className=''><Link className='block p-2 hover:bg-slate-300' to="/info">Chỉnh sửa thông tin</Link></li>
           <li className=''><Link className='block p-2 hover:bg-slate-300' to="/changePass">Đổi mật khẩu</Link></li>
           <li className=''><Link className='block p-2 hover:bg-slate-300' to="/" onClick={handleLogout}>Đăng xuất</Link></li>
