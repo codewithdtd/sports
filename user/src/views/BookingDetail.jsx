@@ -23,6 +23,8 @@ const BookingDetail = () => {
   const [listService, setListService] = useState([])
   const [modalService, setModalService] = useState(null)
   const [validateDate, setValidateDate] = useState(false)
+  const [submit, setSubmit] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -114,6 +116,7 @@ const BookingDetail = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmit(true)
       for(const item of booking) {
         await createBooking(item);
       }
@@ -134,7 +137,7 @@ const BookingDetail = () => {
 
   const createBooking = async (data) => {
     try {
-      data.thanhTien = data.thanhTien + data.dichVu?.reduce((a, c) => a + c.thanhTien, 0)
+      data.thanhTien = data.thanhTien + (data.dichVu?.reduce((a, c) => a + c.thanhTien, 0) || 0)
       const result = await bookingService.create(data, accessToken);
       if (result) {
         return result;  // Trả về kết quả nếu thành công
@@ -341,6 +344,9 @@ const BookingDetail = () => {
               </div>
             </div>
             : '')}
+            { currentDate === getCurrentDate() && timeSlots.every(slot => slot.formattedTimeStart < getCurrentTime()) ? 
+              <p>Đã hết giờ đặt sân của ngày hôm nay vui lòng chọn ngày khác để đặt sân !!!</p> : ''
+            }
           </div>
         </div>
         <div className='flex flex-col flex-1 pt-1'>
@@ -373,7 +379,7 @@ const BookingDetail = () => {
               return a + tienSan + tienDichVu;
             }, 0))}</b>
           </p>
-          <button className='bg-green-500 p-1 px-3 rounded-lg text-white font-bold'>Xác nhận</button>
+          <button type={`${submit ? 'button' : ''}`} className='bg-green-500 p-1 px-3 rounded-lg text-white font-bold'>Xác nhận</button>
         </div>
       </form>
     </div>
