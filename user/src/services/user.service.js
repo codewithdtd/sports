@@ -16,7 +16,7 @@ class UserService extends BaseService {
                 accessToken: accessToken
             }
             dispatch(updateSuccess(action))
-            navigate("/")
+            setTimeout(() => navigate("/"), 2000);
             return user;
         } catch (error) {
             console.log(error)

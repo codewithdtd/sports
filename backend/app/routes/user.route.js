@@ -18,7 +18,11 @@ router.route("/cart")
 router.route("/cart/:id")
     .get(user.findOneCart)
     .put(user.updateCart);
-   
+
+
+// Hóa đơn
+router.route("/invoice/:id")
+    .get(user.findAllInvoiceUser)
 
 // Đặt Sân 
 router.route("/booking")

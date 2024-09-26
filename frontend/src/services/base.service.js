@@ -5,7 +5,7 @@ class BaseService {
     constructor(baseUrl) {
         this.api = createApiClient(baseUrl);
     }
-    async getAll(accessToken) {
+    async getAll(id, accessToken) {
         return (await this.api.get("/", {
             headers: { token: `Bearer ${accessToken}` }
         })).data;

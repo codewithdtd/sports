@@ -1,5 +1,6 @@
 const Users = require("../services/user.service");
 const Bookings = require("../services/booking.service");
+const Invoices = require("../services/invoice.service");
 const { UserMemberships } = require("../services/membership.service");
 const { UserEvents } = require("../services/event.service");
 const Reviews = require("../services/review.service");
@@ -35,8 +36,26 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     const users = new Users();
     try {
-        const result = await users.update(req.params.id, req.body);
-        res.status(201).json(result);
+        const newUpdate = req.body;
+        if(newUpdate.matKhauCu) {
+            let oldPass = newUpdate.matKhauCu;
+            const user = await users.findById(req.params.id);
+            const validPassword = await bcrypt.compare(
+                oldPass,
+                user.matKhau_KH
+            )
+            console.log(validPassword)
+            if(validPassword) {
+                salt = await bcrypt.genSalt(10);
+                newUpdate.matKhau_KH = await bcrypt.hash(newUpdate.matKhauMoi, salt);
+            }
+            else {
+                return res.status(401).json({ error: 'Sai mật khẩu'});             
+            }
+        }
+        const result = await users.update(req.params.id, newUpdate);
+        const { matKhau_KH, ...others } = result._doc;
+        res.status(201).json(others);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -155,7 +174,7 @@ exports.findAll = async (req, res, next) => {
 exports.findOne = async (req, res, next) => {
     const users = new Users();
     try {
-        const result = await users.findOne(req.params.id);
+        const result = await users.findById(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -454,3 +473,14 @@ exports.deleteOneCart = async (req, res, next) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// Hóa đơn
+exports.findAllInvoiceUser = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        const result = await invoice.finAllInvoiceUser(req.params.id)
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}

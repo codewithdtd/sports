@@ -1,14 +1,14 @@
 import BaseService from "./base.service";
 
-class Booking extends BaseService {
+class Invoice extends BaseService {
     constructor() {
-        super('/api/user/booking'); 
+        super('/api/user/invoice'); 
     }
     async getAll(id ,accessToken) {
-        return (await this.api.get("/", { params: id }, {
+        return (await this.api.get("/"+id, {
             headers: { token: `Bearer ${accessToken}` }
         })).data;
     }
 }
 
-export default new Booking();
+export default new Invoice();

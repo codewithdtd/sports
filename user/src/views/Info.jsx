@@ -2,17 +2,27 @@ import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import userService from '../services/user.service';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 const Info = () => {
   const user = useSelector((state)=> state.user.login.user)
   const accessToken = user?.accessToken;
   const [avatar, setAvatar] = useState(null);
   const [info, setInfo] = useState(user.user)
+  const [submit, setSubmit] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmit(true)
     if(await updateUser(info))
-      console.log('Thành công')
+      toast.success('Thành công!')
+    else {
+      toast.error('Mật khẩu không đúng')
+      setInfo({...info, matKhauCu: '', matKhauMoi: '', xacNhanMatKhauMoi: ''})
+      return;
+    }
   }
 
   const updateUser = async (data) => {
@@ -39,6 +49,8 @@ const Info = () => {
         
         <input type="file" id='avatar' className='hidden'/>
       </div> */}
+      <ToastContainer autoClose='2000' />
+
       <div className='flex-1 hidden md:pt-16 info-avatar md:flex flex-col items-center'>
         <div className='flex justify-center'>
           <img src="./src/assets/edit.png" alt="" className="bg-green-500 object-cover md:max-w-[60%] rounded-full aspect-square"/>
@@ -49,21 +61,21 @@ const Info = () => {
         <div className='lg:w-4/5 w-full'>
           <div className='flex items-center py-1'>
             <label htmlFor="" className='md:w-1/4 w-1/6'>Họ: </label>
-            <input type="text" className='bg-gray-200 m-2 p-1 px-2 rounded-xl flex-1' value={info.ho_KH} onChange={e => setInfo({...info, ho_KH: e.target.value})}/>
+            <input required type="text" className='bg-gray-200 m-2 p-1 px-2 rounded-xl flex-1' value={info.ho_KH} onChange={e => setInfo({...info, ho_KH: e.target.value})}/>
           </div>
           <div className='flex items-center py-1'>
             <label htmlFor="" className='md:w-1/4 w-1/6'>Tên: </label>
-            <input type="text" className='bg-gray-200 m-2 p-1 px-2 rounded-xl flex-1' value={info.ten_KH} onChange={e => setInfo({...info, ten_KH: e.target.value})}/>
+            <input required type="text" className='bg-gray-200 m-2 p-1 px-2 rounded-xl flex-1' value={info.ten_KH} onChange={e => setInfo({...info, ten_KH: e.target.value})}/>
           </div>
           <div className='flex items-center py-1'>
             <label htmlFor="" className='md:w-1/4 w-1/6'>Số điện thoại: </label>
-            <input type="text" className='bg-gray-200 m-2 p-1 px-2 rounded-xl flex-1' value={info.sdt_KH} onChange={e => setInfo({...info, sdt_KH: e.target.value})}/>
+            <input required type="text" className='bg-gray-200 m-2 p-1 px-2 rounded-xl flex-1' value={info.sdt_KH} onChange={e => setInfo({...info, sdt_KH: e.target.value})}/>
           </div>
           <div className='flex items-center py-1'>
             <label htmlFor="" className='md:w-1/4 w-1/6'>Email: </label>
             <input type="email" className='bg-gray-200 m-2 p-1 px-2 rounded-xl flex-1' value={info.email_KH} onChange={e => setInfo({...info, email_KH: e.target.value})}/>
           </div>
-          <button className='bg-green-500 w-full p-1 my-4 rounded-xl text-white hover:bg-green-700'>Xác nhận</button>
+          <button type={`${submit ? 'button' : ''}`} className='bg-green-500 w-full p-1 my-4 rounded-xl text-white hover:bg-green-700'>Xác nhận</button>
         </div>
       </form>
     </div>
