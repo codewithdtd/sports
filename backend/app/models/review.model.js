@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 
 const reviewSchema = new mongoose.Schema({
-  ma_KH: { type: String, required: true },
+  khachHang: { type: Object, required: true },
+  danhGia: { type: String, },
   noiDung: { type: String, required: true },
   ngayTao_DG: { type: String },
   da_xoa: { type: Boolean, default: false },
