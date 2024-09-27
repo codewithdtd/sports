@@ -14,6 +14,7 @@ import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 
 const BookingDetail = () => {
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const [listFac, setListFac] = useState([]);
   const [field, setField] = useState({})
   const [booking, setBooking] = useState([]);
@@ -115,20 +116,24 @@ const BookingDetail = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!user) {
+      toast.error("Vui lòng đăng nhập để đặt sân", {
+      });
+      return;
+    }
     try {
       setSubmit(true)
       for(const item of booking) {
         await createBooking(item);
       }
       toast.success("Đặt sân thành công !", {
-        position: "top-center"
+     
       });
       setTimeout(() => {
         navigate('/');  // Chuyển hướng sau 2 giây
       }, 2500);
     } catch (error) {
       toast.error("Đặt sân thất bại!", {
-        position: "top-center"
       });
       console.error("Có lỗi xảy ra khi đặt sân:", error);
       // Xử lý lỗi nếu cần, chẳng hạn hiển thị thông báo
@@ -197,6 +202,26 @@ const BookingDetail = () => {
 
 
   useEffect(() => {
+    if (field.hinhAnh && field.hinhAnh.length > 0) {
+      let loadedImages = 0;
+
+      field.hinhAnh.forEach((item) => {
+        const img = new Image();
+        img.src = `http://localhost:3000/uploads/${item}`;
+        img.onload = () => {
+          loadedImages += 1;
+          if (loadedImages === field.hinhAnh.length) {
+            setImagesLoaded(true);  // Khi tất cả ảnh đã tải xong
+          }
+        };
+        img.onerror = () => {
+          console.error(`Không thể tải ảnh: ${item}`);
+        };
+      });
+    }
+  }, [field.hinhAnh]);
+
+  useEffect(() => {
     if (bookingsByDate[currentDate]) {
       console.log(bookingsByDate[currentDate])
       // setBooking(bookingsByDate[currentDate].booking);
@@ -242,13 +267,22 @@ const BookingDetail = () => {
         <Link to={'/booking'}>{'< '}Quay lại</Link>
       </div>
       <div className=''>
-        <Slide {...properties} slidesToScroll={1} slidesToShow={4} indicators={true}>     
-        {field.hinhAnh?.map((item, index) => 
-          <div key={index} className='w-full px-3 flex justify-center'>
-            <img key={item} src={`http://localhost:3000/uploads/${item}`} className='px-2 object-cover w-full h-full aspect-[3/2]' alt="" />
-          </div>
+        {imagesLoaded ? (
+          <Slide {...properties} slidesToScroll={1} slidesToShow={4} indicators={true}>
+            {field.hinhAnh?.map((item, index) => (
+              <div key={index} className='w-full px-3 flex justify-center'>
+                <img
+                  key={item}
+                  src={`http://localhost:3000/uploads/${item}`}
+                  className='px-2 object-cover w-full h-full aspect-[3/2]'
+                  alt=""
+                />
+              </div>
+            ))}
+          </Slide>
+        ) : (
+          <p>Đang tải ảnh...</p>
         )}
-        </Slide>
       </div>
       <form className='flex flex-col md:flex-row gap-3' action="" onSubmit={e => handleSubmit(e)}>
         <div className='flex-1'>

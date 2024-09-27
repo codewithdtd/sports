@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { useSelector } from "react-redux"
 import './App.css'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 function App() {
 
   return (
@@ -14,6 +15,8 @@ function App() {
         {/* <Header /> */}
         <Outlet />
       </div>
+
+      <Footer />
     </div>
   )
 }
