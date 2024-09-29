@@ -69,28 +69,35 @@ const Navbar = () => {
           {/* <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="membership">HỘI VIÊN</NavLink> */}
           <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="contact">LIÊN HỆ</NavLink>
         </div>
+
+        {/* THông báo */}
+
       {!user ? 
       <div className='flex text-center'>
         <NavLink className='border-[2px] p-1 px-4 font-bold text-white border-green-500 bg-green-500 rounded-full mr-3 hover:bg-green-600' to='login'>ĐĂNG NHẬP</NavLink>
         <NavLink className='border-[2px] p-1 px-4 font-bold text-green-500 border-green-500 rounded-full hover:bg-green-500 hover:text-white' to='signup'>ĐĂNG KÝ</NavLink>
       </div>
       : 
-      <div className="header__right group relative min-w-[200px] flex flex-col">
-        <div className='flex items-center'>
+      <div className="header__right flex items-center">
+        <div className='mx-4 text-gray-500 relative'>
+          <i className="text-2xl ri-notification-3-fill"></i>
+          <p className='absolute text-[12px] rounded-full top-0 -right-1 border-white border-2 bg-red-500 aspect-square w-4 h-4 flex items-center justify-center text-white'></p>
+        </div>
+        <div className='flex group relative min-w-[200px] items-center'>
           <div className="header__item header__user flex w-[50px] h-[50px] rounded-full overflow-hidden">
               <img src="./src/assets/avatar.png" alt="" className="object-contain"/>
           </div>
           <div className='ml-2 hidden sm:block'>
               {user?.user?.ho_KH+' '+user?.user?.ten_KH} <i className="ri-arrow-down-s-line"></i>
           </div>
+          <ul className='hidden z-[1] group-hover:block absolute top-[100%] right-0 w-40 sm:w-full bg-white shadow-lg rounded-xl overflow-hidden'>
+            <li className='font-semibold p-2 overflow-visible text-[13px]'>ID: {user?.user?._id}</li>
+            <li className=''><Link className='block p-2 hover:bg-slate-300' to="/history">Lịch sử đặt sân</Link></li>
+            <li className=''><Link className='block p-2 hover:bg-slate-300' to="/info">Chỉnh sửa thông tin</Link></li>
+            <li className=''><Link className='block p-2 hover:bg-slate-300' to="/changePass">Đổi mật khẩu</Link></li>
+            <li className=''><Link className='block p-2 hover:bg-slate-300' to="/" onClick={handleLogout}>Đăng xuất</Link></li>
+          </ul>
         </div>
-        <ul className='hidden z-[1] group-hover:block absolute top-[100%] right-0 w-40 sm:w-full bg-white shadow-lg rounded-xl overflow-hidden'>
-          <li className='font-semibold p-2 overflow-visible text-[13px]'>ID: {user?.user?._id}</li>
-          <li className=''><Link className='block p-2 hover:bg-slate-300' to="/history">Lịch sử đặt sân</Link></li>
-          <li className=''><Link className='block p-2 hover:bg-slate-300' to="/info">Chỉnh sửa thông tin</Link></li>
-          <li className=''><Link className='block p-2 hover:bg-slate-300' to="/changePass">Đổi mật khẩu</Link></li>
-          <li className=''><Link className='block p-2 hover:bg-slate-300' to="/" onClick={handleLogout}>Đăng xuất</Link></li>
-        </ul>
       </div>
       }
     </div>

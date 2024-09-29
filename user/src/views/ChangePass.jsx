@@ -11,10 +11,10 @@ const ChangePass = () => {
   const [info, setInfo] = useState(user.user)
   const [validatePass, setValidatePass] = useState(false)
   const [submit, setSubmit] = useState(false)
-  const userService = new User(user, dispatch)
-
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userService = new User(user, dispatch)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmit(true)
