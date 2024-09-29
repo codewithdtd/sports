@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import userService from '../services/user.service';
+import User from '../services/user.service';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -11,6 +11,7 @@ const ChangePass = () => {
   const [info, setInfo] = useState(user.user)
   const [validatePass, setValidatePass] = useState(false)
   const [submit, setSubmit] = useState(false)
+  const userService = new User(user, dispatch)
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
