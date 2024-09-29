@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Booking from '../services/booking.service';
 import invoiceService from '../services/invoice.service';
+import reviewService from '../services/review.service';
 import Pagination from '../components/Pagination';
 import Invoice from '../components/Invoice';
+import Feedback from '../components/Feedback';
 
 const History = () => {
   const user = useSelector((state)=> state.user.login.user)
@@ -17,6 +19,9 @@ const History = () => {
       navigate('/login');
     }
   })
+  const [review, setReview] = useState(false);
+  const [reviewed, setReviewed] = useState(null);
+  const [reviews, setReviews] = useState({}); 
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [list, setList] = useState([]);
@@ -111,7 +116,6 @@ const History = () => {
     if(search == '') 
       return list;
 
-
     const searchTerms = search.toLowerCase().split(' ');
     const convertedStrings = convertString();
     const filteredlist = list.filter((item, index) =>
@@ -123,7 +127,7 @@ const History = () => {
     return filteredlist;
   }
 
-  const totalPages = Math.ceil(filterFacility().length / 6);
+  const totalPages = Math.ceil(filterFacility()?.length / 6);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -131,13 +135,28 @@ const History = () => {
     }
   };
 
+  function tinhChenhLechNgay(ngayNhap) {
+    const [day, month, year] = ngayNhap.split('/').map(Number);
+    const date1 = new Date(year, month - 1, day);  // Ngày bạn nhập (dd/mm/yyyy)
+    const date2 = new Date();            // Ngày hiện tại
+
+    // Tính số mili-giây giữa hai ngày
+    const diffInMs = date2 - date1;
+
+    // Chuyển mili-giây thành số ngày
+    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); // Làm tròn lên
+    console.log(diffInDays < 0)
+    return diffInDays;
+  }
+
+
   // GỌI SERVICE BACKEND
   // lấy dữ liệu
   const getBooking = async () => {
     const id = { id: user.user._id }
     const data = await bookingService.getAll(id, accessToken, dispatch);
     const invoice = await invoiceService.getAll(user.user._id)
-    setList(data);
+    setList(data.reverse());
     setListInvoice(invoice)
   }
   const createBooking = async (data) => {
@@ -151,11 +170,48 @@ const History = () => {
     return editFac;
   }
 
+  const getReview = async (id) => {
+    try {
+        const datSan = { 'datSan._id': id }
+        const review = await reviewService.getOne(datSan)
+        if(review) {
+            return review;
+        }
+        else {
+          return false;
+        }
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+  }
+  const fetchAllReviews = async () => {
+    const reviewResults = {};
+
+    // Duyệt qua các item trong filterFacility để gọi getReview cho từng item
+    const items = list;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      try {
+        const review = await getReview(item._id.toString()); // Gọi getReview
+        reviewResults[item._id] = review; // Lưu kết quả vào object
+      } catch (error) {
+        console.error(`Error fetching review for item ${item._id}:`, error);
+      }
+    }
+
+    setReviews(reviewResults); // Cập nhật state với tất cả kết quả review
+  };
+
   useEffect(() => {
     getBooking();
   }, [fac]);
+  useEffect(() => {
+    fetchAllReviews();
+  }, [list]);
+
   return (
-    <div className='pt-4'>
+    <div className='py-4'>
       <h1 className='text-2xl font-bold text-center'>LỊCH SỬ ĐẶT SÂN</h1>
       <div className='px-4'>
         <div className='flex-1 flex justify-between py-5'>
@@ -230,17 +286,28 @@ const History = () => {
             {item.trangThai === 'Chưa duyệt' ? 
             <button className='bg-red-500 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy</button>
             : ''}
+            {/* Hiển thị kết quả của getReview() */}
+            {reviews[item._id] ?
+              <button className='border-gray-500 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Xem đánh giá</button>
+            : ''}
+
+
+            {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ? 
+            <button className='bg-blue-500 hover:bg-blue-700 text-white p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
+            : ''}
           </div>
-        </div> : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
+        </div> : ''
         )}  
+        {(filterFacility()?.length < 1) ? <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div> : <p>{list.length}</p>}
       </div>
        <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}
-        />
+          />
         {/* from nhập dữ liệu */}
       {edit ? <Invoice toggle={setEdit} data={fac} /> : '' }
+      { review ? <Feedback toggle={setReview} data={reviewed} /> : '' }
     </div>
   )
 }

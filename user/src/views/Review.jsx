@@ -25,8 +25,7 @@ const Review = () => {
   const filterFacility = () => {
     if(feedback == '') 
       return listReview;
-
-
+    
     const searchTerms = feedback.toLowerCase().split(' ');
     const convertedStrings = convertString();
     const filteredlist = listReview.filter((item, index) =>
@@ -49,7 +48,7 @@ const Review = () => {
   const getAll = async () => {
     try {
       const review = await listReviewervice.getAll();
-      setListReview(review);
+      setListReview(review.reverse());
     } catch (error) {
       console.log(error);
     }
@@ -63,8 +62,8 @@ const Review = () => {
     <div className='p-5'>
       <h1 className='text-3xl font-bold text-center pt-5'>Đánh giá</h1>
       <div className='px-6'>
-        <button className={`bg-gray-300 p-2 mr-3 rounded-lg ${feedback == 'Tốt' ? 'bg-green-500 text-white' : ''}`} onClick={e => setFeedback('Tốt')}>Tốt  <i className="pl-1 ri-thumb-up-fill"></i> </button>
-        <button className={`bg-gray-300 p-2 mr-3 rounded-lg ${feedback == 'Tệ' ? 'bg-red-500 text-white' : ''}`} onClick={e => setFeedback('Tệ')}>Tệ  <i className="pl-1 ri-thumb-down-fill"></i> </button>
+        <button className={`bg-gray-300 p-2 mr-3 rounded-lg ${feedback == 'Tốt' ? 'bg-green-500 text-white' : ''}`} onClick={e => {setFeedback('Tốt'), handlePageChange(1) }}>Tốt  <i className="pl-1 ri-thumb-up-fill"></i> </button>
+        <button className={`bg-gray-300 p-2 mr-3 rounded-lg ${feedback == 'Tệ' ? 'bg-red-500 text-white' : ''}`} onClick={e => { setFeedback('Tệ'), handlePageChange(1) }}>Tệ  <i className="pl-1 ri-thumb-down-fill"></i> </button>
         <button className={`bg-gray-300 p-2 mr-3 rounded-lg ${feedback == '' ? 'bg-green-500 text-white' : ''}`} onClick={e => setFeedback('')}>Tất cả </button> 
       </div>
       {/* Hiển thị các đánh giá */}

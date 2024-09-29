@@ -30,6 +30,7 @@ class DBHandler {
   async findOne(data) {
     try {
       const find = {...data, "da_xoa": false}
+      console.log(find)
       const results = await this.model.findOne(find);
       return results;
     } catch (err) {

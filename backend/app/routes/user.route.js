@@ -10,6 +10,8 @@ router.route("/review")
 router.route("/review/:id")
     .get(user.findOneReview)
     .put(user.updateReview);
+router.route("/review/find")
+    .post(user.findOneReview)
 
 // Giỏ hàng
 router.route("/cart")

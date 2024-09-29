@@ -396,10 +396,12 @@ exports.findAllReview = async (req, res, next) => {
 
 exports.findOneReview = async (req, res, next) => {
     const review = new Reviews();
+    console.log(req.body)
     try {
         let result;
-        if(!req.params.id) 
+        if(!req.params.id) {
             result = await review.findOne(req.body)
+        }
         else 
             result = await review.findById(req.params.id) 
         res.status(201).json(result);

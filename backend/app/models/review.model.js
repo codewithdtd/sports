@@ -5,6 +5,7 @@ const reviewSchema = new mongoose.Schema({
   khachHang: { type: Object, required: true },
   danhGia: { type: String, },
   noiDung: { type: String, required: true },
+  datSan: { type: Object, required: true },
   ngayTao_DG: { type: String },
   da_xoa: { type: Boolean, default: false },
 });
