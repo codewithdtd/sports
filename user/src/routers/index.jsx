@@ -17,6 +17,7 @@ import BookingDetail from '../views/BookingDetail';
 import Info from '../views/Info';
 import History from '../views/History';
 import ChangePass from '../views/ChangePass';
+import Review from '../views/Review';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
       {
         path: 'changePass',
         element: <ChangePass />
+      },
+      {
+        path: 'review',
+        element: <Review />
       }
     ],
   },

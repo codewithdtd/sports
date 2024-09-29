@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import facilityService from '../services/facility.service'
 import sportTypeService from '../services/sportType.service'
-import bookingService from '../services/booking.service'
+import Booking from '../services/booking.service'
 import serviceService from '../services/service.service'
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
@@ -26,16 +26,19 @@ const BookingDetail = () => {
   const [validateDate, setValidateDate] = useState(false)
   const [submit, setSubmit] = useState(false);
 
-
+  
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  
   const user = useSelector((state) => state.user.login.user);
   const accessToken = user?.accessToken;
   const { loai_san } = useParams(); 
   const startTime = 8; // 8:00
   const endTime = 22; // 22:00
   const interval = loai_san == 'Bóng đá' ?  1.5 : 1; // 1 giờ 30 phút
-
+  
+  const bookingService = new Booking(user, dispatch);
+  
   const timeSlots = [];
 
   // Dùng vòng lặp để tạo các thời gian với khoảng cách 1 giờ 30 phút
@@ -117,8 +120,9 @@ const BookingDetail = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(!user) {
-      toast.error("Vui lòng đăng nhập để đặt sân", {
-      });
+      // toast.error("Vui lòng đăng nhập để đặt sân", {
+      // });
+      alert('Vui lòng đăng nhập để đặt sân')
       return;
     }
     try {
@@ -237,7 +241,7 @@ const BookingDetail = () => {
   useEffect(() => {
     // Gọi getFacility sau khi checkedSlots được cập nhật
     getFacility();
-  }, [listFac]);
+  }, []);
 
 
   const buttonStyle = {

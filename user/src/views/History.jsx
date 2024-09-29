@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import bookingService from '../services/booking.service';
+import Booking from '../services/booking.service';
 import invoiceService from '../services/invoice.service';
 import Pagination from '../components/Pagination';
 import Invoice from '../components/Invoice';
@@ -10,7 +10,8 @@ const History = () => {
   const user = useSelector((state)=> state.user.login.user)
   const accessToken = user?.accessToken; 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const bookingService = new Booking(user, dispatch);
   useEffect(() => {
     if(!user) {
       navigate('/login');
@@ -134,7 +135,7 @@ const History = () => {
   // lấy dữ liệu
   const getBooking = async () => {
     const id = { id: user.user._id }
-    const data = await bookingService.getAll(id, accessToken);
+    const data = await bookingService.getAll(id, accessToken, dispatch);
     const invoice = await invoiceService.getAll(user.user._id)
     setList(data);
     setListInvoice(invoice)

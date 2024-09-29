@@ -26,8 +26,8 @@ router.route("/invoice/:id")
 
 // Đặt Sân 
 router.route("/booking")
-    .get(user.findAllBookingUser)
-    .post(user.createBooking)
+    .get(middleware.verifyAdmin ,user.findAllBookingUser)
+    .post(middleware.verifyToken, user.createBooking)
 router.route("/booking/:id")
     .get(user.findOneBooking)
     .put(user.updateBooking);
@@ -44,7 +44,7 @@ router.route("/userMembership/:id")
 
 // Tài khoản cá nhân
 router.route("/login").post(user.login);
-router.route("/refresh").post(middleware.verifyToken, user.refreshToken);
+router.route("/refresh").post(user.refreshToken);
 router.route("/logout").post(middleware.verifyToken, user.logout);
 
 router.route("/:id")

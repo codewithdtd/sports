@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import userService from '../services/user.service';
+import User from '../services/user.service';
 
 const Navbar = () => {
   const user = useSelector((state) => state.user?.login.user);
   const accessToken = user?.accessToken;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userService = new User(user, dispatch);
   const handleLogout = async () => {
     await userService.logout(dispatch, navigate, accessToken);
   }
@@ -64,7 +65,7 @@ const Navbar = () => {
           <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="about">GIỚI THIỆU</NavLink>
           <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="booking">ĐẶT SÂN</NavLink>
           {/* <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="event">SỰ KIỆN</NavLink> */}
-          <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="membership">ĐÁNH GIÁ</NavLink>
+          <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="review">ĐÁNH GIÁ</NavLink>
           {/* <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="membership">HỘI VIÊN</NavLink> */}
           <NavLink className={({ isActive }) => `${isActive ? "text-green-500 navbar-link-active" : ""} block navbar-link text-start p-3 md:px-5 hover:text-green-600 font-medium`} onClick={e => setIsOpen(false)} to="contact">LIÊN HỆ</NavLink>
         </div>

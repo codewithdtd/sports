@@ -44,11 +44,12 @@ const FormService = ({ toggle, service, handle }) => {
   }
 
   const handleQuantityChange = (id, newQuantity) => {
-    setListServiceSelected(prevList => 
-      prevList.map(item => 
-        item._id === id ? { ...item, soluong: newQuantity, thanhTien: item.gia*newQuantity } : item
-      )
-    );
+    if(newQuantity > 0)
+      setListServiceSelected(prevList => 
+        prevList.map(item => 
+          item._id === id ? { ...item, soluong: newQuantity, thanhTien: item.gia*newQuantity } : item
+        )
+      );
   };
   
 
