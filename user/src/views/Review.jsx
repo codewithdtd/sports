@@ -59,7 +59,7 @@ const Review = () => {
     getAll();
   }, [])
   return (
-    <div className='p-5'>
+    <div className='p-5 px-8'>
       <h1 className='text-3xl font-bold text-center pt-5'>Đánh giá</h1>
       <div className='px-6'>
         <button className={`bg-gray-300 p-2 mr-3 rounded-lg ${feedback == 'Tốt' ? 'bg-green-500 text-white' : ''}`} onClick={e => {setFeedback('Tốt'), handlePageChange(1) }}>Tốt  <i className="pl-1 ri-thumb-up-fill"></i> </button>
@@ -73,16 +73,26 @@ const Review = () => {
         ) : (
           filterFacility()?.map((review, index) => 
              ((currentPage-1)*5 <= index && index < currentPage*5) ? (
-            <div key={review.id} className=" shadow-gray-400 shadow-md mb-3 p-4 border-b border-gray-200">
-              <p className='font-medium'>Khách hàng: {review.khachHang.ho_KH + ' ' + review.khachHang.ten_KH}</p>
-              <p className='text-[11px] font-medium text-gray-700'>{review.ngayTao_DG}</p>
-              <span
-                className={`font-semibold ${review.danhGia === 'Tốt' ? 'text-green-500' : 'text-red-500'}`}
-              >
-                {review.danhGia} 
-                { review.danhGia === 'Tốt' ?  <i className="pl-1 ri-thumb-up-fill"></i> : <i className="pl-1 ri-thumb-down-fill"></i>}
-              </span>
-              <p className="text-gray-700">{review.noiDung}</p>
+            <div key={review._id} className=" shadow-gray-600 bg-gray-200 rounded-xl flex items-center shadow-md mb-3 p-4 border text-lg border-gray-400">
+              <img src="./src/assets/user-profile.png" className='hidden sm:block w-20 h-20 mr-5' alt="" />
+              <div>
+                <div className='font-medium flex items-center'>
+                  <img src="./src/assets/user-profile.png" className='sm:hidden w-20 h-20 mr-5' alt="" />
+                  <div>
+                    <p>{review.khachHang.ho_KH + ' ' + review.khachHang.ten_KH}</p>
+                    <p className='sm:hidden text-sm font-medium text-gray-700'>{review.ngayTao_DG}</p>
+                  </div>
+                </div>
+                <p className='hidden sm:block text-sm font-medium text-gray-700'>{review.ngayTao_DG}</p>
+                <span
+                  className={`font-semibold ${review.danhGia === 'Tốt' ? 'text-green-500' : 'text-red-500'}`}
+                >
+                  {review.danhGia} 
+                  { review.danhGia === 'Tốt' ?  <i className="pl-1 ri-thumb-up-fill"></i> : <i className="pl-1 ri-thumb-down-fill"></i>}
+                </span>
+                <p className="text-gray-700 max-w-">{review.noiDung}</p>
+                <p className='text-base text-gray-500 font-medium'>Phản hồi</p>
+              </div>
             </div>
           ): '') 
         )}
