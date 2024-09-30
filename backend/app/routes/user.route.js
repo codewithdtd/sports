@@ -3,6 +3,10 @@ const user = require("../controllers/user.controller");
 const middleware = require("../middleware/middleware")
 const router = express.Router();
 
+
+// Liên hệ
+router.route("/contact")
+    .post(user.createContact)
 // Đánh giá
 router.route("/review")
     .get(user.findAllReview)

@@ -5,6 +5,7 @@ const { UserMemberships } = require("../services/membership.service");
 const { UserEvents } = require("../services/event.service");
 const Reviews = require("../services/review.service");
 const Carts = require("../services/cart.service"); 
+const Contacts = require("../services/contact.service"); 
 
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
@@ -486,3 +487,28 @@ exports.findAllInvoiceUser = async (req, res, next) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+// Liên hệ
+// Đánh giá
+exports.createContact = async (req, res, next) => {
+    const review = new Contacts();
+    const newReview = req.body;
+    try {
+        const result = await review.create(newReview);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+
+exports.findAllContact = async (req, res, next) => {
+    const review = new Contacts();
+    try {
+        const result = await review.findAllUser(req.body.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+

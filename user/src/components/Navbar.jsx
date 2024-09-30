@@ -68,7 +68,7 @@ const Navbar = () => {
 
   useEffect(() => {
      getBooking();
-  })
+  }, [])
 
 
   return (
