@@ -220,85 +220,93 @@ const History = () => {
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div> 
-        <div className="flex justify-between py-2 bg-gray-200 border-b border-gray-300 text-center">
-          <div className="w-1/12 font-semibold">STT</div>
-          <div className="w-1/6 font-semibold">TÊN SÂN</div>
-          <div className="w-1/6 font-semibold flex justify-center">
-            TỔNG TIỀN
-            <div className="">
-              <i className="ri-arrow-up-fill"></i>
-              {/* <i className="ri-arrow-down-fill"></i> */}
+        <div className='shadow-gray-600 shadow-md rounded-lg'>
+          <div className="flex justify-between py-2 bg-green-500 border-b border-gray-300 text-center rounded-t-lg">
+            <div className="w-1/12 font-semibold">STT</div>
+            <div className="w-1/6 font-semibold">TÊN SÂN</div>
+            <div className="w-1/6 font-semibold flex justify-center">
+              TỔNG TIỀN
+              <div className="">
+                <i className="ri-arrow-up-fill"></i>
+                {/* <i className="ri-arrow-down-fill"></i> */}
+              </div>
+            </div>
+            <div className="w-3/12 font-semibold flex justify-center">
+              CHI TIẾT
+            </div>
+            <div className="w-1/6 font-semibold flex justify-center">
+              NGÀY ĐẶT
+            </div>
+            <div className="w-1/6 font-semibold flex justify-center">
+              TRẠNG THÁI
+              <div className="">
+                <i className={''}></i>
+                <i className="ri-arrow-down-fill"></i>
+              </div>
+            </div>
+            <div className="w-1/6">
+              {/* <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i> */}
             </div>
           </div>
-          <div className="w-3/12 font-semibold flex justify-center">
-            CHI TIẾT
-          </div>
-          <div className="w-1/6 font-semibold flex justify-center">
-            NGÀY ĐẶT
-          </div>
-          <div className="w-1/6 font-semibold flex justify-center">
-            TRẠNG THÁI
-            <div className="">
-              <i className={''}></i>
-              <i className="ri-arrow-down-fill"></i>
+
+
+          {filterFacility()?.map((item, index) => 
+          ((currentPage-1)*6 <= index && index < currentPage*6) ?
+          <div key={index} className="flex justify-between py-2 border-b border-gray-300 text-center min-h-32">
+            <div className="w-1/12">{index +1}</div>
+            <div className="w-1/6 text-start">
+              <p>{item.san.ten_San + ' - ' + item.san.ma_San}</p>
+              <ul className='ml-4 list-disc'>
+                {item.dichVu?.map((dichVu) =>
+                  <li key={dichVu._id}>{dichVu.ten_DV} x{dichVu.soluong}</li>
+                )}
+              </ul>
             </div>
-          </div>
-          <div className="w-1/6">
-            {/* <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i> */}
-          </div>
+            <div className="w-1/6 flex justify-center">
+              {formatNumber(item.thanhTien)}
+            </div>
+            <div className="w-3/12 md:flex justify-around">
+              <p>{item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
+              <p>{item.ngayDat}</p>
+            </div>
+            <div className="w-1/6 flex justify-center">
+              {item.ngayTao}
+            </div>
+            <div className="w-1/6 flex justify-center h-fit">
+              <p className={`${item.trangThai == 'Hoàn thành' ? 'text-green-700 rounded-lg bg-green-200 border-green-500 border-2 shadow-md ' 
+                : item.trangThai == 'Đã hủy' ? 'text-red-700 rounded-lg bg-red-300 border-red-500 border-2 shadow-md ' 
+                : item.trangThai == 'Đã duyệt' ? 'text-blue-700 rounded-lg bg-blue-300 border-blue-500 border-2 shadow-md ' 
+                : item.trangThai == 'Nhận sân' ? 'text-yellow-700 rounded-lg bg-yellow-300 border-yellow-600 border-2 shadow-md ' 
+                : 'rounded-lg'} w-fit px-1 md:px-3`}>
+                {item.trangThai}
+              </p>
+            </div>
+            <div className="w-1/6">
+            {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
+                <i
+                  className="ri-bill-line hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg"
+                  onClick={(e) => handleData(listInvoice.find((invoice) => invoice.datSan._id == item._id))}
+                ></i>
+              )
+              : ''}
+
+              {item.trangThai === 'Chưa duyệt' ? 
+              <button className='bg-red-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy</button>
+              : ''}
+              {/* Hiển thị kết quả của getReview() */}
+              {reviews[item._id] ?
+                <button className='border-gray-500 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Xem đánh giá</button>
+              : ''}
+
+
+              {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ? 
+              <button className='bg-blue-500 hover:bg-blue-700 text-white p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
+              : ''}
+            </div>
+          </div> : ''
+          )}  
+          {(filterFacility()?.length < 1) ? <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div> : ''}
         </div>
-
-
-        {filterFacility()?.map((item, index) => 
-        ((currentPage-1)*6 <= index && index < currentPage*6) ?
-        <div key={index} className="flex justify-between py-2 border-b border-gray-300 text-center">
-          <div className="w-1/12">{index +1}</div>
-          <div className="w-1/6 text-start">
-            <p>{item.san.ten_San + ' - ' + item.san.ma_San}</p>
-            <ul className='ml-4 list-disc'>
-              {item.dichVu?.map((dichVu) =>
-                <li key={dichVu._id}>{dichVu.ten_DV} x{dichVu.soluong}</li>
-              )}
-            </ul>
-          </div>
-          <div className="w-1/6 flex justify-center">
-            {formatNumber(item.thanhTien)}
-          </div>
-          <div className="w-3/12 md:flex justify-around">
-            <p>{item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
-            <p>{item.ngayDat}</p>
-          </div>
-          <div className="w-1/6 flex justify-center">
-            {item.ngayTao}
-          </div>
-          <div className="w-1/6 flex justify-center">
-            {item.trangThai}
-          </div>
-          <div className="w-1/6">
-           {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
-              <i
-                className="ri-bill-line hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg"
-                onClick={(e) => handleData(listInvoice.find((invoice) => invoice.datSan._id == item._id))}
-              ></i>
-            )
-            : ''}
-
-            {item.trangThai === 'Chưa duyệt' ? 
-            <button className='bg-red-500 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy</button>
-            : ''}
-            {/* Hiển thị kết quả của getReview() */}
-            {reviews[item._id] ?
-              <button className='border-gray-500 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Xem đánh giá</button>
-            : ''}
-
-
-            {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ? 
-            <button className='bg-blue-500 hover:bg-blue-700 text-white p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
-            : ''}
-          </div>
-        </div> : ''
-        )}  
-        {(filterFacility()?.length < 1) ? <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div> : ''}
       </div>
        <Pagination
           totalPages={totalPages}

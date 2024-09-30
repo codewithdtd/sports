@@ -46,7 +46,6 @@ const Navbar = () => {
   };
 
    useEffect(() => {
-    getBooking();
     const handleResize = () => {
       if (window.innerWidth >= 780) {
         setIsOpen(true);
@@ -66,6 +65,10 @@ const Navbar = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  useEffect(() => {
+     getBooking();
+  })
 
 
   return (

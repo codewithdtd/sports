@@ -91,7 +91,7 @@ const Review = () => {
                   { review.danhGia === 'Tốt' ?  <i className="pl-1 ri-thumb-up-fill"></i> : <i className="pl-1 ri-thumb-down-fill"></i>}
                 </span>
                 <p className="text-gray-700 max-w-">{review.noiDung}</p>
-                <p className='text-base text-gray-500 font-medium'>Phản hồi</p>
+                {/* <p className='text-base text-gray-500 font-medium'>Phản hồi</p> */}
               </div>
             </div>
           ): '') 
