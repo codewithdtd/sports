@@ -29,7 +29,7 @@ const Navbar = () => {
     const id = { id: user.user._id }
     const data = await bookingService.getAll(id, accessToken, dispatch);
     setList(data.reverse());
-    if (data.some((booking) => booking.trangThai == 'Đã duyệt' || booking.trangThai == 'Đã hủy'))
+    if (data.some((booking) => booking.trangThai == 'Đã duyệt'))
       setNotify(true)
 
   }

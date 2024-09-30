@@ -252,7 +252,7 @@ const History = () => {
 
           {filterFacility()?.map((item, index) => 
           ((currentPage-1)*6 <= index && index < currentPage*6) ?
-          <div key={index} className="flex justify-between py-2 border-b border-gray-300 text-center min-h-32">
+          <div key={index} className="flex items-center justify-between py-2 mb-3 shadow-md shadow-gray-400 border-b border-gray-300 text-center min-h-32">
             <div className="w-1/12">{index +1}</div>
             <div className="w-1/6 text-start">
               <p>{item.san.ten_San + ' - ' + item.san.ma_San}</p>
@@ -291,16 +291,16 @@ const History = () => {
               : ''}
 
               {item.trangThai === 'Chưa duyệt' ? 
-              <button className='bg-red-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy</button>
+              <button className='bg-red-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
               : ''}
               {/* Hiển thị kết quả của getReview() */}
               {reviews[item._id] ?
-                <button className='border-gray-500 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Xem đánh giá</button>
+                <button className='border-gray-500 text-gray-600 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Xem đánh giá</button>
               : ''}
 
 
               {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ? 
-              <button className='bg-blue-500 hover:bg-blue-700 text-white p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
+              <button className='text-white bg-green-500 hover:bg-blue-700 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
               : ''}
             </div>
           </div> : ''

@@ -6,9 +6,10 @@ const Invoice = (props) => {
   }
   return (
     <div className='w-full flex h-full bg-black bg-opacity-70 absolute top-0'  onClick={e => props.toggle(false)}>
-      <div className='relative bg-white m-auto print p-2 rounded-lg text-center' onClick={e => e.stopPropagation()}>
+      <div className='relative bg-white m-auto print p-4 rounded-lg text-center' onClick={e => e.stopPropagation()}>
         <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
-        <h1 className='text-center font-bold text-xl py-2'>HÓA ĐƠN</h1>
+        <h1 className='text-center font-bold text-xl'>HÓA ĐƠN</h1>
+        <p className='text-sm font-medium'>Mã hóa đơn: {props.data._id}</p>
         <div className='flex text-start justify-between gap-14'>
           <div>
             <p className='p-1'>Khách hàng: {props.data.khachHang.ho_KH } {props.data.khachHang.ten_KH }</p>
