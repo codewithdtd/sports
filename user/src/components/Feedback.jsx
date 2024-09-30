@@ -90,6 +90,7 @@ const Feedback = (props) => {
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Nhập bình luận của bạn"
                     rows={4}
+                    maxLength={200}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4" 
                 />
             </div>

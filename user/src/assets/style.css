@@ -93,3 +93,28 @@ input {
 .footer .logo img {
     filter: brightness(0) invert(100%);
 }
+
+/* Tùy chỉnh scrollbar nhỏ hơn */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    /* Độ rộng của thanh scrollbar dọc */
+    height: 4px;
+    /* Độ rộng của thanh scrollbar ngang (nếu có) */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f2f2f2;
+    /* Màu của phần track (kênh trượt) */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #777;
+    /* Màu của phần thumb (phần kéo) */
+    border-radius: 10px;
+    /* Bo tròn góc của thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Màu của thumb khi hover */
+}

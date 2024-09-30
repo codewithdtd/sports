@@ -298,7 +298,7 @@ const History = () => {
           </div>
         </div> : ''
         )}  
-        {(filterFacility()?.length < 1) ? <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div> : <p>{list.length}</p>}
+        {(filterFacility()?.length < 1) ? <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div> : ''}
       </div>
        <Pagination
           totalPages={totalPages}

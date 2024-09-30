@@ -3,18 +3,40 @@ import { NavLink } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import User from '../services/user.service';
+import Notify from './Notify';
+import Booking from '../services/booking.service';
 
 const Navbar = () => {
   const user = useSelector((state) => state.user?.login.user);
   const accessToken = user?.accessToken;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [list, setList] = useState([]);
+  const [notify, setNotify] = useState(false)
+
+  const bookingService = new Booking(user, dispatch);
   const userService = new User(user, dispatch);
   const handleLogout = async () => {
     await userService.logout(dispatch, navigate, accessToken);
   }
 
   const [isOpen, setIsOpen] = useState(false);
+
+
+  // GỌI SERVICE BACKEND
+  // lấy dữ liệu
+  const getBooking = async () => {
+    const id = { id: user.user._id }
+    const data = await bookingService.getAll(id, accessToken, dispatch);
+    setList(data.reverse());
+    if (data.some((booking) => booking.trangThai == 'Đã duyệt' || booking.trangThai == 'Đã hủy'))
+      setNotify(true)
+
+  }
+  const updateNavbar = (newState) => {
+    setNotify(newState);
+  };
+
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -24,6 +46,7 @@ const Navbar = () => {
   };
 
    useEffect(() => {
+    getBooking();
     const handleResize = () => {
       if (window.innerWidth >= 780) {
         setIsOpen(true);
@@ -79,13 +102,19 @@ const Navbar = () => {
       </div>
       : 
       <div className="header__right flex items-center">
-        <div className='mx-4 text-gray-500 relative'>
+        <div className='mx-4 group text-gray-500 relative'>
           <i className="text-2xl ri-notification-3-fill"></i>
+          { notify ?  
           <p className='absolute text-[12px] rounded-full top-0 -right-1 border-white border-2 bg-red-500 aspect-square w-4 h-4 flex items-center justify-center text-white'></p>
+          : ''
+          }
+          <div className='hidden group-hover:block'>
+            <Notify data={list} notify={setNotify} />
+          </div> 
         </div>
-        <div className='flex group relative min-w-[200px] items-center'>
+        <div className='flex group relative sm:min-w-[200px] items-center'>
           <div className="header__item header__user flex w-[50px] h-[50px] rounded-full overflow-hidden">
-              <img src="./src/assets/avatar.png" alt="" className="object-contain"/>
+            <img src="./src/assets/avatar.png" alt="" className="object-contain"/>
           </div>
           <div className='ml-2 hidden sm:block'>
               {user?.user?.ho_KH+' '+user?.user?.ten_KH} <i className="ri-arrow-down-s-line"></i>
