@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import Header from '../components/Header'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import FormFacility from '../components/FormFacility';
-import invoiceService from '../services/invoice.service';
-import bookingService from '../services/booking.service';
-import facilityService from '../services/facility.service';
-import sportTypeService from '../services/sportType.service';
+import InvoiceService from '../services/invoice.service';
+import BookingService from '../services/booking.service';
+import FacilityService from '../services/facility.service';
+import SportTypeService from '../services/sportType.service';
 import Pagination from '../components/Pagination';
 
 function Facility() {
@@ -16,6 +16,12 @@ function Facility() {
   const [sportType, setSportType] = useState([]);
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const invoiceService = new InvoiceService(user, dispatch);
+  const bookingService = new BookingService(user, dispatch);
+  const facilityService = new FacilityService(user, dispatch);
+  const sportTypeService = new SportTypeService(user, dispatch);
 
   useEffect(() => {
     if(!user || user.user.chuc_vu != 'admin') {

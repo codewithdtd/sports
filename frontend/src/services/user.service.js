@@ -2,8 +2,8 @@ import { loginFailed, loginStart, loginSuccess } from "../stores/userSlice";
 import BaseService from "./base.service";
 
 class User extends BaseService {
-    constructor() {
-        super('/api/user'); 
+    constructor(user, dispatch) {
+        super('/api/user', user, dispatch, loginSuccess); 
     }
     async update( id, data, accessToken) {
         return (await this.api.put(`/${id}`, data, {
@@ -14,4 +14,4 @@ class User extends BaseService {
     }
 }
 
-export default new User();
+export default User;

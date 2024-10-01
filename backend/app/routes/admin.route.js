@@ -26,10 +26,10 @@ const upload = multer({
 // NHÂN VIÊN
 router.route("/staff")
     .get(middleware.verifyAdmin, admin.findAllStaff)
-    .post(admin.createStaff);
+    .post(middleware.verifyAdmin, admin.createStaff);
 
 router.route("/staff/login").post(admin.login);
-router.route("/staff/refresh").post(middleware.verifyToken, admin.refreshToken);
+router.route("/staff/refresh").post(admin.refreshToken);
 router.route("/staff/logout").post(middleware.verifyToken, admin.logout);
 
 router.route("/staff/:id")
@@ -41,34 +41,34 @@ router.route("/staff/:id")
 
 //Sân thể thao
 router.route("/facility")
-    .get( admin.findAllFacility)
-    .post( admin.createFacility)
+    .get(middleware.verifyAdmin, admin.findAllFacility)
+    .post(middleware.verifyAdmin, admin.createFacility)
 router.route("/facility/booked-exact")
     .get(admin.findAllFacilityBookingExact)
 router.route("/facility/booked")
     .get(admin.findAllFacilityBooking)
 router.route("/facility/:id")
-    .delete(admin.deleteOneFacility)
+    .delete(middleware.verifyAdmin, admin.deleteOneFacility)
     .get(admin.findOneFacility)
-    .put( admin.updateFacility);
+    .put(middleware.verifyAdmin, admin.updateFacility);
 
 //Đặt sân
 router.route("/booking")
     .get(admin.findAllBooking)
-    .post(admin.createBooking)
+    .post(middleware.verifyAdmin, admin.createBooking)
 router.route("/booking/:id")
     .get(admin.findOneBooking)
-    .put(admin.updateBooking);
+    .put(middleware.verifyAdmin, admin.updateBooking);
    
 // Hóa đơn
 // 
 // 
 router.route("/invoice")
     .get(admin.findAllInvoice)
-    .post(admin.createInvoice)
+    .post(middleware.verifyAdmin, admin.createInvoice)
 router.route("/invoice/:id")
     .get(admin.findOneInvoice)
-    .put(admin.updateInvoice);
+    .put(middleware.verifyAdmin, admin.updateInvoice);
 
 // 
 // Dụng cụ thiết bị
@@ -85,80 +85,80 @@ router.route("/equipment/:id")
 // 
 router.route("/goodReceivedNote")
     .get(admin.findAllGoodReceivedNote)
-    .post(admin.createGoodReceivedNote)
+    .post(middleware.verifyAdmin, admin.createGoodReceivedNote)
 router.route("/goodReceivedNote/:id")
-    .delete(admin.deleteOneGoodReceivedNote)
+    .delete(middleware.verifyAdmin, admin.deleteOneGoodReceivedNote)
     .get(admin.findOneGoodReceivedNote)
-    .put(admin.updateGoodReceivedNote);
+    .put(middleware.verifyAdmin, admin.updateGoodReceivedNote);
 
 // Gói hội viên
 // 
 router.route("/membership")
     .get(admin.findAllMembership)
-    .post(admin.createMembership)
+    .post(middleware.verifyAdmin, admin.createMembership)
 router.route("/membership/:id")
-    .delete(admin.deleteOneMembership)
+    .delete(middleware.verifyAdmin, admin.deleteOneMembership)
     .get(admin.findOneMembership)
-    .put(admin.updateMembership);
+    .put(middleware.verifyAdmin, admin.updateMembership);
 
 // Hội viên
 // 
 router.route("/userMembership/filter")
-    .post(admin.findAllUserMembership)
+    .post(middleware.verifyAdmin, admin.findAllUserMembership)
 router.route("/userMembership")
     .get(admin.findAllUserMembership)
-    .post(admin.createUserMembership)
+    .post(middleware.verifyAdmin, admin.createUserMembership)
 router.route("/userMembership/:id")
-    .delete(admin.deleteOneUserMembership)
+    .delete(middleware.verifyAdmin, admin.deleteOneUserMembership)
     .get(admin.findOneUserMembership)
-    .put(admin.updateUserMembership);
+    .put(middleware.verifyAdmin, admin.updateUserMembership);
 
 // Sự kiện
 router.route("/event")
     .get(admin.findAllEvent)
-    .post(admin.createEvent)
+    .post(middleware.verifyAdmin, admin.createEvent)
 router.route("/event/:id")
-    .delete(admin.deleteOneEvent)
+    .delete(middleware.verifyAdmin, admin.deleteOneEvent)
     .get(admin.findOneEvent)
-    .put(admin.updateEvent);
+    .put(middleware.verifyAdmin, admin.updateEvent);
 // Đăng ký sự kiện
 router.route("/userEvent")
     .get(admin.findAllUserEvent)
-    .post(admin.createUserEvent)
+    .post(middleware.verifyAdmin, admin.createUserEvent)
 router.route("/userEvent/:id")
-    .delete(admin.deleteOneUserEvent)
+    .delete(middleware.verifyAdmin, admin.deleteOneUserEvent)
     .get(admin.findOneUserEvent)
-    .put(admin.updateUserEvent);
+    .put(middleware.verifyAdmin, admin.updateUserEvent);
 
 
 // Đánh giá
 router.route("/review")
     .get(admin.findAllReview)
-    .post(admin.createReview)
+    .post(middleware.verifyAdmin, admin.createReview)
 router.route("/review/:id")
-    .delete(admin.deleteOneReview)
+    .delete(middleware.verifyAdmin, admin.deleteOneReview)
     .get(admin.findOneReview)
-    .put(admin.updateReview);
+    .put(middleware.verifyAdmin, admin.updateReview);
 
 
 // Dịch vụ
 router.route("/service")
     .get(admin.findAllService)
-    .post(admin.createService)
+    .post(middleware.verifyAdmin, admin.createService)
 router.route("/service/:id")
-    .delete(admin.deleteOneService)
+    .delete(middleware.verifyAdmin, admin.deleteOneService)
     .get(admin.findOneService)
-    .put(admin.updateService);
+    .put(middleware.verifyAdmin, admin.updateService);
 
 
 // Loại sân
 router.route("/sportType")
     .get(admin.findAllSportType)
-    .post(upload.fields([{ name: 'hinhAnh', maxCount: 10 }, { name: 'hinhAnhDaiDien', maxCount: 1 }]), admin.createSportType)
+    .post(middleware.verifyAdmin, upload.fields([{ name: 'hinhAnh', maxCount: 10 }, { name: 'hinhAnhDaiDien', maxCount: 1 }]), admin.createSportType)
 router.route("/sportType/:id")
-    .delete(admin.deleteOneSportType)
+    .delete(middleware.verifyAdmin, admin.deleteOneSportType)
     .get(admin.findOneSportType)
-    .put(upload.fields([{ name: 'hinhAnh' }, { name: 'hinhAnhDaiDien' }]), admin.updateSportType);
+    .put(middleware.verifyAdmin, upload.fields([{ name: 'hinhAnh' }, { name: 'hinhAnhDaiDien' }]), admin.updateSportType);
 router.route("/sportType/image/:id")
-    .delete(admin.deleteImageSportType)
+    .delete(middleware.verifyAdmin, admin.deleteImageSportType)
 module.exports = router;

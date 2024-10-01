@@ -34,6 +34,7 @@ exports.verifyAdmin = async (req, res, next) => {
     //     }
     // })
     const token = req.headers.token;
+    console.log('token: '+token)
     if(token) {
         const accessToken = token.split(" ")[1];
         jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, (err, user) => {
@@ -53,7 +54,7 @@ exports.verifyAdmin = async (req, res, next) => {
         );
     }
 
-    if(req.user.id === req.params.id || req.user.role === 'admin' || req.user.id === req.query.id) 
+    if(req.user.id === req.params?.id || req.user.role === 'admin' || req.user.id === req.query?.id) 
         next();
     else {
         return next(
@@ -61,3 +62,4 @@ exports.verifyAdmin = async (req, res, next) => {
         );
     }
 }
+

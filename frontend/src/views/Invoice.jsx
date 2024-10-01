@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import Header from '../components/Header'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import invoiceService from '../services/invoice.service';
+import InvoiceService from '../services/invoice.service';
 import Pagination from '../components/Pagination';
 import FormInvoice from '../components/FormInvoice';
 
@@ -21,7 +21,9 @@ const Invoice = () => {
 
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const invoiceService = new InvoiceService(user, dispatch);
 
   const [fac, setFac] = useState({});
   // Định dạng số

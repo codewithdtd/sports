@@ -1,8 +1,9 @@
 import BaseService from "./base.service";
+import { loginFailed, loginStart, loginSuccess } from "../stores/userSlice";
 
 class SportType extends BaseService {
-    constructor() {
-        super('/api/admin/sportType'); 
+    constructor(user, dispatch) {
+        super('/api/admin/sportType', user, dispatch, loginSuccess); 
     }
     async create(data) {
        const result = (await this.api.post("/", data, {
@@ -27,4 +28,4 @@ class SportType extends BaseService {
     
 }
 
-export default new SportType();
+export default SportType;

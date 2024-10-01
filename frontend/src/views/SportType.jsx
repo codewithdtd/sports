@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react'
 import Header from '../components/Header'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import sportTypeService from '../services/sportType.service';
+import SportTypeService from '../services/sportType.service';
 import Pagination from '../components/Pagination';
 import FormSportType from '../components/FormSportType';
 
 const SportType = () => {
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const sportTypeService = new SportTypeService(user, dispatch)
 
   const [list, setList] = useState([]);
   const [search, setSearch] = useState('');
@@ -103,7 +105,7 @@ const SportType = () => {
   })
   useEffect(() => {
     getData();
-  }, [list]);
+  }, [fac]);
   return (
     <div>
       <Header name="Loại sân"/>

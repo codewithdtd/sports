@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from 'react'
 import Header from '../components/Header'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import FormFacilityManagement from '../components/FormFacilityManagement';
-import facilityService from '../services/facility.service';
+import FacilityService from '../services/facility.service';
 import Pagination from'../components/Pagination';
 function FacilityManagement() {
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const facilityService = new FacilityService(user, dispatch);
 
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);

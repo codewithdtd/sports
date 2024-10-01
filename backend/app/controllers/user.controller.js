@@ -87,7 +87,7 @@ exports.login = async (req, res, next) => {
                     // role: result.role
                 },  
                 process.env.JWT_ACCESS_TOKEN,
-                { expiresIn: "30s" }
+                { expiresIn: "1d" }
             );
             // refresh
             const refreshToken = jwt.sign(
@@ -135,7 +135,7 @@ exports.refreshToken = async (req, res, next) => {
                 // role: result.role
             },  
             process.env.JWT_ACCESS_TOKEN,
-            { expiresIn: "2d" }
+            { expiresIn: "1d" }
         );
         // refresh
         const newRefreshToken = jwt.sign(

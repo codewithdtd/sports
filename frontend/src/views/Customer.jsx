@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import Header from '../components/Header'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import userService from '../services/user.service';
+import UserService from '../services/user.service';
 import Pagination from '../components/Pagination';
 import FormCustomer from '../components/FormCustomer';
 const Customer = () => {
@@ -14,8 +14,9 @@ const Customer = () => {
 
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
-  const accessToken = user.accessToken;
-
+  const dispatch = useDispatch();
+  const accessToken = user?.accessToken;
+  const userService = new UserService(user, dispatch);
 
   const [fac, setFac] = useState({});
   // Định dạng số
@@ -93,7 +94,7 @@ const Customer = () => {
   })
   useEffect(() => {
     getService();
-  }, [list, fac]);
+  }, [fac]);
 
 
   return (

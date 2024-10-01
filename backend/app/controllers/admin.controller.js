@@ -93,7 +93,7 @@ exports.login = async (req, res, next) => {
             const refreshToken = jwt.sign(
                 {
                     id: result.id,
-                    role: result.role
+                    role: result.chuc_vu
                 },  
                 process.env.JWT_REFRESH_TOKEN,
                 { expiresIn: "30d" }
@@ -124,6 +124,7 @@ exports.refreshToken = async (req, res, next) => {
         );
     }
     jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN, (err, user) => {
+        console.log('refresh');
         if(err) {
             return next(
                 new ApiError(403, "Token is not valid!")
@@ -132,16 +133,16 @@ exports.refreshToken = async (req, res, next) => {
         const newAccessToken = jwt.sign(
             {
                 id: user.id,
-                role: result.chuc_vu
+                role: user.role
             },  
             process.env.JWT_ACCESS_TOKEN,
-            { expiresIn: "3d" }
+            { expiresIn: "1d" }
         );
         // refresh
         const newRefreshToken = jwt.sign(
             {
                 id: user.id,
-                role: result.chuc_vu
+                role: user.role
             },  
             process.env.JWT_REFRESH_TOKEN,
             { expiresIn: "30d" }

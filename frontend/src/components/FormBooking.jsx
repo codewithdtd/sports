@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import facilityService from '../services/facility.service';
-import serviceService from '../services/service.service';
-import userService from '../services/user.service';
-import sportTypeService from '../services/sportType.service';
+import FacilityService from '../services/facility.service';
+import ServiceService from '../services/service.service';
+import UserService from '../services/user.service';
+import SportTypeService from '../services/sportType.service';
 import FormService from './FormService';
-
-
+import { useSelector, useDispatch } from 'react-redux'
 
 function FromBooking(props) {
   const [data, setData] = useState(props.data);
@@ -27,6 +26,14 @@ function FromBooking(props) {
   const [fieldChange, setFieldChange] = useState(null)
   const [validateDate, setValidateDate] = useState(false)
   const [currentDate, setCurrentDate] = useState(getCurrentDate());
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.login.user);
+
+  const facilityService = new FacilityService(user, dispatch);
+  const serviceService = new ServiceService(user, dispatch);
+  const sportTypeService = new SportTypeService(user, dispatch);
+  const userService = new UserService(user, dispatch);
+  
   const startTime = 8; // 8:00
   const endTime = 22; // 22:00
   const interval = filter == 'Bóng đá' ?  1.5 : 1; // 1 giờ 30 phút

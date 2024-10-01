@@ -1,9 +1,10 @@
 import { bookingFailed, bookingStart, bookingSuccess } from "../stores/bookingSlice";
+import { loginSuccess } from '../stores/userSlice'
 import BaseService from "./base.service";
 
 class Booking extends BaseService {
-    constructor() {
-        super('/api/admin/booking'); 
+    constructor(user, dispatch) {
+        super('/api/admin/booking', user, dispatch, loginSuccess); 
     }
     async create(data) {
         return (await this.api.post('/', data)).data;
@@ -21,4 +22,4 @@ class Booking extends BaseService {
     // }
 }
 
-export default new Booking();
+export default Booking;

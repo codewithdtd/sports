@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import Header from '../components/Header'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import serviceService from '../services/service.service';
+import ServiceService from '../services/service.service';
 import FormEquipment from '../components/FormEquipment';
 import Pagination from '../components/Pagination';
 const Equipment = () => {
@@ -14,7 +14,9 @@ const Equipment = () => {
 
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const serviceService = new ServiceService(user, dispatch);
 
   const [fac, setFac] = useState({});
   // Định dạng số

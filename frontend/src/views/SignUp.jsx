@@ -1,12 +1,16 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import Form from '../components/Form';
-import staffService from '../services/staff.service';
+import StaffService from '../services/staff.service';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from 'react-redux';
 
 const SignUp = () => {
   const [error, setError] = useState('')
+  const dispatch = useDispatch()
+  const staffService = new StaffService(dispatch);
+
   const handleData= async (data) => {
     try {
       const response = await staffService.create(data);

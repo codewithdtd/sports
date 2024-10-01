@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import FormBooking from '../components/FormBooking';
-import bookingService from '../services/booking.service';
-import facilityService from '../services/facility.service';
+import BookingService from '../services/booking.service';
+import FacilityService from '../services/facility.service';
 import Pagination from '../components/Pagination';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import serviceService from '../services/service.service';
+import ServiceService from '../services/service.service';
 const Booking = () => {
   // const dispatch = useDispatch();
   const user = useSelector((state)=> state.user.login.user)
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const bookingService = new BookingService(user, dispatch);
+  const facilityService = new FacilityService(user, dispatch);
+  const serviceService = new ServiceService(user, dispatch);
+  
   useEffect(() => {
     if(!user) {
       navigate('/login');

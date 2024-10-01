@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import staffService from '../services/staff.service';
+import StaffService from '../services/staff.service';
 function Header(props) {
   const user = useSelector((state) => state.user.login.user);
   const accessToken = user?.accessToken;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const staffService = new StaffService(user, dispatch);
   const handleLogout = async () => {
     await staffService.logout(dispatch, navigate, accessToken);
   }

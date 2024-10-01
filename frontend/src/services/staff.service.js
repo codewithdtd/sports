@@ -3,8 +3,8 @@ import BaseService from "./base.service";
 import { persistor } from '../stores/store'; 
 
 class UserService extends BaseService {
-    constructor() {
-        super('/api/admin/staff'); 
+    constructor(user, dispatch) {
+        super('/api/admin/staff', user, dispatch, loginSuccess); 
     }
     async login(data, dispatch, navigate) {
         try {
@@ -42,4 +42,4 @@ class UserService extends BaseService {
     }
 }
 
-export default new UserService();
+export default UserService;

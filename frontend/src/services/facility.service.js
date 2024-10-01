@@ -2,8 +2,8 @@ import { loginFailed, loginStart, loginSuccess } from "../stores/userSlice";
 import BaseService from "./base.service";
 
 class Facility extends BaseService {
-    constructor() {
-        super('/api/admin/facility'); 
+    constructor(user, dispatch) {
+        super('/api/admin/facility', user, dispatch, loginSuccess); 
     }
     async getAllBooked(data) {
         return (await this.api.get("/booked", {params: data})).data;
@@ -14,4 +14,4 @@ class Facility extends BaseService {
     
 }
 
-export default new Facility();
+export default Facility;
