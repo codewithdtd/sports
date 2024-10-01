@@ -73,23 +73,23 @@ const ChangePass = () => {
       </div>
       <form className='md:flex-1 flex flex-col items-center bg-white rounded-lg p-4 h-fit my-10' onSubmit={e => handleSubmit(e)}>
         <h1 className='text-center text-2xl text-green-600 font-bold py-3'>ĐỔI MẬT KHẨU</h1>
-        <div className='lg:w-4/5 w-full'>
+        <div className='lg:w-4/5 w-full md:text-lg'>
           <div className='flex items-center py-1'>
             <label htmlFor="" className='md:w-1/3 w-1/4'>Nhập mật khẩu cũ: </label>
-            <input required type="password" className='bg-gray-200 m-2 p-1 px-2 rounded-xl flex-1' value={info?.matKhauCu} onChange={e => setInfo({...info, matKhauCu: e.target.value})}/>
+            <input required type="password" className='bg-gray-200  m-2 p-2 px-2 rounded-xl flex-1' value={info?.matKhauCu} onChange={e => setInfo({...info, matKhauCu: e.target.value})}/>
           </div>
           <div className='flex items-center py-1'>
             <label htmlFor="" className='md:w-1/3 w-1/4'>Nhập mật khẩu mới: </label>
-            <input required type="password" className='bg-gray-200 m-2 p-1 px-2 rounded-xl flex-1' value={info?.matKhauMoi} onChange={e => setInfo({...info, matKhauMoi: e.target.value})}/>
+            <input required type="password" className='bg-gray-200  m-2 p-2 px-2 rounded-xl flex-1' value={info?.matKhauMoi} onChange={e => setInfo({...info, matKhauMoi: e.target.value})}/>
           </div>
           <div className='flex items-center py-1'>
             <label htmlFor="" className='md:w-1/3 w-1/4'>Xác nhận mật khẩu mới: </label>
             <div className='flex-1 flex flex-col relative'>
-              <input required type="password" className={`bg-gray-200 flex-1 m-2 p-1 px-2 rounded-xl  ${validatePass ? 'bg-red-200' : ''}`} value={info?.xacNhanMatKhauMoi} onChange={e => setInfo({...info, xacNhanMatKhauMoi: e.target.value})}/>
+              <input required type="password" className={`bg-gray-200  flex-1 m-2 p-2 px-2 rounded-xl  ${validatePass ? 'bg-red-200' : ''}`} value={info?.xacNhanMatKhauMoi} onChange={e => setInfo({...info, xacNhanMatKhauMoi: e.target.value})}/>
               {validatePass ? <p className='absolute text-red-600 -bottom-3 right-4 text-[12px]'>Mật khẩu không chính xác</p> : '' }
             </div>
           </div>
-          <button type={`${submit ? 'button' : ''}`} className='bg-green-500 w-full p-1 my-4 rounded-xl text-white hover:bg-green-700'>Xác nhận</button>
+          <button type={`${submit ? 'button' : ''}`} className='bg-green-500 w-full p-2 my-4 rounded-xl text-white hover:bg-green-700'>Xác nhận</button>
         </div>
       </form>
     </div>

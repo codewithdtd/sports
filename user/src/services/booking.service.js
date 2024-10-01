@@ -1,7 +1,7 @@
 import BaseService from "./base.service";
 import { useSelector, useDispatch } from "react-redux";
 import { loginSuccess } from '../stores/userSlice';
-import { createAxiosInstance } from "./createInstance.service";
+import { createAxiosInstance } from "./api.service";
 // const dispatch = useDispatch()
 
 class Booking extends BaseService {

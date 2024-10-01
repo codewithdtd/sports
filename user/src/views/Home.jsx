@@ -19,19 +19,19 @@ const Home = () => {
           <NavLink className='font-bold px-10 py-2 pt-3 text-white bg-[#00BA29] rounded-lg hover:bg-[#006f18]' to='booking'>ĐẶT SÂN NGAY</NavLink>
         </div>
       </div>
-      <h2 className='text-center font-medium pt-4 text-xl'>Đa dạng các bộ môn thể thao</h2>
-      <p className='px-4 text-center'>Ở đây có đa dạng các bộ môn thể thao cho các bạn thử sức từ bóng đá, bóng chuyền đến cầu lông bóng rổ, cầu lông </p>
-      <div className='bg-white p-4 flex gap-3 items-center justify-center w-full h-[88vh]'>
-        <div className='w-1/4 shadow-md shadow-gray-400 h-full relative rounded-lg overflow-hidden'>
+      <h2 className='text-center font-medium pt-4 text-2xl'>Đa dạng các bộ môn thể thao</h2>
+      <p className='px-4 text-center text-lg'>Ở đây có đa dạng các bộ môn thể thao cho các bạn thử sức từ bóng đá, bóng chuyền đến cầu lông bóng rổ, cầu lông </p>
+      <div className='bg-white p-4 py-8 flex gap-3 items-center justify-center w-full h-[88vh]'>
+        <div className='w-1/4 shadow-lg border shadow-gray-500 h-full relative rounded-lg overflow-hidden'>
           <img src="./src/assets/home1.jpg" alt="" className='h-full object-cover' />
         </div>
-        <div className='w-1/4 shadow-md shadow-gray-400 h-full relative rounded-lg overflow-hidden'>
+        <div className='w-1/4 shadow-lg border shadow-gray-500 h-full relative rounded-lg overflow-hidden'>
           <img src="./src/assets/home2.jpg" alt="" className='h-full object-cover' />
         </div>
-        <div className='w-1/4 shadow-md shadow-gray-400 h-full relative rounded-lg overflow-hidden'>
+        <div className='w-1/4 shadow-lg border shadow-gray-500 h-full relative rounded-lg overflow-hidden'>
           <img src="./src/assets/home3.jpg" alt="" className='h-full object-cover' />
         </div>
-        <div className='w-1/4 shadow-md shadow-gray-400 h-full relative rounded-lg overflow-hidden'>
+        <div className='w-1/4 shadow-lg border shadow-gray-500 h-full relative rounded-lg overflow-hidden'>
           <img src="./src/assets/home4.jpg" alt="" className='h-full object-cover' />
         </div>
       </div>

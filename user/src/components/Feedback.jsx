@@ -128,7 +128,7 @@ const Feedback = (props) => {
             { !reviewed ?  
             <button
                 onClick={submitReview}
-                className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
             >
                 Gửi đánh giá
             </button>  

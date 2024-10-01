@@ -164,10 +164,13 @@ const History = () => {
     return newFac;  
   }
   const editBooking = async (data) => {
-    data.trangThai = 'Đã hủy';
-    const editFac = await bookingService.update(data._id, data);
-    setFac(edit)
-    return editFac;
+    const isConfirmed = window.confirm("Bạn có chắc chắn muốn hủy sân?");
+    if (isConfirmed) {
+      data.trangThai = 'Đã hủy';
+      const editFac = await bookingService.update(data._id, data);
+      setFac(edit)
+      return editFac;
+    }
   }
 
   const getReview = async (id) => {
@@ -300,7 +303,7 @@ const History = () => {
 
 
               {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ? 
-              <button className='text-white bg-green-500 hover:bg-blue-700 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
+              <button className='text-white bg-green-500 hover:bg-green-700 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
               : ''}
             </div>
           </div> : ''
