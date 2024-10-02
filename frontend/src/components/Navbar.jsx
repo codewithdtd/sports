@@ -93,6 +93,12 @@ function Navbar() {
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
+                    <NavLink onClick={toggleMenu} to="/contact" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                        <i className="ml-5 ri-feedback-line mr-2"></i> 
+                        <span>Liên hệ</span>
+                    </NavLink>
+                </li>
+                <li className="navigation__link__items">
                     <NavLink onClick={toggleMenu} to="/customer" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-user-line mr-2"></i> 
                         <span>Khách hàng</span>

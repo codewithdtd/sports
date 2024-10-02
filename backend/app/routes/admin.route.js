@@ -139,7 +139,8 @@ router.route("/review/:id")
     .delete(middleware.verifyAdmin, admin.deleteOneReview)
     .get(admin.findOneReview)
     .put(middleware.verifyAdmin, admin.updateReview);
-
+router.route("/review/find")
+    .post(admin.findOneReview)
 
 // Dịch vụ
 router.route("/service")

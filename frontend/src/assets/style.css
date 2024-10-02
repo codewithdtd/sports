@@ -102,3 +102,14 @@ input {
         display: none;
     }
 }
+
+.review .content {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em;
+    /* Đặt khoảng cách giữa các dòng */
+    max-height: calc(1.5em * 3);
+}

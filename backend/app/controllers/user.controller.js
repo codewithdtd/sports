@@ -103,6 +103,7 @@ exports.login = async (req, res, next) => {
                 httpOnly: true,
                 path: "/",
                 sameSite: "strict",
+                maxAge: 7 * 24 * 60 * 60 * 1000,
             });
 
 
@@ -151,6 +152,7 @@ exports.refreshToken = async (req, res, next) => {
             httpOnly: true,
             path: "/",
             sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
         });
         res.status(200).json({accessToken: newAccessToken});
     })

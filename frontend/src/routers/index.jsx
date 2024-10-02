@@ -22,6 +22,7 @@ import ChangePass from '../views/ChangePass';
 import FacilityManagement from '../views/FacilityManagement';
 import SportType from '../views/SportType';
 import UserMembership from '../views/UserMembership';
+import Contact from '../views/Contact';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -95,6 +96,10 @@ export const router = createBrowserRouter([
       {
         path: "facilityManagement",
         element: <FacilityManagement />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
       },
     ],
   },
