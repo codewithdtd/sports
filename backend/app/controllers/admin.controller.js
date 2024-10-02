@@ -10,6 +10,7 @@ const Reviews = require("../services/review.service");
 const Services = require("../services/service.service");
 const SportTypes = require("../services/sportType.service");
 const Customers = require("../services/user.service");
+const Contacts = require("../services/contact.service");
 
 
 const ApiError = require("../api-error");
@@ -1171,6 +1172,62 @@ exports.deleteOneSportType = async (req, res, next) => {
     const sportType = new SportTypes();
     try {
         const result = await sportType.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Liên hệ
+exports.createContact = async (req, res, next) => {
+    const contact = new Reviews();
+    const newReview = req.body;
+    try {
+        const result = await contact.create(newReview);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateContact = async (req, res, next) => {
+    const contact = new Contacts();
+    try {
+        const result = await contact.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllContact = async (req, res, next) => {
+    const contact = new Contacts();
+    try {
+        const result = await contact.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneContact = async (req, res, next) => {
+    const contact = new Contacts();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await contact.findOne(req.body)
+        else 
+            result = await contact.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneContact = async (req, res, next) => {
+    const contact = new Contacts();
+    try {
+        const result = await contact.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -162,4 +162,14 @@ router.route("/sportType/:id")
     .put(middleware.verifyAdmin, upload.fields([{ name: 'hinhAnh' }, { name: 'hinhAnhDaiDien' }]), admin.updateSportType);
 router.route("/sportType/image/:id")
     .delete(middleware.verifyAdmin, admin.deleteImageSportType)
+
+// liên hệ
+router.route("/contact")
+    .get(admin.findAllContact)
+    .post(middleware.verifyAdmin, admin.createContact)
+router.route("/contact/:id")
+    .delete(middleware.verifyAdmin, admin.deleteOneContact)
+    .get(admin.findOneContact)
+    .put(middleware.verifyAdmin, admin.updateContact)
+
 module.exports = router;

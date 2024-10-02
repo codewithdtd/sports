@@ -6,6 +6,7 @@ const contactSchema = new mongoose.Schema({
   sdt: { type: String, required: true},
   email: { type: String },
   noiDung: { type: String, required: true },
+  phanHoi: { type: Boolean, default: false },
   ngayTao: { type: String },
   da_xoa: { type: Boolean, default: false },
 });

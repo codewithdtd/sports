@@ -105,6 +105,7 @@ const FormReview = (props) => {
                 {/* Form nhập bình luận */}
                 <textarea
                     value={reviewedRes?.noiDung}
+                    disabled = {reviewedRes?.noiDung}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Nhập phản hồi của bạn"
                     rows={4}
