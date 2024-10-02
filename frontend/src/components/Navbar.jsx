@@ -40,84 +40,84 @@ function Navbar() {
         <div className={`bg-white shadow-black shadow-sm rounded-lg h-[100%] w-full md:block transition-all overflow-hidden ${isOpen ? 'translate-x-0' : 'absolute -translate-x-80'}`}>
             <div className='navigation-group-logo flex justify-center items-center'>
                 <img src="./src/assets/img/Logo.svg" alt="" className='navigation-logo w-[20%] py-2' />
-                <p className='ml-2 italic font-extrabold text-3xl'>SPORT</p>
+                <p className='ml-2 italic font-extrabold text-4xl'>SPORT</p>
                 {/* <p>X</p> */}
             </div>
             <ul className="navigation__link">
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/">
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/">
                         <i className="ml-5 ri-pie-chart-2-fill mr-2"></i> 
                         <span>Báo cáo</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/facility" end>
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/facility" end>
                         <i className="ml-5 ri-football-line mr-2"></i> 
                         <span>Sân thể thao</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/sportType" end>
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/sportType" end>
                         <i className="ml-5 ri-bubble-chart-fill mr-2"></i>
                         <span>Phân loại sân</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/facilityManagement" end>
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/facilityManagement" end>
                         <i className="ml-5 ri-folder-settings-line mr-2"></i> 
                         <span>Quản lý sân</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/booking" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/booking" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-time-line mr-2"></i> 
                         <span>Đặt sân</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/invoice">
+                    <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`} to="/invoice">
                         <i className="ml-5 ri-bill-line mr-2"></i> 
                         <span>Hóa đơn</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/equipment" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/equipment" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-tools-line mr-2"></i> 
                         <span>Kho</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/review" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/review" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-feedback-line mr-2"></i> 
                         <span>Đánh giá</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/customer" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/customer" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-user-line mr-2"></i> 
                         <span>Khách hàng</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/staff" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/staff" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-folder-user-line mr-2"></i> 
                         <span>Nhân viên</span>
                     </NavLink>
                 </li>
-                <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/membership" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                {/* <li className="navigation__link__items">
+                    <NavLink onClick={toggleMenu} to="/membership" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-shield-user-line mr-2"></i> 
                         <span>Gói hội viên</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/userMembership" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/userMembership" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-shield-user-fill mr-2"></i> 
                         <span>Hội viên</span>
                     </NavLink>
-                </li>
+                </li> */}
                 {/* <li className="navigation__link__items">
-                    <NavLink onClick={toggleMenu} to="/event" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
+                    <NavLink onClick={toggleMenu} to="/event" className={({ isActive }) => `${isActive ? "text-white bg-green-500" : ""} p-1 py-2 block m-2 rounded-xl hover:bg-green-200 mx-3 font-medium`}>
                         <i className="ml-5 ri-calendar-event-fill mr-2"></i> 
                         <span>Sự kiện</span>
                     </NavLink>

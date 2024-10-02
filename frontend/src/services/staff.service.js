@@ -1,4 +1,4 @@
-import { loginFailed, loginStart, loginSuccess, logoutStart, logoutSuccess, logoutFailed } from "../stores/userSlice";
+import { loginFailed, loginStart, loginSuccess, logoutStart, logoutSuccess, logoutFailed, updateSuccess } from "../stores/userSlice";
 import BaseService from "./base.service";
 import { persistor } from '../stores/store'; 
 
@@ -33,12 +33,21 @@ class UserService extends BaseService {
             console.log(error)
         }
     }
-    async update( id, data, accessToken) {
-        return (await this.api.put(`/${id}`, data, {
-            headers: {
-                token: `Bearer ${accessToken}`
+    async update( id, data, accessToken = '', dispatch, navigate) {
+        try {
+            const user = (await this.api.put(`/${id}`, data, {
+                headers: { token: `Bearer ${accessToken}` }
+            })).data;
+            const action = {
+                ...user,
+                accessToken: accessToken
             }
-        })).data;
+            dispatch(updateSuccess(action))
+            setTimeout(() => navigate("/"), 2000);
+            return user;
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 
