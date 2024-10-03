@@ -56,8 +56,26 @@ exports.createStaff = async (req, res, next) => {
 exports.updateStaff = async (req, res, next) => {
     const staff = new Staffs();
     try {
-        const result = await staff.update(req.params.id, req.body);
-        res.status(201).json(result);
+        const newUpdate = req.body;
+        if(newUpdate.matKhauCu) {
+            let oldPass = newUpdate.matKhauCu;
+            const user = await staff.findById(req.params.id);
+            const validPassword = await bcrypt.compare(
+                oldPass,
+                user.matKhau_NV
+            )
+            console.log(validPassword)
+            if(validPassword) {
+                salt = await bcrypt.genSalt(10);
+                newUpdate.matKhau_NV = await bcrypt.hash(newUpdate.matKhauMoi, salt);
+            }
+            else {
+                return res.status(401).json({ error: 'Sai mật khẩu'});             
+            }
+        }
+        const result = await staff.update(req.params.id, newUpdate);
+        const { matKhau_NV, ...others } = result._doc;
+        res.status(201).json(others);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
