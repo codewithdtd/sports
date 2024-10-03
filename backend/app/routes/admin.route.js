@@ -40,6 +40,8 @@ router.route("/staff/:id")
 
 
 //Sân thể thao
+router.route("/facility/find")
+    .post(admin.findFacility)
 router.route("/facility")
     .get(middleware.verifyAdmin, admin.findAllFacility)
     .post(middleware.verifyAdmin, admin.createFacility)

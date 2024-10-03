@@ -77,7 +77,7 @@ const BookingDetail = () => {
 
     const date = {ngayDat: currentDate};
     let list = await facilityService.getAllBooked(date);
-    list = list.filter(fac => fac.loai_San === fields.ten_loai)
+    list = list.filter(fac => fac.loai_San.ten_loai === fields.ten_loai)
     setListFac(list)
 
     const service = await serviceService.getAll();

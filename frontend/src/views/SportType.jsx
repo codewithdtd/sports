@@ -3,6 +3,7 @@ import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import SportTypeService from '../services/sportType.service';
+import FacilityService from '../services/facility.service';
 import Pagination from '../components/Pagination';
 import FormSportType from '../components/FormSportType';
 
@@ -11,6 +12,7 @@ const SportType = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const sportTypeService = new SportTypeService(user, dispatch)
+  const facilityService = new FacilityService(user, dispatch)
 
   const [list, setList] = useState([]);
   const [search, setSearch] = useState('');
@@ -87,16 +89,36 @@ const SportType = () => {
   }
   const createData = async (data) => {
     const newFac = await sportTypeService.create(data);
+    setFac(fac);
     return newFac;  
   }
   const editData = async (data) => {
     const id = data.get('_id');
     const editFac = await sportTypeService.update(id, data);
+
+    const fields = await facilityService.getByType({
+      'loai_San._id': data.get('_id')
+    });
+    console.log(fields)
+
+    if (fields && fields.length > 0) {
+      for (const element of fields) {
+        element.loai_San.ten_loai = data.get('ten_loai');
+        console.log(element)
+        await facilityService.update(element._id, element); // Use await with the update function here
+      }
+    }
+
+    setFac(fac)
     return editFac;
   }
   const deleteData = async (data) => {
-    const editFac = await sportTypeService.delete(data._id, data);
-    return editFac;
+    const confirm = window.confirm('Bạn có chắc chắn muốn xóa không?');
+    if(confirm) {
+      const editFac = await sportTypeService.delete(data._id, data);
+      getData();
+      return editFac;
+    }
   }
   useEffect(() => {
     if(!user) {

@@ -277,7 +277,7 @@ function Facility() {
               <p>{facility.datSan ? facility.datSan.khachHang.ho_KH+' '+facility.datSan.khachHang.ten_KH : ''}</p>
             </div>
             <div className='bg-white relative facility-item-name pl-1 min-h-20 sm:min-h-24 md:h-36 justify-center items-center bg-no-repeat bg-center flex text-lg font-extrabold'>
-              <img src={`http://localhost:3000/uploads/${backgroundSan(facility.loai_San)}`} className='absolute w-1/2 z-[0] opacity-70' alt="" /> 
+              <img src={`http://localhost:3000/uploads/${backgroundSan(facility.loai_San.ten_loai)}`} className='absolute w-1/2 z-[0] opacity-70' alt="" /> 
               <p className='text-3xl z-[1] xl:text-4xl italic'>{facility.tinhTrang}</p>
             </div>
             <div className='z-10 text-sm sm:text-base px-1 sm:flex justify-between'>

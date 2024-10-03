@@ -216,7 +216,7 @@ function FacilityManagement() {
               </div> */}
             <div className="w-1/6">
               { facility.ten_San }
-              <p className='lg:block'>Loại sân: {facility.loai_San}</p>
+              <p className='lg:block'>Loại sân: {facility.loai_San.ten_loai}</p>
               <p className='md:block'>{facility.khuVuc}</p>
             </div>
             <div className="w-1/6">{ formatNumber(parseInt(facility.bangGiaMoiGio))}</div>

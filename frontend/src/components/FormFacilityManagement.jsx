@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import sportTypeService from '../services/sportType.service';
+import SportTypeService from '../services/sportType.service';
+import { useDispatch, useSelector } from 'react-redux';
 function FromFacility(props) {
   const [data, setData] = useState(props.data);
   const [preImg, setPreImg] = useState(null);
   const [show, setShow] = useState(false);
-  const [sportType, setSportType] = useState(null)
-
+  const [sportType, setSportType] = useState(null);
+  const user = useSelector((state) => state.user.login.user);
+  const dispatch = useDispatch();
+  const sportTypeService = new SportTypeService(user, dispatch)
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     const base64 = await convertToBase64(file);
@@ -50,11 +53,17 @@ function FromFacility(props) {
               <label htmlFor="" className='w-1/4'>Loại sân:</label>
               {/* <input name='loai_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.loai_San} onChange={e => setData({...data, loai_San: e.target.value})}/> */}
               <select name="" id="" className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2'
-                onChange={e => setData({...data, loai_San: e.target.value})}
+                onChange={e => {
+                  const selectedItem = JSON.parse(e.target.value);
+                  console.log(e.target.value) // Parse chuỗi JSON thành đối tượng
+                  setData({...data, loai_San: selectedItem});
+                  // setData({...data, loai_San: e.target.value})
+                  }
+                }
               >
-                <option value="">Loại sân</option>
+                <option value="">{data?.loai_San?.ten_loai || 'Loại sân'}</option>
                 {sportType?.map((item) => 
-                  <option value={item.ten_loai}>{item.ten_loai}</option>
+                  <option key={item._id} value={JSON.stringify(item)}>{item.ten_loai}</option>
                 )}
               </select>
             </div>

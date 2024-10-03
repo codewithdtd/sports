@@ -262,6 +262,16 @@ exports.findAllFacility = async (req, res, next) => {
     }
 };
 
+exports.findFacility = async (req, res, next) => {
+    const facility = new Facilities();
+    try {
+        const result = await facility.find(req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 exports.findOneFacility = async (req, res, next) => {
     const facility = new Facilities();
     try {
