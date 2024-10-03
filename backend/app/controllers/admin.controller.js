@@ -272,6 +272,7 @@ exports.findFacility = async (req, res, next) => {
     }
 };
 
+
 exports.findOneFacility = async (req, res, next) => {
     const facility = new Facilities();
     try {
@@ -478,7 +479,24 @@ exports.findOneBooking = async (req, res, next) => {
         res.status(500).json({ error: err.message });
     }
 }
-
+exports.findAllBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+exports.findAllBookingToday = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.findBookingBookedFromToday(req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 // Hóa đơn
 // 
 // 

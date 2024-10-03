@@ -269,12 +269,16 @@ function Facility() {
         {facilities ? filterFacility().map((facility, index) => 
           <div 
             key={facility._id} 
-            className={`${facility.tinhTrang == "Trống" ? 'bg-white' : facility.tinhTrang == "Đã đặt" ? 'bg-blue-500' : 'bg-green-500'} shadow-lg shadow-slate-500 rounded-lg overflow-hidden transition-all cursor-pointer hover:-translate-y-1`}
+            className={`${facility.tinhTrang == "Trống" 
+                            ? 'bg-white' : facility.tinhTrang == "Đã đặt" 
+                            ? 'bg-blue-500' : facility.tinhTrang == "Đang sử dụng" ? 'bg-green-500' : 'bg-yellow-400'} 
+              shadow-lg shadow-slate-500 rounded-lg overflow-hidden transition-all cursor-pointer hover:-translate-y-1`}
             onClick={e => handleFacility(facility)}
           >  
             <div className={`px-1 text-sm flex justify-between `}>
               <p>{facility.ma_San}</p>
-              <p>{facility.datSan ? facility.datSan.khachHang.ho_KH+' '+facility.datSan.khachHang.ten_KH : ''}</p>
+              {facility.tinhTrang == 'Bảo trì' ?<p> Bảo trì</p> : ''}
+              {facility.datSan ? <p>{facility.datSan.khachHang.ho_KH+' '+facility.datSan.khachHang.ten_KH}</p> : '' }
             </div>
             <div className='bg-white relative facility-item-name pl-1 min-h-20 sm:min-h-24 md:h-36 justify-center items-center bg-no-repeat bg-center flex text-lg font-extrabold'>
               <img src={`http://localhost:3000/uploads/${backgroundSan(facility.loai_San.ten_loai)}`} className='absolute w-1/2 z-[0] opacity-70' alt="" /> 

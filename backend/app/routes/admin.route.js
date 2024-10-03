@@ -55,6 +55,8 @@ router.route("/facility/:id")
     .put(middleware.verifyAdmin, admin.updateFacility);
 
 //Đặt sân
+router.route("/booking/today")
+    .post(admin.findAllBookingToday)
 router.route("/booking")
     .get(admin.findAllBooking)
     .post(middleware.verifyAdmin, admin.createBooking)

@@ -79,6 +79,7 @@ function FromFacility(props) {
                 <option value={'Trống'}>Trống</option>
                 <option value={'Đang sử dụng'}>Đang sử dụng</option>
                 <option value={'Đã đặt'}>Đã đặt</option>
+                <option value={'Bảo trì'}>Bảo trì</option>
               </select>
             </div>
             <div className="flex">

@@ -116,13 +116,16 @@ const Booking = () => {
     if(data.phuongThuc == 'create') {
       console.log('create')
       console.log(data)
-      const updatedServices = await Promise.all(
-        data.dichVu?.map(async (service) => {
-          service.tonKho -= service.soluong;
-          // service.choMuon += service.soluong;
-          return await serviceService.update(service._id, service);
-        })
-      );
+      let updatedServices = null;
+      if(data.dichVu?.length > 0) {
+        updatedServices = await Promise.all(
+          data.dichVu?.map(async (service) => {
+            service.tonKho -= service.soluong;
+            // service.choMuon += service.soluong;
+            return await serviceService.update(service._id, service);
+          })
+        );
+      }  
       if(await createBooking(data) && updatedServices)
         console.log('Đã thêm mới');
     }
@@ -191,7 +194,7 @@ const Booking = () => {
 
   useEffect(() => {
     getBooking();
-  }, [list]);
+  }, [fac]);
   return (
     <div className='facility'>
       <Header name="Quản lý Đặt sân" />

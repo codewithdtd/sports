@@ -9,6 +9,9 @@ class Booking extends BaseService {
     async create(data) {
         return (await this.api.post('/', data)).data;
     }
+    async getToday(data) {
+        return (await this.api.post('/today', data)).data;
+    }
     // async getAll(dispatch) {
     //     try {
     //         dispatch(bookingStart());

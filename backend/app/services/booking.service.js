@@ -63,6 +63,50 @@ class Bookings extends db {
       throw new Error('Error finding document: ' + err.message);
     }
   }
+  async findBookingBookedFromToday(payload) { 
+    try {
+      const today = new Date(); // Ngày hiện tại
+
+      // Chuyển đổi ngày hiện tại thành chuỗi để phù hợp với định dạng lưu trữ 'DD/MM/YYYY'
+      const todayString = today.toLocaleDateString('en-GB').split('/').reverse().join('-'); // 'YYYY-MM-DD'
+
+      // Khởi tạo điều kiện truy vấn
+      const result = await this.model.aggregate([
+        {
+          $addFields: {
+            ngayDatISO: {
+              $dateFromString: {
+                dateString: {
+                  $concat: [
+                    { $arrayElemAt: [{ $split: ['$ngayDat', '/'] }, 2] }, '-', // Năm
+                    { $arrayElemAt: [{ $split: ['$ngayDat', '/'] }, 1] }, '-', // Tháng
+                    { $arrayElemAt: [{ $split: ['$ngayDat', '/'] }, 0] }      // Ngày
+                  ]
+                },
+                format: '%Y-%m-%d'
+              }
+            }
+          }
+        },
+        {
+          $match: {
+            ngayDatISO: { $gte: new Date(todayString) }, // So sánh với ngày hiện tại
+            "san._id": payload.sanId  // Kiểm tra san._id
+          }
+        }
+      ]);
+
+      // Nếu không tìm thấy kết quả
+      if (!result) {
+        throw new Error('Document not found');
+      }
+
+      return result;
+    } catch (err) {
+      throw new Error('Error finding document: ' + err.message);
+    }
+  }
+
     //   Xóa phần tử trong mảng chi tiết đặt sân
   // async removeBookingDetail(bookingId, maSan) {
   //   try {

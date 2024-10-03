@@ -4,13 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import FormFacilityManagement from '../components/FormFacilityManagement';
 import FacilityService from '../services/facility.service';
+import BookingService from '../services/booking.service';
 import Pagination from'../components/Pagination';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function FacilityManagement() {
   const user = useSelector((state)=> state.user.login.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const facilityService = new FacilityService(user, dispatch);
+  const bookingService = new BookingService(user, dispatch);
 
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -124,8 +129,16 @@ function FacilityManagement() {
     return editFac;
   }
   const deleteFacility = async (data) => {
-    const deleteFac = await facilityService.delete(data._id);
-    return deleteFac;
+    const confirm = window.confirm('Xác nhận xóa!!!');
+    const today = await bookingService.getToday({sanId: data._id});
+    if(today && today.length > 0) {
+      toast.error('Không thể xóa !!!')
+      return;
+    }
+    if(confirm) {
+      const deleteFac = await facilityService.delete(data._id);
+      return deleteFac;
+    }
   }
 
   useEffect(() => {
@@ -138,6 +151,7 @@ function FacilityManagement() {
   })
   return (
     <div className='facility'>
+      <ToastContainer autoClose={2000} />
       <Header name="Quản lý Sân thể thao" />
       <div className="flex justify-between mb-3">
         <div className='flex-1 flex relative justify-between'>
