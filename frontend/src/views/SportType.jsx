@@ -6,6 +6,8 @@ import SportTypeService from '../services/sportType.service';
 import FacilityService from '../services/facility.service';
 import Pagination from '../components/Pagination';
 import FormSportType from '../components/FormSportType';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SportType = () => {
   const user = useSelector((state)=> state.user.login.user)
@@ -39,14 +41,17 @@ const SportType = () => {
       if(phuongThuc == 'edit') {
         console.log('edit')
         if(await editData(data)) {
-          console.log('Đã cập nhật');
+          toast.success('Đã cập nhật');
         }
-      }
-      if(phuongThuc == 'create') {
-        console.log('create')
-        if(await createData(data))
-          console.log('Đã thêm mới');
-      }
+      } 
+      else
+        if(phuongThuc == 'create') {
+          console.log('create')
+          if(await createData(data))
+            toast.success('Đã thêm mới');
+        } else {
+          toast.error('Đã có lỗi xảy ra')
+        }
     }
     setEdit(!edit);  
 
@@ -113,6 +118,13 @@ const SportType = () => {
     return editFac;
   }
   const deleteData = async (data) => {
+    const fields = await facilityService.getByType({
+      'loai_San._id': data._id
+    });
+    if(fields && fields?.length > 0) {
+      toast.error('Không thể xóa do có sân đang tồn tại!!!');
+      return;
+    }
     const confirm = window.confirm('Bạn có chắc chắn muốn xóa không?');
     if(confirm) {
       const editFac = await sportTypeService.delete(data._id, data);
@@ -130,6 +142,7 @@ const SportType = () => {
   }, [fac]);
   return (
     <div>
+      <ToastContainer autoClose='2000' />
       <Header name="Loại sân"/>
       <div className="flex justify-between mb-5">
         <div className='flex-1 flex relative justify-between'>
