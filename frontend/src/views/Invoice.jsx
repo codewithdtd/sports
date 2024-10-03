@@ -86,7 +86,7 @@ const Invoice = () => {
     return filteredlist;
   }
 
-  const totalPages = Math.ceil(filterFacility().length / 7);
+  const totalPages = Math.ceil(filterFacility().length / 6);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -164,7 +164,7 @@ const Invoice = () => {
   return (
     <div>
       <Header name="Quản lý hóa đơn" />
-      <div className="flex justify-between mb-5">
+      <div className="flex justify-between mb-3">
         <div className='flex-1 flex relative justify-between'>
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
             <i className="ri-search-line font-semibold"></i>
@@ -250,7 +250,7 @@ const Invoice = () => {
 
         {/* List dữ liệu */}
         {list.length > 0 ? filterFacility()?.map((item, index) =>
-        ((currentPage-1)*7 <= index && index < currentPage*7) ?
+        ((currentPage-1)*6 <= index && index < currentPage*6) ?
         <div key={index} className="flex justify-between items-center min-h-14 max-h-16 py-2 border-b border-gray-300 text-center">
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">{item.khachHang?.ho_KH +' '} {item.khachHang?.ten_KH}</div>

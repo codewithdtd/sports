@@ -46,7 +46,7 @@ const Info = () => {
   return (
     <div>
       <Header name={'Chỉnh sửa thông tin'} />
-      <div className='info md:pt-10 px-4 flex justify-center min-h-[87vh] h-fit'>
+      <div className='info flex justify-center'>
         <ToastContainer autoClose='2000' />
         <form className='md:w-3/4 w-full border border-gray-400 shadow-lg shadow-gray-500 flex flex-col items-center bg-white rounded-lg p-4 h-fit my-10' onSubmit={e => handleSubmit(e)}>
           <h1 className='text-center text-2xl md:text-3xl text-green-600 font-bold py-3'>THÔNG TIN</h1>

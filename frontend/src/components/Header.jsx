@@ -12,9 +12,9 @@ function Header(props) {
     await staffService.logout(dispatch, navigate, accessToken);
   }
   return (
-    <div className="header items-center pl-12 md:pl-0 mr-2 px-2 flex justify-between">
-        <div className="header__left uppercase text-2xl font-bold">
-            <p>{ props.name }</p>
+    <div className="header mb-2 rounded-xl px-2 items-center pl-12 md:pl-0 mr-2 flex justify-between">
+        <div className="header__left uppercase text-2xl font-[1000]">
+            <p className='text-slate-800'>{ props.name }</p>
         </div>
         <div className="header__right group relative flex flex-col">
             <div className='flex items-center'>

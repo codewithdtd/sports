@@ -63,12 +63,12 @@ input {
 
 /* navigation */
 .navigation .navigation-logo {
-    filter: brightness(0) saturate(100%);
+    filter: brightness(100%) saturate(100%);
 }
 .navigation-group-logo {
-    background: linear-gradient(to bottom, #22FF53 0%, #125511 100%);
+    /* background: linear-gradient(to bottom, #22FF53 0%, #125511 100%); */
     background-clip: text;
-    color: transparent;
+    color: white;
 }
 
 /* Facility */
