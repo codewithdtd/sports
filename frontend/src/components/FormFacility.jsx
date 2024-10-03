@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import serviceService from '../services/service.service';
+import ServiceService from '../services/service.service';
 import ConfirmCheckOut from './ConfirmCheckOut';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 function FromFacility(props) {
   const [data, setData] = useState(props.data);
@@ -13,6 +13,8 @@ function FromFacility(props) {
   const [timeEnd, setTimeEnd] = useState('--:--')
   const [paymentModal, setPaymentModal] = useState(false)
   const user = useSelector((state)=> state.user.login.user)
+  const dispatch = useDispatch();
+  const serviceService = new ServiceService(user, dispatch)
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
     // console.log('click')
@@ -24,9 +26,11 @@ function FromFacility(props) {
       ? data.phuongThuc = 'edit' 
       : (data.phuongThuc = 'thanhToan');
 
-    // if(data.phuongThuc = 'thanhToan') {
-
-    // }
+    if(data.phuongThuc == 'thanhToan' && !data.phuongThucThanhToan) {
+      setPaymentModal(true)
+      return;
+    } 
+    setPaymentModal(false);
     props.handleData(data); // Xử lý dữ liệu biểu mẫu
   };
 
@@ -161,10 +165,6 @@ function FromFacility(props) {
                   <span className=''>{data.datSan?.khachHang.sdt_KH}</span>
                 </div>
                 <div className='flex'>
-                  <p className='w-2/5'>Hội viên:</p>
-                  <span className=''>VIP ??</span>
-                </div>
-                <div className='flex'>
                   <p className='w-2/5'>Trạng thái:</p>
                   <span className=''>{data.datSan?.trangThaiThanhToan}</span>
                 </div>
@@ -174,10 +174,6 @@ function FromFacility(props) {
                 </div>
               </div>
               <div className='flex-1 text-sm sm:text-base'>
-                <div className='flex'>
-                  <p className='w-2/5'>Mã sân:</p>
-                  <span className=''>{data.ma_San}</span>
-                </div>
                 <div className='flex'>
                   <p className='w-2/5'>Thời gian:</p>
                   <div className='flex flex-col'>
@@ -233,7 +229,7 @@ function FromFacility(props) {
             <div className='flex items-center'>
               Phương thức thanh toán:
               <select 
-                required = {data.thoiGianKetThuc ? true : false} 
+                required = {paymentModal}
                 className='border border-gray-500 ml-2 '
                 onChange={e => setData({...data, phuongThucThanhToan: e.target.value})}
               >
@@ -244,10 +240,10 @@ function FromFacility(props) {
               </select>
             </div>
             <div className='flex mt-4'>
-                <button type='button' className='border-green-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-green-600 hover:bg-green-500 hover:text-white' 
+                {/* <button type='button' className='border-green-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-green-600 hover:bg-green-500 hover:text-white' 
                   onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckIn: getTime()}})}}>
                     Nhận sân
-                </button>
+                </button> */}
                 <button type='button' className='border-gray-600 flex-1 mx-2 bg-gray-200 border px-3 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white'
                   onClick={e => {
                     if(data.datSan) {

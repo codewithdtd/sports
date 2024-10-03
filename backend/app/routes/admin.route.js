@@ -26,7 +26,7 @@ const upload = multer({
 // NHÂN VIÊN
 router.route("/staff")
     .get(middleware.verifyAdmin, admin.findAllStaff)
-    .post(middleware.verifyAdmin, admin.createStaff);
+    .post(admin.createStaff);
 
 router.route("/staff/login").post(admin.login);
 router.route("/staff/refresh").post(admin.refreshToken);
