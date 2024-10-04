@@ -159,9 +159,9 @@ const SportType = () => {
       </div>
 
       {/* Bảng dữ liệu */}
-      <div className="bg-white text-[10px] sm:text-sm md:text-base p-4 rounded-lg shadow-sm border border-gray-300">
+      <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-400">
         {/* Header bảngg */}
-        <div className="flex justify-between py-2 border-b border-gray-300 text-center">
+        <div className="flex justify-between p-4 pb-2 bg-green-500 border-b border-gray-400 text-center">
           <div className="w-1/12 font-semibold">STT</div>
           <div className="w-1/6 font-semibold">LOẠI SÂN</div>
           <div className="w-1/6 font-semibold flex justify-center">
@@ -178,7 +178,7 @@ const SportType = () => {
         {/* List dữ liệu */}
         {list.length > 0 ? filterFacility()?.map((item, index) =>
         ((currentPage-1)*7 <= index && index < currentPage*7) ?
-        <div key={index} className="flex justify-between items-center min-h-14 max-h-16 py-2 border-b border-gray-300 text-center">
+        <div key={index} className="flex m-4 justify-between items-center min-h-14 max-h-16 py-2 border-b border-gray-400 text-center">
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">{item.ten_loai}</div>
           <div className="w-1/6 ">
@@ -194,7 +194,7 @@ const SportType = () => {
             <i className="ri-delete-bin-2-line w-[40px] h-[40px] bg-red-600 text-white p-2 rounded-md" onClick={e => deleteData(item)} ></i>
           </div>
         </div>
-        : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
+        : '') : <div className="py-2 border-b border-gray-400 text-center items-center">Chưa có dữ liệu</div>
         }
         
       </div>
