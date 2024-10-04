@@ -41,21 +41,6 @@ function FacilityManagement() {
     }
   };
 
-  const backgroundSan = (data) => {
-    console.log(data)
-    switch (data) {
-      case 'Bóng đá':
-        return './src/assets/img/soccer.jpg';
-      case 'Bóng rổ':
-        return './src/assets/img/basketball.jpg';
-      case 'Bóng chuyền':
-        return './src/assets/img/volleyball.jpg';
-      case 'Cầu lông':
-        return './src/assets/img/badminton.jpg';
-      default: 
-        break;
-    }
-  } 
 
   const handleFacility = async (data = {}) => {
     console.log(data);
@@ -125,7 +110,15 @@ function FacilityManagement() {
     return newFac;  
   }
   const editFacility = async (data) => {
+    const today = await bookingService.getToday({sanId: data._id});
+    if(today && today.length > 0) {
+      for (const element of today) {
+        element.san = data;
+        await bookingService.update(element._id, element); // Use await with the update function here
+      }
+    }
     const editFac = await facilityService.update(data._id, data);
+    setFac(fac)
     return editFac;
   }
   const deleteFacility = async (data) => {
@@ -184,9 +177,9 @@ function FacilityManagement() {
       
       {/* Phân chia xem hiển thị dạng grid hay bảng */}
       
-      <div className={`bg-white p-4 rounded-lg shadow-sm border border-gray-300`}>
+      <div className={`bg-white rounded-lg overflow-hidden shadow-md shadow-gray-600 border border-gray-300`}>
         {/* Header bảngg */}
-        <div className="flex justify-between py-2 border-b border-gray-300 text-center">
+        <div className="flex p-4 bg-green-500 justify-between pb-2 border-b border-gray-300 text-center">
           <div className="w-1/12 font-semibold">STT</div>
           {/* <div className="hidden sm:block w-1/6 md:w-[10%] font-semibold">HÌNH ẢNH</div> */}
           <div className="w-1/6 font-semibold flex justify-center">
@@ -219,7 +212,7 @@ function FacilityManagement() {
         {/* Nội dung bảng */}
         {facilities ? filterFacility().map((facility, index) => 
         ((currentPage-1)*4 <= index && index < currentPage*4) ?
-          <div key={facility._id} className="hover:bg-slate-200 text-sm md:text-base flex flex-grow justify-between py-2 border-b border-gray-300 text-center items-center"> 
+          <div key={facility._id} className="hover:bg-slate-200 p-4 text-sm md:text-base flex flex-grow justify-between py-2 border-b border-gray-300 text-center items-center"> 
             <div className="w-1/12">{ index+1 }</div>
             {/* <div className="w-1/6 md:w-[10%] hidden sm:block">
               {

@@ -44,7 +44,6 @@ export const createAxiosInstance = (baseUrl, user, dispatch, stateSuccess) => {
         async (config) => {
             // const accessToken = config.headers["token"] || ''; // Lấy token từ headers nếu có
             const accessToken = user?.accessToken || '';
-            console.log(user)
             if (accessToken) {
                 let date = new Date();
                 const decodedToken = jwtDecode(accessToken);
