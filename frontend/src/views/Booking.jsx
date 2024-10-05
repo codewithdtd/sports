@@ -169,11 +169,29 @@ const Booking = () => {
     }
   };
 
+    // Lấy thời gian hiện tại
+  function getCurrentDate() {
+    const today = new Date();
+    
+    const year = today.getFullYear(); // Lấy năm
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Lấy tháng (bắt đầu từ 0 nên cần +1) và định dạng thành 2 chữ số
+    const day = String(today.getDate()).padStart(2, '0'); // Lấy ngày và định dạng thành 2 chữ số
+
+    return `${year}-${month}-${day}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
+  }
+  function getCurrentTime() {
+    const today = new Date();
+    
+    const hour = today.getHours(); 
+    const minute = today.getMinutes();
+    return `${hour}:${minute}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
+  }
+
   // GỌI SERVICE BACKEND
   // lấy dữ liệu
   const getBooking = async () => {
     const data = await bookingService.getAll();
-    setList(data);
+    setList(data.reverse());
   }
   const createBooking = async (data) => {
     const newFac = await bookingService.create(data);
@@ -244,9 +262,9 @@ const Booking = () => {
       {/* Lọc dữ liệu */}
       
 
-      <div className="bg-white text-[10px] sm:text-sm md:text-base p-4 rounded-lg shadow-sm border border-gray-300">
+      <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-300">
         {/* Header bảngg */}
-        <div className="flex justify-between py-2 border-b border-gray-300 text-center">
+        <div className="flex justify-between p-4 px-6 pb-2 border-b bg-green-500 border-gray-300 text-center ">
           <div className="w-1/12 font-semibold">STT</div>
           <div className="w-1/6 font-semibold">KHÁCH HÀNG</div>
           <div className="w-1/6 font-semibold flex justify-center">
@@ -287,7 +305,7 @@ const Booking = () => {
         {list.length > 0 ? filterFacility().map((facility, index) => 
         ((currentPage-1)*6 <= index && index < currentPage*6) ?
        
-          <div key={facility._id} className="flex justify-between py-2 max-h-[70px] border-b border-gray-300 text-center items-center"> 
+          <div key={facility._id} className="flex justify-between p-4 mx-2 py-2 max-h-[70px] border-b border-gray-300 text-center items-center"> 
             <div className="w-1/12">{ index+1 }</div>
             <div className="w-1/6">
               {facility.khachHang.ho_KH + " " + facility.khachHang.ten_KH}

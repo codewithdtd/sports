@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import serviceService from '../services/service.service'
-
+import ServiceService from '../services/service.service'
+import { useDispatch, useSelector } from 'react-redux'
 
 const FormService = ({ toggle, service, handle }) => {
   const [listService, setListService] = useState([])
   const [listServiceSelected, setListServiceSelected] = useState([])
-  
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.login.user);
+
+  const serviceService = new ServiceService(user, dispatch)
   
   // định dạng số
   function formatNumber(num) {
@@ -63,7 +66,7 @@ const FormService = ({ toggle, service, handle }) => {
     setListServiceSelected(service.dichVu)
   }, [])
   return (
-    <div className='bg-black flex bg-opacity-40 absolute w-full h-full top-0 left-0' onClick={e => toggle(null)}>
+    <div className='bg-black flex bg-opacity-40 fixed w-full h-full bottom-0 top-0 left-0' onClick={e => toggle(null)}>
         <div className='bg-white shadow-lg m-auto p-3 rounded-lg w-3/4 md:w-3/5' onClick={e => e.stopPropagation()}>
             <h1 className='text-center font-bold pb-2 text-2xl'>DỊCH VỤ</h1>
             <div className='md:flex gap-2'>

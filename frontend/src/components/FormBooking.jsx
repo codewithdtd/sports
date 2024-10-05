@@ -5,6 +5,9 @@ import UserService from '../services/user.service';
 import SportTypeService from '../services/sportType.service';
 import FormService from './FormService';
 import { useSelector, useDispatch } from 'react-redux'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function FromBooking(props) {
   const [data, setData] = useState(props.data);
@@ -72,9 +75,23 @@ function FromBooking(props) {
 
     return `${year}-${month}-${day}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
   }
+  function getCurrentTime() {
+    const today = new Date();
+    
+    const hour = today.getHours(); 
+    const minute = today.getMinutes();
+    return `${hour}:${minute}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
+  }
+
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
+    if(props.data.trangThai === 'Hoàn thành') {
+      toast.warning('Đặt sân đã hoàn tất không được phép chỉnh sửa!')
+      setBooking([])
+      setListSelected([]);
+      return;
+    }
     if(booking.length <= 0) {
       console.log('miss');
       setMissError(true)
@@ -316,15 +333,37 @@ function FromBooking(props) {
   }
 
   const checkValidateDate = (date) => {
-    if(date >= getCurrentDate) {
+    if(date >= getCurrentDate()) {
       console.log(date)
       setCurrentDate(date)
     } else 
       setValidateDate(true)
   }
+
+  useEffect(() => {
+    setData(props.data);
+    // if(data._id != '')
+    //   setFilter(data.san.loai_San);
+    getFacility();
+    console.log(props.data)
+    if(props.data?.ngayDat) {
+      setCurrentDate(convertDateFormat(props.data.ngayDat))
+      // if (booking.length || checkedSlots?.length)
+        // setBookingsByDate(prev => ({
+        //   ...prev,
+        //   [currentDate]: {
+        //     booking,
+        //     checkedSlots
+        //   }
+        // }))
+        console.log(checkedSlots)
+    }
+    // getService();
+  }, [props.data]);
+
   useEffect(() => {
     // Lưu trạng thái trước khi thay đổi currentDate
-    if (booking.length || checkedSlots.length) {
+    if (booking?.length || checkedSlots?.length || props.data._id) {
       setBookingsByDate(prev => ({
         ...prev,
         [currentDate]: {
@@ -339,23 +378,15 @@ function FromBooking(props) {
   useEffect(() => {
     if (bookingsByDate[currentDate]) {
       // setBooking(bookingsByDate[currentDate].booking);
-      setCheckedSlots(bookingsByDate[currentDate].checkedSlots);  // checkedSlots bao gồm san._id
+      console.log('true')
+      setCheckedSlots(bookingsByDate[currentDate]?.checkedSlots);  // checkedSlots bao gồm san._id
     } else {
       // setBooking([]);
+      console.log('false')
       setCheckedSlots([]);
     }
-
     getFacility();
   }, [currentDate]);
-
-  useEffect(() => {
-    setData(props.data);
-    // if(data._id != '')
-    //   setFilter(data.san.loai_San);
-    getFacility();
-    console.log(props.data)
-    // getService();
-  }, [props.data, currentDate]);
   
   useEffect(() => {
     filterList();
@@ -369,6 +400,7 @@ function FromBooking(props) {
 
   return (
     <div className='absolute bg-opacity-30 bg-black -translate-x-2 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
+      <ToastContainer autoClose={2000} />
         <form action="" className='relative flex flex-col bg-white p-2 px-6 w-11/12 max-h-[98%] overflow-y-scroll max-w-[98%] rounded-md m-auto' onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
           <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
           <h1 className='text-center text-2xl font-bold p-5'>THÔNG TIN</h1>
@@ -423,10 +455,10 @@ function FromBooking(props) {
                 </select>
               </div>
               }
-                <div className="flex">
+                {/* <div className="flex">
                   <i className="mr-1 ri-shield-user-fill text-lg"></i>
                   <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.hoiVien} onChange={e => setData({...data, hoiVien: e.target.value})} placeholder='Hội viên'/>
-                </div>
+                </div> */}
                 <div className="flex">
                   <i className="mr-1 ri-sticky-note-line"></i>
                   <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ghiChu} onChange={e => setData({...data, ghiChu: e.target.value})} placeholder='Ghi chú'/>
@@ -445,7 +477,7 @@ function FromBooking(props) {
                     <option value={data.trangThai ? data.trangThai : ''}>{data.trangThai ? data.trangThai : 'Chọn'}</option>
                     <option value='Đã duyệt'>Đã duyệt</option>
                     <option value='Nhận sân'>Nhận sân</option>
-                    <option value='Đã thanh toán'>Hoàn thành</option>
+                    <option value='Hoàn thành'>Hoàn thành</option>
                     <option value='Đã hủy'>Đã hủy</option>
                   </select>
                 </div>
@@ -464,7 +496,7 @@ function FromBooking(props) {
                       <select name="filter" id="" onChange={e => setFilter(e.target.value)} className='bg-gray-300 rounded-md border border-gray-400'>
                         <option value="">Chọn sân</option>
                         {listSportType?.map(sportType => 
-                        <option value={sportType.ten_loai}>{sportType.ten_loai}</option>
+                        <option key={sportType._id} value={sportType.ten_loai}>{sportType.ten_loai}</option>
                         )}
                       </select>
                     
@@ -474,7 +506,7 @@ function FromBooking(props) {
                       <div className='flex-1'>
                         <div className='flex justify-between'>
                           <div>
-                            <input min={getCurrentDate()} type="date" className={`border rounded-md p-1 ${validateDate ? 'border-red-400 bg-red-100' : 'border-gray-400'}`} value={currentDate} onChange={e => setCurrentDate(e.target.value)} />
+                            <input min={getCurrentDate()} type="date" className={`border rounded-md p-1 ${validateDate ? 'border-red-400 bg-red-100' : 'border-gray-400'}`} value={currentDate} onChange={e => checkValidateDate(e.target.value)} />
                             {validateDate ? <p className='text-red-500'>Vui lòng chọn ngày chính xác</p> : ''}
                           </div>
                           {/* <div>
@@ -490,7 +522,9 @@ function FromBooking(props) {
                             <div className='flex-1 font-bold'>Tình trạng</div>
                             <div className='mx-4'></div>
                           </div>
-                          {timeSlots.map((slot, index) => (
+                          {timeSlots.map((slot, index) => (currentDate === getCurrentDate() ? 
+                            (slot.formattedTimeStart > getCurrentTime()) : true) 
+                          ? (
                           <div className={`flex items-center border-b text-center border-gray-400`} key={index}>
                             <div className='w-1/6'>
                               {slot.formattedTimeStart}
@@ -502,7 +536,8 @@ function FromBooking(props) {
                               {filterList()?.map((san) => 
                               <div className={`flex py-2 border border-gray-400
                                   ${
-                                    san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                                    (san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd)
+                                    || (san.tinhTrang == 'Bảo trì')
                                     ? 'bg-gray-300' : ''
                                   }
                                 `} 
@@ -514,8 +549,8 @@ function FromBooking(props) {
                                 <div className="flex-1">{formatNumber(san.bangGiaMoiGio || 0)}</div>
                                 <div className="flex-1">
                                   {
-                                    san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
-                                    ? 'Đã đặt' : 'Trống'
+                                    (san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd)
+                                    ? 'Đã đặt' : (san.tinhTrang == 'Bảo trì') ? san.tinhTrang : 'Trống'
                                   }
                                 </div>
                                 <div className='mx-2'>
@@ -529,14 +564,17 @@ function FromBooking(props) {
                                       ngayDat: currentDate,
                                       thanhTien: san.bangGiaMoiGio
                                     }, e.target.checked)}
-                                    disabled={san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd}
+                                    disabled={(san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd) || (san.tinhTrang == 'Bảo trì')}
                                   />
                                 </div>
                               </div>
                               )}
                             </div>
                           </div>
-                          ))}
+                          ): '')}
+                          { currentDate === getCurrentDate() && timeSlots.every(slot => slot.formattedTimeStart < getCurrentTime()) ? 
+                            <p className='p-2'>Đã hết giờ đặt sân của ngày hôm nay vui lòng chọn ngày khác để đặt sân !!!</p> : ''
+                          }
                         </div>
                       </div>
                     </div>
@@ -560,9 +598,9 @@ function FromBooking(props) {
 
                       <h1 className='font-bold'>ĐỔI SÂN</h1>
                       <select name="filter" id="" onChange={e => setFilter(e.target.value)} className='bg-gray-300 rounded-md border border-gray-400'>
-                        <option value="">Chọn sân</option>
+                        <option value={''}>Chọn sân</option>
                         {listSportType?.map(sportType => 
-                        <option value={sportType.ten_loai}>{sportType.ten_loai}</option>
+                        <option key={sportType._id} value={sportType.ten_loai}>{sportType.ten_loai}</option>
                         )}
                       </select>
                     
@@ -601,7 +639,9 @@ function FromBooking(props) {
                             {filterList()?.map((san) => 
                             <div className={`flex py-2 border border-gray-400
                                 ${
-                                  san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                                  san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd 
+                                  || (data.thoiGianBatDau <= slot.formattedTimeStart && data.thoiGianKetThuc >= slot.formattedTimeEnd && data.san._id == san._id)
+                                  || (san.tinhTrang == 'Bảo trì')
                                   ? 'bg-gray-300' : ''
                                 }
                               `} 
@@ -614,7 +654,8 @@ function FromBooking(props) {
                               <div className="flex-1">
                                 {
                                   san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
-                                  ? 'Đã đặt' : 'Trống'
+                                  || (data.thoiGianBatDau <= slot.formattedTimeStart && data.thoiGianKetThuc >= slot.formattedTimeEnd && data.san._id == san._id)
+                                  ? 'Đã đặt' : san.tinhTrang == 'Bảo trì' ? 'Bảo trì' : 'Trống'
                                 }
                               </div>
                               <div className='mx-2'>
@@ -629,7 +670,10 @@ function FromBooking(props) {
                                     ngayDat: currentDate,
                                     thanhTien: san.bangGiaMoiGio
                                   })}
-                                  disabled={san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd}
+                                  disabled={(san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd) 
+                                    || (data.thoiGianBatDau <= slot.formattedTimeStart && data.thoiGianKetThuc >= slot.formattedTimeEnd && data.san._id == san._id)
+                                    || (san.tinhTrang == 'Bảo trì')
+                                  }
                                 />
                               </div>
                             </div>
@@ -690,7 +734,10 @@ function FromBooking(props) {
 
             </div>
           </div>
+
+          {data?.trangThai !== 'Hoàn thành' ? 
         <button className='bg-green-600 m-4 py-1 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
+          : ''  }
       </form>
     </div>
   )

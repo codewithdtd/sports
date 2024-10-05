@@ -83,16 +83,16 @@ function FromSportType(props) {
 
   return (
      <div className='absolute bg-opacity-30 bg-black -translate-x-2 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
-        <form action="" className={`relative transition flex flex-col bg-white p-2 px-6 w-3/5 lg:w-5/12 rounded-md m-auto md:-translate-x-20+ ${show ? 'scale-100' : 'scale-0'}`} onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
+        <form action="" className={`relative transition flex flex-col bg-white p-2 px-6 w-3/5 lg:w-5/12 rounded-md m-auto ${show ? 'scale-100' : 'scale-0'}`} onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
             <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
-            <h1 className='text-center text-2xl font-bold p-5'>THÔNG TIN</h1>
+            <h1 className='text-center text-2xl font-bold p-3'>THÔNG TIN</h1>
             <div className="flex">
               <label htmlFor="" className='w-1/4'>Loại thể thao:</label>
               <input name='ten_loai' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ten_loai} onChange={e => setData({...data, ten_loai: e.target.value})}/>
             </div>
             <div className='flex'>
               <label htmlFor="" className='w-1/4'>Ảnh đại diện:</label>
-              <div className='w-3/4 flex flex-col'>
+              <div className='w-3/4 flex'>
                 {data.hinhAnhDaiDien ?
                 <div className='relative w-1/2'>
                   <img src={`http://localhost:3000/uploads/${data.hinhAnhDaiDien}`} alt='' className='object-contain mb-2' />
@@ -111,7 +111,7 @@ function FromSportType(props) {
             </div>
             <div className="flex mt-2">
               <label htmlFor="" className='w-1/4'>Hình ảnh:</label>
-              <div className='w-3/4 flex flex-col max-h-64 overflow-y-scroll'>
+              <div className='w-3/4 flex flex-col max-h-60 overflow-y-scroll'>
               {/* Hiển thị các hình ảnh từ props */}
               {data.hinhAnh?.length > 0 && data.hinhAnh?.map((img, index) => (
                 <div key={index} className='relative w-1/2'>
