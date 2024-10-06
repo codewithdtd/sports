@@ -10,6 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.2",
+    "@mui/styled-engine-sc": "^6.1.2",
+    "@mui/x-charts": "^7.19.0",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.2",
     "js-cookie": "^3.0.5",
@@ -21,7 +26,8 @@
     "react-router-dom": "^6.26.0",
     "react-toastify": "^10.0.5",
     "redux-persist": "^6.0.0",
-    "remixicon": "^4.3.0"
+    "remixicon": "^4.3.0",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
