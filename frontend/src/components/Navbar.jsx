@@ -34,7 +34,7 @@ function Navbar() {
   }, []);
   return (
     <div className="navigation z-10 absolute md:relative h-screen">
-        <div className='block md:hidden absolute mx-2 w-[30px] translate-y-1/2 pt-1 text-center rounded-lg' onClick={toggleMenu}>
+        <div className='block md:hidden absolute mx-5 w-[30px] translate-y-1/2 pt-1 text-center rounded-lg' onClick={toggleMenu}>
             <i className="ri-menu-line text-xl font-bold"></i>
         </div>
         <div className={`bg-slate-800 shadow-black shadow-md rounded-lg h-[100%] md:block transition-all overflow-hidden ${isOpen ? 'translate-x-0' : 'absolute -translate-x-80'}`}>
