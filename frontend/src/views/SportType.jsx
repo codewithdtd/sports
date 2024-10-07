@@ -151,7 +151,7 @@ const SportType = () => {
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div> 
-        <button className="bg-green-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-green-700 w-10 h-10 m-auto rounded-xl"
+        <button className="bg-blue-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-blue-700 w-10 h-10 m-auto rounded-xl"
                 onClick={e => handleData()}
         >
           +
@@ -159,9 +159,9 @@ const SportType = () => {
       </div>
 
       {/* Bảng dữ liệu */}
-      <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-400">
+      <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm shadow-gr border border-gray-300">
         {/* Header bảngg */}
-        <div className="flex justify-between p-4 pb-2 bg-green-500 border-b border-gray-400 text-center">
+        <div className="flex justify-between p-4 pb-2 bg-blue-500 border-b border-gray-400 text-center text-white">
           <div className="w-1/12 font-semibold">STT</div>
           <div className="w-1/6 font-semibold">LOẠI SÂN</div>
           <div className="w-1/6 font-semibold flex justify-center">
@@ -178,7 +178,7 @@ const SportType = () => {
         {/* List dữ liệu */}
         {list.length > 0 ? filterFacility()?.map((item, index) =>
         ((currentPage-1)*7 <= index && index < currentPage*7) ?
-        <div key={index} className="flex m-4 justify-between items-center min-h-14 max-h-16 py-2 border-b border-gray-400 text-center">
+        <div key={index} className="hover:bg-gray-200 flex p-4 justify-between items-center min-h-14 max-h-20 border-b border-gray-300 text-center">
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">{item.ten_loai}</div>
           <div className="w-1/6 ">

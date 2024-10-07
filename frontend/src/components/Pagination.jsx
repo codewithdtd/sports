@@ -60,7 +60,7 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
                 <button
                   onClick={() => onPageChange(page)}
                   className={`px-3 py-2
-                    ${page === currentPage ? "bg-green-500 text-white" : "text-gray-500 bg-white"}`}
+                    ${page === currentPage ? "bg-blue-500 text-white" : "text-gray-500 bg-white"}`}
                 >
                   {page}
                 </button>
