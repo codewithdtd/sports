@@ -9,6 +9,7 @@ const Info = () => {
   const user = useSelector((state)=> state.user.login.user)
   const accessToken = user?.accessToken;
   const [avatar, setAvatar] = useState(null);
+  const [avatarPre, setAvatarPre] = useState(null);
   const [info, setInfo] = useState(user.user)
   const [submit, setSubmit] = useState(false)
   const navigate = useNavigate();
@@ -30,9 +31,24 @@ const Info = () => {
   }
 
   const updateUser = async (data) => {
-    const update = await staffService.update(data._id, data, accessToken, dispatch, navigate );
+    const userUpdate = new FormData();
+    userUpdate.append('ho_NV', data.ho_NV);
+    userUpdate.append('ten_NV', data.ten_NV);
+    userUpdate.append('sdt_NV', data.sdt_NV);
+    userUpdate.append('email_NV', data.email_NV);
+    if(avatar) {
+      userUpdate.append('hinhAnh_NV', avatar)
+    }
+    const update = await staffService.update(data._id, userUpdate, accessToken, dispatch, navigate );
     return update;
   }
+  const handleFileUploadAvatar = async (e) => {
+    const { files } = e.target;
+    setAvatar(files[0]);
+    const avatarPreview = URL.createObjectURL(files[0]);
+    setAvatarPre(avatarPreview);
+  }
+
 
   function isValidVietnamesePhoneNumber(phoneNumber) {
     const regex = /^(0[3|5|7|8|9])+([0-9]{8})$/;
@@ -44,34 +60,47 @@ const Info = () => {
     }
   })
   return (
-    <div>
+    <div className='flex h-[95vh] flex-col'>
       <Header name={'Chỉnh sửa thông tin'} />
-      <div className='info flex justify-center'>
+      <div className='info relative flex flex-1 items-center justify-center w-full border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-full'>
         <ToastContainer autoClose='2000' />
-        <form className='md:w-3/4 w-full border border-gray-400 shadow-lg shadow-gray-500 flex flex-col items-center bg-white rounded-lg p-4 h-fit my-10' onSubmit={e => handleSubmit(e)}>
-          <h1 className='text-center text-2xl md:text-3xl text-green-600 font-bold py-3'>THÔNG TIN</h1>
-          <div className='lg:w-4/5 w-full md:text-lg'>
+        <div className='w-1/3 z-[2] h-full flex flex-col justify-center items-center text-center bg-blue-600'>
+          { user.user.hinhAnh_NV && !avatarPre ? 
+            <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_NV}`} className="border-[7px] border-white rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
+            : <img src={`${avatarPre ? avatarPre : './src/assets/img/user.png'}`} className="border-[7px] border-white rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
+          }
+          <p className='mt-3 font-bold text-lg'>
+            ẢNH ĐẠI DIỆN
+            <label htmlFor="avatar" className='hover:bg-gray-300 rounded-full p-2 py-1 cursor-pointer'>
+              <i className="ri-image-edit-fill"></i>
+            </label>
+          </p>
+          <input type="file" id='avatar' className='hidden' onChange={handleFileUploadAvatar}/>
+        </div>
+        <form className='flex-1 z-[2] md:w-1/2 flex flex-col rounded-lg p-4' onSubmit={e => handleSubmit(e)}>
+          <h1 className='text-center text-2xl md:text-3xl text-blue-600 font-bold py-3'>CẬP NHẬT THÔNG TIN CỦA BẠN</h1>
+          <div className='w-full md:text-lg'>
             <div className='flex items-center py-1'>
-              <label htmlFor="" className='md:w-1/4 w-1/6'>Họ: </label>
-              <input required type="text" className='bg-gray-200 m-2 p-2 px-2 rounded-xl flex-1' value={info.ho_NV} onChange={e => setInfo({...info, ho_NV: e.target.value})}/>
+              <label htmlFor="" className='md:w-1/4 w-1/5 font-bold text-gray-800'>Họ: </label>
+              <input required type="text" className='bg-gray-200 m-2 p-2 px-2 flex-1' value={info.ho_NV} onChange={e => setInfo({...info, ho_NV: e.target.value})}/>
             </div>
             <div className='flex items-center py-1'>
-              <label htmlFor="" className='md:w-1/4 w-1/6'>Tên: </label>
-              <input required type="text" className='bg-gray-200 m-2 p-2 px-2 rounded-xl flex-1' value={info.ten_NV} onChange={e => setInfo({...info, ten_NV: e.target.value})}/>
+              <label htmlFor="" className='md:w-1/4 w-1/5 font-bold text-gray-800'>Tên: </label>
+              <input required type="text" className='bg-gray-200 m-2 p-2 px-2 flex-1' value={info.ten_NV} onChange={e => setInfo({...info, ten_NV: e.target.value})}/>
             </div>
             <div className='flex items-center py-1'>
-              <label htmlFor="" className='md:w-1/4 w-1/6'>Số điện thoại: </label>
+              <label htmlFor="" className='md:w-1/4 w-1/5 font-bold text-gray-800'>Số điện thoại: </label>
               <input required type="text" minLength={10} maxLength={10} 
-                className='bg-gray-200 m-2 p-2 px-2 rounded-xl flex-1' 
+                className='bg-gray-200 m-2 p-2 px-2 flex-1' 
                 value={info.sdt_NV} 
                 onChange={e => setInfo({...info, sdt_NV: e.target.value})}
               />
             </div>
             <div className='flex items-center py-1'>
-              <label htmlFor="" className='md:w-1/4 w-1/6'>Email: </label>
-              <input type="email" className='bg-gray-200 m-2 p-2 px-2 rounded-xl flex-1' value={info.email_NV} onChange={e => setInfo({...info, email_NV: e.target.value})}/>
+              <label htmlFor="" className='md:w-1/4 w-1/5 font-bold text-gray-800'>Email: </label>
+              <input type="email" className='bg-gray-200 m-2 p-2 px-2 flex-1' value={info.email_NV} onChange={e => setInfo({...info, email_NV: e.target.value})}/>
             </div>
-            <button type={`${submit ? 'button' : ''}`} className='bg-green-500 w-full p-1 my-4 rounded-xl text-white hover:bg-green-700'>Xác nhận</button>
+            <button type={`${submit ? 'button' : ''}`} className='bg-blue-500 w-full p-1 my-4 rounded-xl text-white hover:bg-blue-700'>Xác nhận</button>
           </div>
         </form>
       </div>

@@ -36,7 +36,10 @@ class UserService extends BaseService {
     async update( id, data, accessToken = '', dispatch, navigate) {
         try {
             const user = (await this.api.put(`/${id}`, data, {
-                headers: { token: `Bearer ${accessToken}` }
+                headers: { 
+                    token: `Bearer ${accessToken}` ,
+                    'Content-Type': 'multipart/form-data'
+                }
             })).data;
             const action = {
                 ...user,

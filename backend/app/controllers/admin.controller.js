@@ -57,6 +57,7 @@ exports.updateStaff = async (req, res, next) => {
     const staff = new Staffs();
     try {
         const newUpdate = req.body;
+        console.log(req.file)
         if(newUpdate.matKhauCu) {
             let oldPass = newUpdate.matKhauCu;
             const user = await staff.findById(req.params.id);
@@ -73,6 +74,15 @@ exports.updateStaff = async (req, res, next) => {
                 return res.status(401).json({ error: 'Sai mật khẩu'});             
             }
         }
+
+        let hinhAnhDaiDien = null;
+        if (req.file) {
+            console.log(req.file)
+            hinhAnhDaiDien = req.file.filename;
+            newUpdate.hinhAnh_NV = hinhAnhDaiDien;
+        }
+
+
         const result = await staff.update(req.params.id, newUpdate);
         const { matKhau_NV, ...others } = result._doc;
         res.status(201).json(others);

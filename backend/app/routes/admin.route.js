@@ -35,7 +35,7 @@ router.route("/staff/logout").post(middleware.verifyToken, admin.logout);
 router.route("/staff/:id")
     .delete(middleware.verifyAdmin, admin.deleteOneStaff)
     .get(admin.findOneStaff)
-    .put(middleware.verifyAdmin, admin.updateStaff);
+    .put(middleware.verifyAdmin, upload.single('hinhAnh_NV'), admin.updateStaff);
 
 
 
