@@ -138,7 +138,7 @@ function FromSportType(props) {
               <input id='file-upload' className='hidden' type='file' name='hinhAnh' multiple onChange={handleFileUpload} />
             </div>
             </div>
-            <button className='bg-green-600 m-4 py-1 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
+            <button className='bg-blue-600 m-4 py-1 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
         </form>
     </div>
   )

@@ -99,7 +99,7 @@ const Customer = () => {
 
   return (
     <div>
-      <Header name="Quản lý khách hàng" />
+      <Header name="Khách hàng" />
       <div className="flex justify-between mb-5">
         <div className='flex-1 flex relative justify-between'>
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
@@ -111,9 +111,9 @@ const Customer = () => {
         
       </div>
       {/* Bảng dữ liệu */}
-      <div className="bg-white text-[10px] sm:text-sm md:text-base p-4 rounded-lg shadow-sm border border-gray-300">
+      <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-300">
         {/* Header bảngg */}
-        <div className="flex justify-between py-2 border-b border-gray-300 text-center">
+        <div className="flex justify-between p-4 pb-2 bg-blue-500 text-white border-b border-gray-300 text-center">
           <div className="w-1/12 font-semibold">STT</div>
           <div className="w-1/6 font-semibold">TÊN</div>
           
@@ -123,10 +123,7 @@ const Customer = () => {
           </div>
           <div className="w-1/6 font-semibold flex justify-center">
             EMAIL
-            <div className="">
-              <i className="ri-arrow-up-fill"></i>
-              {/* <i className="ri-arrow-down-fill"></i> */}
-            </div>
+           
           </div>
           
           <div className="w-1/6 font-semibold flex justify-center">
@@ -134,7 +131,7 @@ const Customer = () => {
         </div>
         {list.length > 0 ? filterFacility()?.map((item, index) =>
         ((currentPage-1)*7 <= index && index < currentPage*7) ?
-        <div key={index} className="flex justify-between items-center min-h-14 max-h-16 py-2 border-b border-gray-300 text-center">
+        <div key={index} className="flex justify-between items-center p-4 min-h-14 max-h-16 py-2 border-b border-gray-300 text-center">
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">{item.ho_KH} {item.ten_KH}</div>
           <div className="w-1/6 flex justify-center">

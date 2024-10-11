@@ -37,7 +37,7 @@ function FromFacility(props) {
   }, [props.data]);
 
   return (
-     <div className='absolute bg-opacity-30 bg-black -translate-x-2 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
+     <div className='absolute bg-opacity-30 bg-black left-0 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
         <form action="" className={`relative transition flex flex-col bg-white p-2 px-6 w-3/5 lg:w-5/12 rounded-md m-auto md:-translate-x-20+ ${show ? 'scale-100' : 'scale-0'}`} onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
             <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
             <h1 className='text-center text-2xl font-bold p-5'>THÔNG TIN</h1>
@@ -97,7 +97,7 @@ function FromFacility(props) {
                 <input id='file-upload' className='hidden' type="file" onChange={e => handleFileUpload(e)} />
               </div>
             </div> */}
-            <button className='bg-green-600 m-4 py-1 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
+            <button className='bg-blue-600 m-4 py-1 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
         </form>
     </div>
   )

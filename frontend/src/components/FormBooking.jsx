@@ -408,8 +408,8 @@ function FromBooking(props) {
             <div className='booking-customer lg:max-w-max mr-6'>  
               {!data._id ? 
               <div className='flex justify-between mb-2'>
-                <p className={`border-2 border-gray-400 p-1 px-2 rounded-lg cursor-pointer ${chooseUser == false ? 'bg-green-500 text-white' : ''}`} onClick={e => setChooseUser(false)}>Khách mới</p>
-                <p className={`border-2 border-gray-400 p-1 px-2 rounded-lg cursor-pointer ${chooseUser == true ? 'bg-green-500 text-white' : ''}`} onClick={e => setChooseUser(true)}>Khách cũ</p>
+                <p className={`border-2 border-gray-400 p-1 px-2 rounded-lg cursor-pointer ${chooseUser == false ? 'bg-blue-500 text-white border-blue-700' : ''}`} onClick={e => setChooseUser(false)}>Khách mới</p>
+                <p className={`border-2 border-gray-400 p-1 px-2 rounded-lg cursor-pointer ${chooseUser == true ? 'bg-blue-500 text-white border-blue-700' : ''}`} onClick={e => setChooseUser(true)}>Khách cũ</p>
               </div> : ''
               }
             {!chooseUser ?  
@@ -611,7 +611,7 @@ function FromBooking(props) {
                       
                       <div className='flex justify-between'>
                         <div>
-                          <input min={getCurrentDate()} type="date" className={`border rounded-md p-1 ${validateDate ? 'border-red-400 bg-red-100' : 'border-gray-400'}`} value={currentDate} onChange={e => checkValidateDate(e.target.value)} />
+                          <input type="date" className={`border rounded-md p-1 ${validateDate ? 'border-red-400 bg-red-100' : 'border-gray-400'}`} value={currentDate} />
                           {validateDate ? <p className='text-red-500'>Vui lòng chọn ngày chính xác</p> : ''}
                         </div>
                         {/* <div>
@@ -701,7 +701,7 @@ function FromBooking(props) {
                           <p>{bk.thoiGianBatDau} - {bk.thoiGianKetThuc}</p>
                           <p>{bk.san.ten_San}</p>
                           <p>{formatNumber(bk.san.bangGiaMoiGio || 0)}</p>
-                          <button type='button' onClick={e=> setModalService(bk)} className='border border-green-600 p-1 rounded-md text-green-600 hover:text-white hover:bg-green-500'>Thêm dịch vụ</button>
+                          <button type='button' onClick={e=> setModalService(bk)} className='border border-blue-600 p-1 rounded-md text-blue-600 hover:text-white hover:bg-blue-500'>Thêm dịch vụ</button>
                         </div>
                         {!data._id ? bk.dichVu?.map((dichVu) => 
                           <div key={dichVu._id} className='ml-7 flex border-b text-center justify-between p-2 border-l-2 border-gray-400'>
@@ -736,7 +736,7 @@ function FromBooking(props) {
           </div>
 
           {data?.trangThai !== 'Hoàn thành' ? 
-        <button className='bg-green-600 m-4 py-1 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
+        <button className='bg-blue-600 m-4 py-1 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
           : ''  }
       </form>
     </div>

@@ -104,12 +104,12 @@ function Navbar() {
                         <span>Khách hàng</span>
                     </NavLink>
                 </li>
-                <li className="navigation__link__items">
+                {/* <li className="navigation__link__items">
                     <NavLink onClick={toggleMenu} to="/staff" className={({ isActive }) => `${isActive ? "bg-blue-500 text-white" : ""} p-1 py-2 block m-2 rounded-md hover:text-white hover:bg-blue-500 mx-3 font-medium`}>
                         <i className="ml-5 ri-folder-user-line mr-2"></i> 
                         <span>Nhân viên</span>
                     </NavLink>
-                </li>
+                </li> */}
                 {/* <li className="navigation__link__items">
                     <NavLink onClick={toggleMenu} to="/membership" className={({ isActive }) => `${isActive ? "bg-blue-500 text-white" : ""} p-1 py-2 block m-2 rounded-md hover:text-white hover:bg-blue-500 mx-3 font-medium`}>
                         <i className="ml-5 ri-shield-user-line mr-2"></i> 

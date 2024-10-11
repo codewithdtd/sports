@@ -222,7 +222,7 @@ const Booking = () => {
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <div className="bg-green-500 cursor-pointer hover:bg-green-700 ml-2 max-w-50% shadow-gray-700 shadow-sm text-white overflow-hidden rounded-lg p-2" onClick={e => setFilter(!filter)}>
+          <div className="bg-blue-500 cursor-pointer hover:bg-blue-700 ml-2 max-w-50% shadow-gray-700 shadow-sm text-white overflow-hidden rounded-lg p-2" onClick={e => setFilter(!filter)}>
             <i className="ri-arrow-down-double-line"></i>
             Lọc
           </div>
@@ -249,11 +249,11 @@ const Booking = () => {
               <option value="">200.000 - 400.000</option>
               <option value="">{'>'} 400.000</option>
             </select>
-            <button className='bg-green-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-green-700 m-auto rounded-md' onClick={e => setFilter(!filter)}>Xác nhận</button>
+            <button className='bg-blue-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-700 m-auto rounded-md' onClick={e => setFilter(!filter)}>Xác nhận</button>
           </div>
         : '' }
         </div> 
-        <button className="bg-green-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-green-700 w-10 h-10 m-auto rounded-xl"
+        <button className="bg-blue-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-blue-700 w-10 h-10 m-auto rounded-xl"
                 onClick={e => handleData()}
         >
           +
@@ -264,7 +264,7 @@ const Booking = () => {
 
       <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-300">
         {/* Header bảngg */}
-        <div className="flex justify-between p-4 px-6 pb-2 border-b bg-green-500 border-gray-300 text-center ">
+        <div className="flex justify-between p-4 px-6 pb-2 border-b bg-blue-500 border-gray-300 text-white text-center ">
           <div className="w-1/12 font-semibold">STT</div>
           <div className="w-1/6 font-semibold">KHÁCH HÀNG</div>
           <div className="w-1/6 font-semibold flex justify-center">
@@ -337,7 +337,7 @@ const Booking = () => {
             </div>
             <div className="w-1/6 text-xl">
               <i className="ri-edit-box-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(facility)}></i>
-              <i className="ri-delete-bin-2-line w-[40px] h-[40px] bg-red-600 text-white p-2 rounded-md" onClick={e => deleteBooking(facility)} ></i>
+              {/* <i className="ri-delete-bin-2-line w-[40px] h-[40px] bg-red-600 text-white p-2 rounded-md" onClick={e => deleteBooking(facility)} ></i> */}
             </div>
           </div> 
         : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>

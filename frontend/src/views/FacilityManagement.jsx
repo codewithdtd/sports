@@ -154,7 +154,7 @@ function FacilityManagement() {
           </div>
        
         </div> 
-        <button className="bg-green-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-green-700 w-10 h-10 m-auto rounded-xl"
+        <button className="bg-blue-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-blue-700 w-10 h-10 m-auto rounded-xl"
                 onClick={e => handleFacility()}
         >
           +
@@ -179,29 +179,17 @@ function FacilityManagement() {
       
       <div className={`bg-white rounded-lg overflow-hidden shadow-md shadow-gray-600 border border-gray-300`}>
         {/* Header bảngg */}
-        <div className="flex p-4 bg-green-500 justify-between pb-2 border-b border-gray-300 text-center">
+        <div className="flex text-white p-4 bg-blue-500 justify-between pb-2 border-b border-gray-300 text-center">
           <div className="w-1/12 font-semibold">STT</div>
           {/* <div className="hidden sm:block w-1/6 md:w-[10%] font-semibold">HÌNH ẢNH</div> */}
           <div className="w-1/6 font-semibold flex justify-center">
             TÊN
-            <div className="">
-              <i className={''}></i>
-              <i className="ri-arrow-down-fill"></i>
-            </div>
           </div>
           <div className="w-1/6 font-semibold flex justify-center">
             GIÁ MỖI GIỜ
-            <div className="">
-              <i className="ri-arrow-up-fill"></i>
-              <i className="ri-arrow-down-fill"></i>
-            </div>
           </div>
           <div className="w-1/6 font-semibold flex justify-center">
             TÌNH TRẠNG
-            <div className="">
-              <i className="ri-arrow-up-fill"></i>
-              <i className="ri-arrow-down-fill"></i>
-            </div>
           </div>
           <div className="w-1/6">
             {/* <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i> */}
@@ -228,7 +216,11 @@ function FacilityManagement() {
             </div>
             <div className="w-1/6">{ formatNumber(parseInt(facility.bangGiaMoiGio))}</div>
             <div className="w-1/6 flex">
-              <p className={`m-auto p-1 ${facility.tinhTrang == 'Đang sử dụng' ? 'text-white rounded-lg bg-green-600 w-full lg:w-1/2 shadow-md shadow-slate-500' : facility.tinhTrang == 'Đã đặt' ? 'text-white rounded-lg bg-blue-500 w-full md:w-1/2 shadow-md shadow-slate-500' : ''}`}>
+              <p className={`m-auto p-1 ${facility.tinhTrang == 'Đang sử dụng' 
+                                          ? 'text-white rounded-lg bg-green-500 w-full lg:w-1/2 shadow-md shadow-slate-500' 
+                                          : facility.tinhTrang == 'Đã đặt' 
+                                          ? 'text-white rounded-lg bg-blue-500 w-full md:w-1/2 shadow-md shadow-slate-500' 
+                                          : facility.tinhTrang == 'Bảo trì' ? 'text-white rounded-lg bg-yellow-500 w-full lg:w-1/2 shadow-md shadow-slate-500' : ''}`}>
                 { facility.tinhTrang }
               </p>
             </div>

@@ -30,7 +30,7 @@ const FormEquipment = (props) => {
               <label htmlFor="" className='w-1/4'>Cho mượn:</label>
               <input name='ten_San' min={0}  className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="number" value={data.choMuon || 0} onChange={e => setData({...data, choMuon: e.target.value})}/>
             </div> */}
-            <button className='bg-green-600 w-full py-1 px-2 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
+            <button className='bg-blue-600 w-full py-1 px-2 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
         </form>
     </div>
   )
