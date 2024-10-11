@@ -62,7 +62,7 @@ const Info = () => {
   return (
     <div className='flex h-[95vh] flex-col'>
       <Header name={'Chỉnh sửa thông tin'} />
-      <div className='info relative flex flex-1 items-center justify-center w-full border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-full'>
+      <div className='info relative flex flex-1 items-center overflow-hidden justify-center w-full border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-full'>
         <ToastContainer autoClose='2000' />
         <div className='w-1/3 z-[2] h-full flex flex-col justify-center items-center text-center bg-blue-600'>
           { user.user.hinhAnh_NV && !avatarPre ? 

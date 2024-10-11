@@ -55,11 +55,23 @@ const ChangePass = () => {
   return (
     <div>
       <Header name={'Đổi mật khẩu'} />
-      <div className='info md:pt-10 px-4 flex justify-center min-h-[87vh] h-fit'>
-
+      <div className='info relative flex flex-1 overflow-hidden justify-center w-full border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-[85vh]'>
         <ToastContainer autoClose='2000' />
-        <form className='flex flex-col w-full md:w-1/2 items-center bg-white border border-gray-300 shadow-lg shadow-gray-500 rounded-lg p-4 h-fit my-10' onSubmit={e => handleSubmit(e)}>
-          <h1 className='text-center text-3xl text-green-600 font-bold py-3'>ĐỔI MẬT KHẨU</h1>
+        <div className='w-1/3 z-[2] h-full flex flex-col justify-center items-center text-center bg-blue-600'>
+          <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_NV}`} className="border-[3px] border-white rounded-full w-1/2 md:w-[50%] aspect-square object-cover" alt="" />
+          <p className='mt-3 font-bold text-lg'>
+            {user.user.ho_NV + ' ' + user.user.ten_NV}
+          </p>
+          <p className='text-lg'>
+            Phone: {user.user.sdt_NV}
+          </p>
+          <p className='text-lg'>
+            Email: {user.user.email_NV}
+          </p>
+          
+        </div>
+        <form className='flex flex-col flex-1 w-full md:w-1/2 items-center rounded-lg p-4 h-fit my-10' onSubmit={e => handleSubmit(e)}>
+          <h1 className='text-center text-3xl text-blue-600 font-bold py-3'>ĐỔI MẬT KHẨU</h1>
           <div className='w-full md:text-lg'>
             <div className='flex items-center py-1'>
               <label htmlFor="" className='md:w-1/3 w-1/4'>Nhập mật khẩu cũ: </label>
@@ -76,7 +88,7 @@ const ChangePass = () => {
                 {validatePass ? <p className='absolute text-red-600 -bottom-3 right-4 text-[12px]'>Mật khẩu không chính xác</p> : '' }
               </div>
             </div>
-            <button type={`${submit ? 'button' : ''}`} className='bg-green-500 w-full p-2 my-4 rounded-xl text-white hover:bg-green-700'>Xác nhận</button>
+            <button type={`${submit ? 'button' : ''}`} className='bg-blue-500 w-full p-2 my-4 rounded-xl text-white hover:bg-blue-700'>Xác nhận</button>
           </div>
         </form>
       </div>
