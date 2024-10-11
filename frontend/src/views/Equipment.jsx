@@ -3,8 +3,11 @@ import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ServiceService from '../services/service.service';
+import BookingService from '../services/booking.service';
 import FormEquipment from '../components/FormEquipment';
 import Pagination from '../components/Pagination';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Equipment = () => {
   const [list, setList] = useState([]);
   const [search, setSearch] = useState('');
@@ -17,6 +20,7 @@ const Equipment = () => {
   const dispatch = useDispatch();
 
   const serviceService = new ServiceService(user, dispatch);
+  const bookingService = new BookingService(user, dispatch);
 
   const [fac, setFac] = useState({});
   // Định dạng số
@@ -84,8 +88,23 @@ const Equipment = () => {
     return editFac;
   }
   const deleteData = async (data) => {
-    const deleteFac = await serviceService.delete(data._id);
-    return deleteFac;
+    const findBooking = await bookingService.getByType(
+      {
+        "dichVu._id": data._id,
+      }
+    );
+
+    if(findBooking && findBooking.length > 0) {
+      toast.error('Không thể xóa!');
+      return;
+    }
+    const confirm = window.confirm('Bạn có chắc chắn muốn xóa không?');
+    if(confirm) {
+      const deleteFac = await serviceService.delete(data._id);
+      getService();
+      return deleteFac;
+    }
+
   }
   useEffect(() => {
     if(!user) {
@@ -99,6 +118,7 @@ const Equipment = () => {
 
   return (
     <div>
+      <ToastContainer autoClose='2000' />
       <Header name="Dịch vụ" />
       <div className="flex justify-between mb-5">
         <div className='flex-1 flex relative justify-between'>

@@ -507,6 +507,15 @@ exports.findAllBookingToday = async (req, res, next) => {
         res.status(500).json({ error: err.message });
     }
 }
+exports.findBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.find(req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 // Hóa đơn
 // 
 // 

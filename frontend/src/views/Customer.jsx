@@ -145,7 +145,7 @@ const Customer = () => {
           </div> */}
           <div className="w-1/6">
             <i className="ri-edit-box-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(item)}></i>
-            <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteData(item)} ></i>
+            {/* <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteData(item)} ></i> */}
           </div>
         </div>
         : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>

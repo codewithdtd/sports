@@ -23,6 +23,9 @@ class BaseService {
     async get( id) {
         return (await this.api.get(`/${id}`)).data;
     }
+    async getByType(data) {
+        return (await this.api.post('/find', data)).data;
+    }
     async update( id, data) {
         return (await this.api.put(`/${id}`, data)).data;
     }
