@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { BarChart } from '@mui/x-charts/BarChart';
 import BookingService from '../../services/booking.service';
+import SportTypeService from '../../services/sportType.service';
 import { useSelector, useDispatch } from 'react-redux';
 const RevenueChart = () => {
   const [list, setList] = useState([])
+  const [sportType, setSoprtType] = useState([])
   const [weekDays, setWeekDays] = useState([]);
+  const [startDay, setStartDay] = useState(null);
+  const [endDay, setEndDay] = useState(null);
   const [typeTime, setTypeTime] = useState('month')
   const [doanhThu, setDoanhThu] = useState([]);
   const [currentWeekOffset, setCurrentWeekOffset] = useState(0); 
@@ -12,12 +16,20 @@ const RevenueChart = () => {
   const user = useSelector((state)=> state.user.login.user)
 
   const dispatch = useDispatch();
+  const sportTypeService = new SportTypeService(user, dispatch);
   const bookingService = new BookingService(user, dispatch);
 
   const formatDate = (day) => {
     return `${String(day.getDate()).padStart(2, '0')}/${String(day.getMonth() + 1).padStart(2, '0')}/${day.getFullYear()}`;
   }
+  const formatToYYYYMMDD = (day) => {
+    return `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+  }
 
+  const parseDate = (dateString) => {
+    const [day, month, year] = dateString.split('/').map(Number); // Tách các phần ngày, tháng, năm và chuyển thành số
+    return new Date(year, month - 1, day); // Tạo đối tượng Date (chú ý tháng trong Date bắt đầu từ 0)
+  };
   const convertToMMDDYYYY = (dateString) => {
     if(dateString) {
       const [day, month, year] = dateString.split('/'); // Tách các phần của ngày
@@ -25,7 +37,7 @@ const RevenueChart = () => {
     }
   };
 
-  const getToDay = (direction = '') => {
+  const getToDay = (direction = '', startDate, endDate) => {
     const today = new Date();
     // 1. Lấy ra ngày hôm nay và thứ trong tuần hiện tại
     const currentDay = today.getDay();  // Lấy thứ trong tuần (0 = Chủ Nhật, 1 = Thứ Hai, ...)
@@ -41,6 +53,22 @@ const RevenueChart = () => {
 
     const weekOffset = direction === 'next' ? currentWeekOffset + 1 : direction === 'previous' ? currentWeekOffset - 1 : currentWeekOffset;
 
+    if (startDate && endDate) {
+      const start = parseDate(startDate);  // Chuyển đổi startDate thành đối tượng Date
+      const end = parseDate(endDate);  // Chuyển đổi endDate thành đối tượng Date
+      const daysInRange = [];
+
+      // Lặp qua các ngày từ start đến end
+      let currentDay = start;
+      while (currentDay <= end) {
+        daysInRange.push(formatDate(currentDay));  // Định dạng và thêm ngày vào mảng
+        currentDay.setDate(currentDay.getDate() + 1);  // Chuyển sang ngày tiếp theo
+      }
+      setWeekDays(daysInRange);  // Cập nhật mảng weekDays với các ngày trong khoảng
+      return;
+    }
+   
+
     // Nếu là tuần 
     if(typeTime === 'week') {
       const monday = new Date(today);
@@ -53,12 +81,13 @@ const RevenueChart = () => {
         day.setDate(monday.getDate() + i); // Cộng thêm ngày để lấy các ngày từ Thứ Hai đến Chủ Nhật
         daysOfWeek.push(formatDate(day));  // Thêm ngày vào mảng với định dạng dd/mm/yyyy
       }
+      setStartDay(daysOfWeek[0])
+      setEndDay(daysOfWeek[daysOfWeek.length -1])
       setWeekDays(daysOfWeek); 
     }
 
     // Nếu là tháng 
     if(typeTime === 'month') {
-      console.log(currentMonth + weekOffset)
       currentMonth += weekOffset; // Điều chỉnh tháng theo offset
       // Xử lý nếu tháng vượt quá 12 hoặc dưới 1
       if (currentMonth > 11) {
@@ -79,6 +108,8 @@ const RevenueChart = () => {
           const date = new Date(currentYear, currentMonth, day);
           daysInMonth.push(formatDate(date)); // Định dạng thành dd/mm/yyyy
       }
+      setStartDay(daysInMonth[0])
+      setEndDay(daysInMonth[daysInMonth.length -1])
       setWeekDays(daysInMonth);
     }
 
@@ -89,8 +120,6 @@ const RevenueChart = () => {
     let doanhThuMoi = [];
     for(let day of weekDays) {
       const theoNgay = list.filter((item) => {
-        if(item.ngayDat == day) 
-          console.log(item.ngayDat)
         return item.ngayDat == day && item.trangThai == 'Hoàn thành'
       })
       if(theoNgay.length > 0) {
@@ -107,6 +136,8 @@ const RevenueChart = () => {
   const getBooking = async () => {
     const booking = await bookingService.getAll();
     setList(booking);
+    const sportType = await sportTypeService.getAll();
+    setSoprtType(sportType);
   }
 
   useEffect(() => {
@@ -142,21 +173,58 @@ const RevenueChart = () => {
   }, []);
 
   return (
-    <div className=''>
-      <div className='bg-white w-full flex-flex-col items-center justify-center p-2 border-gray-400 rounded-xl shadow-md shadow-gray-700'>
+    <div className='h-full'>
+      <div className='bg-white h-full w-full flex-col items-center justify-center p-2 border-gray-400 rounded-xl shadow-md shadow-gray-700'>
         <div className='flex px-2 mt-2 items-center justify-between'>
-          <h3 className='text-2xl font-bold text-gray-700'>Doanh Thu</h3>
-          <div className='flex items-center justify-center'>
-            <p className={`rounded-md font-extrabold text-xl m-2 hover:bg-blue-600 cursor-pointer`} onClick={e => getToDay('previous')}><i className="ri-arrow-left-s-fill"></i></p>
-            <div className='flex'>
-              <p className={`p-2 px-4 rounded-md border-2 text-gray-500 font-medium  m-auto mx-1 hover:bg-blue-400 hover:text-white cursor-pointer ${typeTime == 'week' ? 'bg-blue-400 text-white border-blue-400' : 'border-gray-400'}`} onClick={e => setTypeTime('week')}>Tuần</p>
-              <p className={`p-2 px-4 rounded-md border-2 text-gray-500 font-medium  m-auto mx-1 hover:bg-blue-400 hover:text-white cursor-pointer ${typeTime == 'month' ? 'bg-blue-400 text-white border-blue-400' : 'border-gray-400'}`} onClick={e => setTypeTime('month')}>Tháng</p>
+          <h3 className='text-2xl font-bold text-gray-700'>Doanh thu theo ngày</h3>
+          <div>
+            <div className='flex items-center justify-center'>
+              <p className={`rounded-md font-extrabold text-xl m-2 hover:bg-blue-600 cursor-pointer`} onClick={e => getToDay('previous')}><i className="ri-arrow-left-s-fill"></i></p>
+              <div className='flex'>
+                <p className={`p-2 px-4 rounded-md border-2 text-gray-500 font-medium  m-auto mx-1 hover:bg-blue-400 hover:text-white cursor-pointer ${typeTime == 'week' ? 'bg-blue-400 text-white border-blue-400' : 'border-gray-400'}`} onClick={e => setTypeTime('week')}>Tuần</p>
+                <p className={`p-2 px-4 rounded-md border-2 text-gray-500 font-medium  m-auto mx-1 hover:bg-blue-400 hover:text-white cursor-pointer ${typeTime == 'month' ? 'bg-blue-400 text-white border-blue-400' : 'border-gray-400'}`} onClick={e => setTypeTime('month')}>Tháng</p>
+              </div>
+              <p className={`rounded-md font-extrabold text-xl m-2 hover:bg-blue-600 cursor-pointer`} onClick={e => getToDay('next')}><i className="ri-arrow-right-s-fill"></i></p>
             </div>
-            <p className={`rounded-md font-extrabold text-xl m-2 hover:bg-blue-600 cursor-pointer`} onClick={e => getToDay('next')}><i className="ri-arrow-right-s-fill"></i></p>
+            <div className='flex pt-2'>
+              <input 
+                className='border border-gray-400 mx-2 rounded-md' 
+                type="date" 
+                value={weekDays.length > 0 ? formatToYYYYMMDD(parseDate(startDay)) : ''} 
+                onChange={e => {
+                  const newStartDay = formatDate(new Date(e.target.value));
+                  setStartDay(newStartDay);
+                  getToDay('', newStartDay, endDay); // Update weekDays based on new start date and current end date
+                }}
+              />
+              -
+              <input
+                className='border border-gray-400 mx-2 rounded-md'
+                type="date"
+                value={weekDays.length > 0 && formatToYYYYMMDD(parseDate(endDay))}
+                onChange={(e) => {
+                  const newEndDay = formatDate(new Date(e.target.value));
+                  setEndDay(newEndDay);
+                  getToDay('', startDay, newEndDay); // Update weekDays based on startDay and new end date
+                }}
+              />
+            </div>
           </div>
         </div>
         <div className='flex flex-1'>
           <BarChart
+            colors={[
+              '#5C8ED4', 
+              '#5FBF7A', 
+              '#FFDD54', 
+              '#C576B8', 
+              '#FF7E4D', 
+              '#4ED5D4', 
+              '#D68CD8', 
+              '#FFB84D', 
+              '#A66EDB', 
+              '#FF7F92', 
+            ]}
             xAxis={[
               {
                 id: 'barCategories',
@@ -166,11 +234,12 @@ const RevenueChart = () => {
               },
             ]}
             series={[
-              {
-                data: doanhThu,  // Dữ liệu doanh thu theo ngày
+              
+                {data: doanhThu, stack: 'total'}, 
+                  // Dữ liệu doanh thu theo ngày
                 // label: 'Doanh thu',
-                color: '#186eff',  // Nhãn cho loạt dữ liệu
-              },
+                // color: '#186eff',  // Nhãn cho loạt dữ liệu
+              
             ]}
             width={widthChart}
             height={350}

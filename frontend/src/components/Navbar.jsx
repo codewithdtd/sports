@@ -83,7 +83,7 @@ function Navbar() {
                 <li className="navigation__link__items">
                     <NavLink onClick={toggleMenu} to="/equipment" className={({ isActive }) => `${isActive ? "bg-blue-500 text-white" : ""} p-1 py-2 block m-2 rounded-md hover:text-white hover:bg-blue-500 mx-3 font-medium`}>
                         <i className="ml-5 ri-tools-line mr-2"></i> 
-                        <span>Kho</span>
+                        <span>Dịch vụ</span>
                     </NavLink>
                 </li>
                 <li className="navigation__link__items">
