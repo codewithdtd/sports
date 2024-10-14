@@ -13,7 +13,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [list, setList] = useState([]);
   const [notify, setNotify] = useState(false)
-
+  const [scrolled, setScrolled] = useState(false);
   const bookingService = new Booking(user, dispatch);
   const userService = new User(user, dispatch);
   const handleLogout = async () => {
@@ -69,10 +69,26 @@ const Navbar = () => {
   useEffect(() => {
      getBooking();
   }, [])
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
 
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
-    <div className='flex sticky top-0 z-[2] bg-white shadow-md shadow-gray-500 justify-between w-full px-10 items-center h-fit py-3'>
+    <div
+      className={`flex sticky transition-all top-0 z-[2] bg-white justify-between w-full px-10 items-center h-fit py-3 backdrop-blur-sm 
+        ${scrolled ? 'shadow-gray-500 shadow-sm' : ''}`}
+    >
       <div className='block md:hidden text-green-600 absolute mx-2 w-[30px] left-0  text-center rounded-lg' onClick={toggleMenu}>
           <i className="ri-menu-line text-xl font-bold"></i>
       </div>
@@ -83,7 +99,7 @@ const Navbar = () => {
       </NavLink>
         <div className={`flex-1 flex md:flex-row flex-col 
           text-center justify-center font-medium
-          md:relative absolute bg-white top-full w-1/3 md:w-auto
+          md:relative absolute bg-white md:bg-transparent top-full w-1/3 md:w-auto
           shadow-sm shadow-gray-700 md:shadow-none z-10 transition-all
           ${isOpen ? 'left-0' : '-left-full md:left-0'}`}
         >

@@ -1,6 +1,7 @@
 body {
     font-family: "Afacad", sans-serif;
     font-optical-sizing: auto;
+    /* background-color: #e0e0e0; */
     /* font-family: "Reem Kufi", sans-serif;
     font-optical-sizing: auto; */
 }
@@ -44,12 +45,13 @@ input {
 /* Home */
 .home {
     background: url('./background.png') no-repeat;
+    /* background: url('https://imgcdn.stablediffusionweb.com/2024/4/26/970675b4-68ef-4f6f-9906-c98d9403dab3.jpg'); */
     background-size: cover;
-    background-position: center;
+    background-position: top;
     font-family: "Baloo Bhaijaan 2", sans-serif;
 }
 .home-container {
-    background-color: rgba(0, 0, 0, 0.63);
+    background-color: rgba(0, 0, 0, 0.633);
     /* background: url('./background.png') no-repeat;
     background-size: cover;
     background-position: center; */
