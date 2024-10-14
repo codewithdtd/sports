@@ -117,16 +117,17 @@ const Booking = () => {
       console.log('create')
       console.log(data)
       let updatedServices = null;
-      if(data.dichVu?.length > 0) {
-        updatedServices = await Promise.all(
-          data.dichVu?.map(async (service) => {
-            service.tonKho -= service.soluong;
-            // service.choMuon += service.soluong;
-            return await serviceService.update(service._id, service);
-          })
-        );
-      }  
-      if(await createBooking(data) && updatedServices)
+      // if(data.dichVu?.length > 0) {
+      //   updatedServices = await Promise.all(
+      //     data.dichVu?.map(async (service) => {
+      //       service.tonKho -= service.soluong;
+      //       // service.choMuon += service.soluong;
+      //       return await serviceService.update(service._id, service);
+      //     })
+      //   );
+      // }  
+      // if(await createBooking(data) && updatedServices)
+      if(await createBooking(data))
         console.log('Đã thêm mới');
     }
     setEdit(!edit);  

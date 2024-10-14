@@ -399,7 +399,7 @@ function FromBooking(props) {
   }, [time]);
 
   return (
-    <div className='absolute bg-opacity-30 bg-black -translate-x-2 flex top-0 w-full h-full' onClick={e => props.toggle(false)}>
+    <div className='absolute bg-opacity-30 bg-black flex top-0 left-0 w-full h-full' onClick={e => props.toggle(false)}>
       <ToastContainer autoClose={2000} />
         <form action="" className='relative flex flex-col bg-white p-2 px-6 w-11/12 max-h-[98%] overflow-y-scroll max-w-[98%] rounded-md m-auto' onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
           <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
@@ -692,7 +692,7 @@ function FromBooking(props) {
           
               <div className={`flex flex-col flex-1 pt-1`}>
                 Sân đã chọn:
-                  <div className={`flex-1 overflow-y-scroll border-2 px-2 min-h-60 rounded-lg ${missError ? 'border-red-400 bg-red-100' : 'border-gray-400 '}`}>
+                  <div className={`flex-1 overflow-y-scroll border-2 px-2 min-h-60 max-h-[35vh]  rounded-lg ${missError ? 'border-red-400 bg-red-100' : 'border-gray-400 '}`}>
                     {missError ? <p className='text-red-600'>Chưa chọn sân</p> : ''}
                     {booking?.map((bk, index) => 
                       <div key={index} className='flex flex-col justify-around'>
@@ -718,7 +718,7 @@ function FromBooking(props) {
                           </div>
                         )}
                       
-                        {modalService ? <FormService toggle={setModalService} service={modalService} handle={handleService} /> : ''}
+                        {modalService ? <FormService toggle={setModalService} service={modalService} allService={listService} setService={setListService} handle={handleService} /> : ''}
                       </div>
                     )}
                   </div>

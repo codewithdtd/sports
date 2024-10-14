@@ -422,31 +422,16 @@ exports.deleteOneFacility = async (req, res, next) => {
 // 
 exports.createBooking = async (req, res, next) => {
     const booking = new Bookings();
+    const service = new Services();
     try {
-        // const data = req.body;
-        // const {san, dichVu, ...other} = data;
-        // console.log(dichVu)
-        // let count = 0;
-        // // Xử lý sân
-        // for (const element of san) {
-        //     const { thoiGianBatDau, thoiGianKetThuc, ngayDat, thanhTien, hinhAnh_San, ...otherTwo } = element;
-        //     const dichVu_San = dichVu
-        //         .filter(service => service.ma_San === otherTwo.ma_San)
-        //         .map(({ ma_San, ...other3 }) => other3);
-        //     const newData = {
-        //         ...other,           
-        //         san: otherTwo, 
-        //         dichVu: dichVu_San,     
-        //         thoiGianBatDau,     
-        //         thoiGianKetThuc,
-        //         ngayDat: convertToDateReverse(ngayDat),
-        //         thanhTien,
-        //     }; 
-        //     if (await booking.create(newData)) {
-        //         count++;
-        //     }
-        // }
         const newBooking = req.body;
+        const newDichVu = newBooking.dichVu || [];
+
+        for(let newService of newDichVu) {
+            let temp = await service.findById(newService._id)
+
+            const r = await service.update(newService._id, { tonKho: temp._doc.tonKho - newService.soluong });
+        }
         newBooking.ngayDat = convertToDateReverse(newBooking.ngayDat)
         const result = await booking.create(newBooking);
         res.status(201).json(result);
@@ -456,9 +441,61 @@ exports.createBooking = async (req, res, next) => {
 }
 exports.updateBooking = async (req, res, next) => {
     const booking = new Bookings();
+    const service = new Services();
     try {
+        // const services = await service.findAll();
         const updateBooking = req.body;
         updateBooking.ngayDat =  convertToDateReverse(updateBooking.ngayDat)
+        const currentBooking = await booking.findById(updateBooking._id)
+        const currentDichVu = currentBooking.dichVu || [];
+
+        const newDichVu = updateBooking.dichVu || [];
+        if(updateBooking.trangThai == 'Đã hủy') {
+            for(let newService of newDichVu) {
+                let temp = await service.findById(newService._id)
+                // Xóa dịch vụ không còn tồn tại trong danh sách mới
+                await service.update(newService._id, { tonKho: temp._doc.tonKho + newService.soluong });
+                
+            };
+        }
+
+        for(let newService of newDichVu) {
+            const existingService = currentDichVu.find(
+                (service) => service._id === newService._id
+            );
+
+            if (existingService) {
+                // Nếu dịch vụ tồn tại, kiểm tra xem số lượng có thay đổi không
+                if (existingService.soluong !== newService.soluong) {
+                    let temp = await service.findById(existingService._id)
+                    // Cập nhật dịch vụ với số lượng mới
+                    await service.update(newService._id, { tonKho: temp._doc.tonKho - (newService.soluong - existingService.soluong) });
+                }
+            } else {
+                
+                // Nếu dịch vụ không tồn tại, thêm mới
+                let temp = await service.findById(newService._id)
+
+                await service.update(newService._id, { tonKho: temp._doc.tonKho - newService.soluong });
+            }
+        };
+
+        // Kiểm tra và xóa các dịch vụ không còn trong danh sách mới
+        for(let existingService of currentDichVu) {
+            const stillExists = newDichVu.find(
+                (newService) => newService._id === existingService._id
+            );
+
+            if (!stillExists) {
+                let temp = await service.findById(existingService._id)
+                // Xóa dịch vụ không còn tồn tại trong danh sách mới
+                await service.update(existingService._id, { tonKho: temp._doc.tonKho + existingService.soluong });
+
+            }
+        };
+
+   
+
         console.log(updateBooking.ngayDat)
         const result = await booking.update(req.params.id, updateBooking);
         // console.log(result)

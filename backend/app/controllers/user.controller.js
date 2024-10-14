@@ -1,5 +1,6 @@
 const Users = require("../services/user.service");
 const Bookings = require("../services/booking.service");
+const Services = require("../services/service.service");
 const Invoices = require("../services/invoice.service");
 const { UserMemberships } = require("../services/membership.service");
 const { UserEvents } = require("../services/event.service");
@@ -198,9 +199,17 @@ exports.deleteOne = async (req, res, next) => {
 // Đặt sân
 exports.createBooking = async (req, res, next) => {
     const booking = new Bookings();
+    const service = new Services();
     try {
         const newBooking = req.body;
+        const newDichVu = newBooking.dichVu || [];
+
         newBooking.ngayDat = convertToDateReverse(newBooking.ngayDat)
+        for(let newService of newDichVu) {
+            let temp = await service.findById(newService._id)
+
+            const r = await service.update(newService._id, { tonKho: temp._doc.tonKho - newService.soluong });
+        }
         const result = await booking.create(newBooking);
         res.status(201).json(result);
     } catch (err) {

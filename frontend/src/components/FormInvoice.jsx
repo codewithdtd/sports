@@ -14,9 +14,9 @@ const FormInvoice = (props) => {
   }, [])
   return (
     <div className='bg-black bg-opacity-50 w-full h-full absolute flex top-0 left-0' onClick={e => props.toggle(false)}>
-        <div className='relative bg-white m-auto print p-4 px-6 rounded-lg text-center' onClick={e => e.stopPropagation()}>
+        <div className='relative bg-white h-[90%] m-auto print p-4 px-6 rounded-lg text-center' onClick={e => e.stopPropagation()}>
             <i className="ri-close-line no-print absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
-            <div className='flex justify-between my-4'>
+            <div className='flex justify-between my-4 mb-14'>
                 <div className='text-sm text-start'>
                     <p className='italic font-extrabold text-xl'>D SPORT</p>
                         {props.listData[0] ? props.listData.map((item) => (
@@ -26,7 +26,7 @@ const FormInvoice = (props) => {
                 </div>
                 <h1 className="font-bold text-5xl text-center">HÓA ĐƠN</h1>
             </div>
-            <div className='flex text-start justify-between gap-14'>
+            <div className='flex text-start text-xl justify-between gap-14'>
                 <div>
                     <p className='p-1'>Khách hàng: {!props.listData[0] ? props.data.khachHang.ho_KH  : props.listData[0]?.khachHang.ho_KH} {!props.listData[0] ? props.data.khachHang.ten_KH  : props.listData[0]?.khachHang.ten_KH}</p>
                     <p className='p-1'>Số điện thoại: {!props.listData[0] ? props.data.khachHang.sdt_KH  : props.listData[0]?.khachHang.sdt_KH} </p>
@@ -42,7 +42,7 @@ const FormInvoice = (props) => {
                     <p className='p-1'>Check-out: {!props.listData[0] ? props.data.datSan.thoiGianCheckOut  : props.listData[0]?.datSan.thoiGianCheckOut}</p>
                 </div>
             </div>
-            <div className='gap-14'>
+            <div className='gap-14 pt-10 text-lg'>
                 <div className='flex justify-around text-center font-bold bg-gray-400'>
                     <p className='p-1 border border-gray-500 w-full'>TÊN</p>
                     <p className='p-1 border border-gray-500 w-full'>SỐ LƯỢNG</p>
@@ -85,7 +85,7 @@ const FormInvoice = (props) => {
                     Tổng tiền: <b>{formatNumber(props.listData.length == 0 ? props.data.tongTien : props.listData?.reduce((a, c) => a + c.tongTien, 0))}</b>
                 </p>
             </div>
-            <button type='button' className='bg-blue-600 no-print p-1 px-3 rounded-md text-white' onClick={print}>Xuất hóa đơn</button>
+            <button type='button' className='bg-blue-600 no-print p-1 px-3 float-end rounded-md text-white' onClick={print}>Xuất hóa đơn</button>
         </div>
     </div>
   )
