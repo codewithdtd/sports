@@ -38,7 +38,7 @@ input {
 .form-right h1 {
     font-size: 40px;
     font-weight: 700;
-    background: linear-gradient(to bottom, #22FF53 0%, #125511 100%);
+    background: linear-gradient(to bottom, #2290ff 0%, #112a55 100%);
     background-clip: text;
     color: transparent;
 }

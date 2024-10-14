@@ -271,7 +271,7 @@ function Facility() {
             key={facility._id} 
             className={`${facility.tinhTrang == "Trống" 
                             ? 'bg-white' : facility.tinhTrang == "Đã đặt" 
-                            ? 'bg-blue-500' : facility.tinhTrang == "Đang sử dụng" ? 'bg-green-500' : 'bg-yellow-400'} 
+                            ? 'bg-blue-400' : facility.tinhTrang == "Đang sử dụng" ? 'bg-green-400' : 'bg-yellow-400'} 
               shadow-lg shadow-slate-500 rounded-lg overflow-hidden transition-all cursor-pointer hover:-translate-y-1`}
             onClick={e => handleFacility(facility)}
           >  
@@ -281,7 +281,7 @@ function Facility() {
               {facility.datSan ? <p>{facility.datSan.khachHang.ho_KH+' '+facility.datSan.khachHang.ten_KH}</p> : '' }
             </div>
             <div className='relative facility-item-name pl-1 min-h-20 sm:min-h-24 md:h-36 justify-center items-center bg-no-repeat bg-center flex text-lg font-extrabold'>
-              <img src={`http://localhost:3000/uploads/${backgroundSan(facility.loai_San.ten_loai)}`} className='absolute w-1/2 z-[0] opacity-70' alt="" /> 
+              <img src={`http://localhost:3000/uploads/${backgroundSan(facility.loai_San.ten_loai)}`} className='absolute w-1/2 z-[0] opacity-80' alt="" /> 
               <p className='text-3xl z-[1] xl:text-4xl italic'>{facility.tinhTrang}</p>
             </div>
             <div className='z-10 text-sm sm:text-base px-1 sm:flex justify-between'>
