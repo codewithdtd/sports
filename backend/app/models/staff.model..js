@@ -7,7 +7,7 @@ const staffSchema = new mongoose.Schema({
   sdt_NV: { type: String, required: true, },
   matKhau_NV: { type: String, required: true },
   hinhAnh_NV: { type: String, },
-  chuc_vu: { type: String, default: "Nhân viên" },
+  chuc_vu: { type: String, default: "admin" },
   ngayTao_NV: { type: String, },
   ngayCapNhat_NV: { type: String, },
   da_xoa: { type: Boolean, default: false },

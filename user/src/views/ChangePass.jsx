@@ -17,14 +17,16 @@ const ChangePass = () => {
   const userService = new User(user, dispatch)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmit(true)
     if(info.matKhauMoi !== info.xacNhanMatKhauMoi) {
       setValidatePass(true)
       return;
     }
-    if(await updateUser(info))
+    if(await updateUser(info)) {
+      setSubmit(true)
       toast.success('Thành công!')
+    }
     else {
+      setSubmit(false)
       toast.error('Mật khẩu không đúng')
       setInfo({...info, matKhauCu: '', matKhauMoi: '', xacNhanMatKhauMoi: ''})
       return;
@@ -50,48 +52,44 @@ const ChangePass = () => {
     // getUser();
   })
   return (
-    <div className='info bg-gray-300 md:pt-10 px-4 flex md:flex-row flex-col min-h-[87vh] h-fit'>
-      {/* <div className='flex-1 md:pt-16 info-avatar flex flex-col items-center'>
-        <div className='flex justify-center'>
-          <img src="./src/assets/background.png" alt="" className="border-green-600 border-[5px] object-cover md:max-w-[40%] max-w-[50%] rounded-full aspect-square"/>
+    <div className='flex h-[85vh] py-5 flex-col'>
+      <div className='info relative flex flex-1 overflow-hidden justify-center w-[90%] border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-[85vh] m-auto'>
+        <ToastContainer autoClose='2000' />
+        <div className='w-1/3 z-[2] h-full flex flex-col justify-center items-center text-center bg-green-500'>
+          <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_KH}`} className="border-[3px] border-white rounded-full w-1/2 md:w-[50%] aspect-square object-cover" alt="" />
+          <p className='mt-3 font-bold text-lg'>
+            {user.user.ho_KH + ' ' + user.user.ten_KH}
+          </p>
+          <p className='text-lg'>
+            Phone: {user.user.sdt_KH}
+          </p>
+          <p className='text-lg'>
+            Email: {user.user.email_KH}
+          </p>
+          
         </div>
-        <div className='flex items-center'>
-          <h3 className='font-medium my-3'>ẢNH ĐẠI DIỆN</h3>
-          <label htmlFor="avatar">
-            <i className="ri-pencil-line mx-2 bg-green-500 p-1 rounded-lg hover:bg-green-700"></i>
-          </label>
-        </div>
-        
-        <input type="file" id='avatar' className='hidden'/>
-      </div> */}
-      <ToastContainer autoClose='2000' />
-
-      <div className='flex-1 hidden md:pt-16 info-avatar md:flex flex-col items-center'>
-        <div className='flex justify-center'>
-          <img src="./src/assets/edit.png" alt="" className="bg-green-500 object-cover md:max-w-[60%] rounded-full aspect-square"/>
-        </div>
-      </div>
-      <form className='md:flex-1 flex flex-col items-center bg-white rounded-lg p-4 h-fit my-10' onSubmit={e => handleSubmit(e)}>
-        <h1 className='text-center text-2xl text-green-600 font-bold py-3'>ĐỔI MẬT KHẨU</h1>
-        <div className='lg:w-4/5 w-full md:text-lg'>
-          <div className='flex items-center py-1'>
-            <label htmlFor="" className='md:w-1/3 w-1/4'>Nhập mật khẩu cũ: </label>
-            <input required type="password" className='bg-gray-200  m-2 p-2 px-2 rounded-xl flex-1' value={info?.matKhauCu} onChange={e => setInfo({...info, matKhauCu: e.target.value})}/>
-          </div>
-          <div className='flex items-center py-1'>
-            <label htmlFor="" className='md:w-1/3 w-1/4'>Nhập mật khẩu mới: </label>
-            <input required type="password" className='bg-gray-200  m-2 p-2 px-2 rounded-xl flex-1' value={info?.matKhauMoi} onChange={e => setInfo({...info, matKhauMoi: e.target.value})}/>
-          </div>
-          <div className='flex items-center py-1'>
-            <label htmlFor="" className='md:w-1/3 w-1/4'>Xác nhận mật khẩu mới: </label>
-            <div className='flex-1 flex flex-col relative'>
-              <input required type="password" className={`bg-gray-200  flex-1 m-2 p-2 px-2 rounded-xl  ${validatePass ? 'bg-red-200' : ''}`} value={info?.xacNhanMatKhauMoi} onChange={e => setInfo({...info, xacNhanMatKhauMoi: e.target.value})}/>
-              {validatePass ? <p className='absolute text-red-600 -bottom-3 right-4 text-[12px]'>Mật khẩu không chính xác</p> : '' }
+        <form className='flex flex-col flex-1 w-full md:w-1/2 items-center rounded-lg p-4 h-fit my-10' onSubmit={e => handleSubmit(e)}>
+          <h1 className='text-center text-3xl text-green-600 font-bold py-3'>ĐỔI MẬT KHẨU</h1>
+          <div className='w-full md:text-lg'>
+            <div className='flex items-center py-1'>
+              <label htmlFor="" className='md:w-1/3 w-1/4'>Nhập mật khẩu cũ: </label>
+              <input required type="password" className='bg-gray-200 m-2 p-3 px-2 rounded-xl flex-1' value={info?.matKhauCu} onChange={e => setInfo({...info, matKhauCu: e.target.value})}/>
             </div>
+            <div className='flex items-center py-1'>
+              <label htmlFor="" className='md:w-1/3 w-1/4'>Nhập mật khẩu mới: </label>
+              <input required type="password" className='bg-gray-200  m-2 p-3 px-2 rounded-xl flex-1' value={info?.matKhauMoi} onChange={e => setInfo({...info, matKhauMoi: e.target.value})}/>
+            </div>
+            <div className='flex items-center py-1'>
+              <label htmlFor="" className='md:w-1/3 w-1/4'>Xác nhận mật khẩu mới: </label>
+              <div className='flex-1 flex flex-col relative'>
+                <input required type="password" className={`bg-gray-200  flex-1 m-2 p-3 px-2 rounded-xl  ${validatePass ? 'bg-red-200' : ''}`} value={info?.xacNhanMatKhauMoi} onChange={e => setInfo({...info, xacNhanMatKhauMoi: e.target.value})}/>
+                {validatePass ? <p className='absolute text-red-600 -bottom-3 right-4 text-[12px]'>Mật khẩu không chính xác</p> : '' }
+              </div>
+            </div>
+            <button type={`${submit ? 'button' : ''}`} className='bg-green-500 w-full p-2 my-4 rounded-xl text-white hover:bg-green-700'>Xác nhận</button>
           </div>
-          <button type={`${submit ? 'button' : ''}`} className='bg-green-500 w-full p-2 my-4 rounded-xl text-white hover:bg-green-700'>Xác nhận</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   )
 }

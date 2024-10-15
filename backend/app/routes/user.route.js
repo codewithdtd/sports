@@ -3,6 +3,25 @@ const user = require("../controllers/user.controller");
 const middleware = require("../middleware/middleware")
 const router = express.Router();
 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './app/uploads/'); // Thư mục lưu trữ ảnh
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Tạo tên file duy nhất
+  },
+});
+
+const upload = multer({ 
+    storage: storage ,
+    limits: {
+        fileSize: 1024 * 1024 * 5, // Giới hạn kích thước file là 5MB
+    },
+});
 
 // Liên hệ
 router.route("/contact")
@@ -56,7 +75,7 @@ router.route("/logout").post(middleware.verifyToken, user.logout);
 router.route("/:id")
     .delete(middleware.verifyAdmin, user.deleteOne)
     .get(user.findOne)
-    .put(middleware.verifyAdmin, user.update);
+    .put(middleware.verifyAdmin, upload.single('hinhAnh_KH'), user.update);
     
 router.route("/")
     .get(middleware.verifyAdmin, user.findAll)

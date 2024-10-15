@@ -86,7 +86,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={`flex sticky transition-all top-0 z-[2] bg-white justify-between w-full px-10 items-center h-fit py-3 backdrop-blur-sm 
+      className={`flex sticky transition-all top-0 z-[2] bg-white border-b-2 border-gray-500 justify-between w-full px-10 items-center h-fit py-3 backdrop-blur-sm 
         ${scrolled ? 'shadow-gray-500 shadow-sm' : ''}`}
     >
       <div className='block md:hidden text-green-600 absolute mx-2 w-[30px] left-0  text-center rounded-lg' onClick={toggleMenu}>
@@ -133,7 +133,8 @@ const Navbar = () => {
         </div>
         <div className='flex group relative sm:min-w-[200px] items-center'>
           <div className="header__item header__user flex w-[50px] h-[50px] rounded-full overflow-hidden">
-            <img src="./src/assets/avatar.png" alt="" className="object-contain"/>
+            {/* <img src="./src/assets/avatar.png" alt="" className="object-contain"/> */}
+            <img src={`${user?.user.hinhAnh_KH ? 'http://localhost:3000/uploads/'+user.user.hinhAnh_KH : "./src/assets/user-profile.png"}`} alt="" className="object-cover w-[50px] h-[50px]"/>
           </div>
           <div className='ml-2 hidden sm:block'>
               {user?.user?.ho_KH+' '+user?.user?.ten_KH} <i className="ri-arrow-down-s-line"></i>

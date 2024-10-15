@@ -280,7 +280,7 @@ const History = () => {
                 : item.trangThai == 'Đã hủy' ? 'text-red-700 rounded-lg bg-red-300 border-red-500 border-2 shadow-md ' 
                 : item.trangThai == 'Đã duyệt' ? 'text-blue-700 rounded-lg bg-blue-300 border-blue-500 border-2 shadow-md ' 
                 : item.trangThai == 'Nhận sân' ? 'text-yellow-700 rounded-lg bg-yellow-300 border-yellow-600 border-2 shadow-md ' 
-                : 'rounded-lg'} w-fit px-1 md:px-3`}>
+                : 'rounded-lg'} w-fit p-1 md:px-3`}>
                 {item.trangThai}
               </p>
             </div>
@@ -294,7 +294,7 @@ const History = () => {
               : ''}
 
               {item.trangThai === 'Chưa duyệt' ? 
-              <button className='bg-red-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
+              <button className='bg-red-500 shadow-md shadow-gray-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
               : ''}
               {/* Hiển thị kết quả của getReview() */}
               {reviews[item._id] ?

@@ -24,12 +24,17 @@ const convertToDateReverse = (dateStr) => {
 
 exports.create = async (req, res, next) => {
     const users = new Users();
-    const newUser = req.body;
+    salt = await bcrypt.genSalt(10);
+    newUser.matKhau_KH = await bcrypt.hash(newUser.matKhau_KH, salt);
     try {
-        salt = await bcrypt.genSalt(10);
-        newUser.matKhau_KH = await bcrypt.hash(newUser.matKhau_KH, salt);
-        const result = await users.create(newUser);
-        res.status(201).json(result);
+        const exits = await users.findOne({sdt_KH: newUser.sdt_KH})
+        if(exits) {
+            res.status(409).json({error: 'Tài khoản đã được đăng ký!!!'})
+        }
+        else {
+            const result = await users.create(newUser);
+            res.status(201).json(result);
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -39,6 +44,7 @@ exports.update = async (req, res, next) => {
     const users = new Users();
     try {
         const newUpdate = req.body;
+        console.log(req.file)
         if(newUpdate.matKhauCu) {
             let oldPass = newUpdate.matKhauCu;
             const user = await users.findById(req.params.id);
@@ -55,6 +61,15 @@ exports.update = async (req, res, next) => {
                 return res.status(401).json({ error: 'Sai mật khẩu'});             
             }
         }
+
+        let hinhAnhDaiDien = null;
+        if (req.file) {
+            console.log(req.file)
+            hinhAnhDaiDien = req.file.filename;
+            newUpdate.hinhAnh_KH = hinhAnhDaiDien;
+        }
+
+
         const result = await users.update(req.params.id, newUpdate);
         const { matKhau_KH, ...others } = result._doc;
         res.status(201).json(others);

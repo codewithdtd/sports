@@ -4,8 +4,8 @@ import { NavLink } from 'react-router-dom';
 const Home = () => {
   return (
     <div className='main'>
-      <div className='home mx-2 md:mx-5 rounded-2xl overflow-hidden'>
-        <div className='home-container flex flex-col items-center justify-center w-full h-[85vh]'>
+      <div className='home overflow-hidden'>
+        <div className='home-container flex flex-col items-center justify-center w-full h-[90vh]'>
           <div className='flex flex-col items-center justify-center'>
             <p className='md:text-[70px] text-[60px] font-bold text-white'>
               <span className='text-[#00BA29]'>Sports: </span> 
@@ -19,9 +19,9 @@ const Home = () => {
           <NavLink className='font-bold px-10 py-2 pt-3 text-white bg-green-600 rounded-full hover:bg-[#006f18]' to='booking'>ĐẶT SÂN NGAY</NavLink>
         </div>
       </div>
-      <h2 className='text-center font-bold pt-4 text-4xl'>Đa dạng các bộ môn thể thao</h2>
+      <h2 className='text-center font-bold pt-16 text-4xl'>Đa dạng các bộ môn thể thao</h2>
       <p className='px-4 text-center text-lg'>Ở đây có đa dạng các bộ môn thể thao cho các bạn thử sức từ bóng đá, bóng chuyền đến cầu lông bóng rổ, cầu lông...</p>
-      <div className='p-7 h-fit grid grid-cols-2 md:grid-cols-4 gap-7'>
+      <div className='p-7 pb-16 h-fit grid grid-cols-2 md:grid-cols-4 gap-7'>
         <div className='text-center overflow-hidden flex-1 relative rounded-lg'>
           <img src="./src/assets/home1.jpg" alt="" className='w-full border-2 border-gray-400 shadow-gray-500 h-40 rounded-lg object-cover' />
           <div className='flex justify-between px-1 items-center'>
@@ -66,15 +66,15 @@ const Home = () => {
       <div className='bg-gradient-to-b from-[#1d6926] to-[#00ff51] py-10'>
         <h2 className='text-center font-bold pt-4 text-4xl text-white'>Tại sao là DSport</h2>
         <div className='flex gap-5 justify-center p-5'>
-          <div className='h-80 shadow-md bg-white shadow-gray-500 border-2 border-gray-400 rounded-lg w-1/3 md:w-1/5 text-2xl flex flex-col items-center justify-center'>
+          <div className='h-80 md:h-96 shadow-md bg-white shadow-gray-500 border-2 border-gray-400 rounded-lg w-1/3 md:w-1/5 text-2xl flex flex-col items-center justify-center'>
             <img src="./src/assets/salary.png" className='w-1/2' alt="" />
             <h2 className='font-extrabold w-full text-center'>Giá cả hợp lý</h2>
           </div>
-          <div className='h-80 shadow-md bg-white shadow-gray-500 border-2 border-gray-400 rounded-lg w-1/3 md:w-1/5 text-2xl flex flex-col items-center justify-center'>
+          <div className='h-80 md:h-96 shadow-md bg-white shadow-gray-500 border-2 border-gray-400 rounded-lg w-1/3 md:w-1/5 text-2xl flex flex-col items-center justify-center'>
             <img src="./src/assets/clock.png" className='w-1/2 ' alt="" />
             <h2 className='font-extrabold w-full text-center'>Thời gian linh hoạt</h2>
           </div>
-          <div className='h-80 shadow-md bg-white shadow-gray-500 border-2 border-gray-400 rounded-lg w-1/3 md:w-1/5 text-2xl flex flex-col items-center justify-center'>
+          <div className='h-80 md:h-96 shadow-md bg-white shadow-gray-500 border-2 border-gray-400 rounded-lg w-1/3 md:w-1/5 text-2xl flex flex-col items-center justify-center'>
             <img src="./src/assets/star.png" className='w-1/2 ' alt="" />
             <h2 className='font-extrabold w-full text-center'>Trang thiết bị hiện đại</h2>
           </div>
