@@ -15,7 +15,58 @@ input:-webkit-autofill {
 input {
     outline: none;
 }
+/* Form */
+.form-left {
+    position: relative;
+}
 
+.form-left .logo {
+    position: absolute;
+}
+
+.form-left .img-main {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-left .img-main h1 {
+    font-family: "Keania One", sans-serif;
+}
+
+.form-right h1 {
+    font-size: 40px;
+    font-weight: 700;
+    background: linear-gradient(to bottom, #22ff56 0%, #115525 100%);
+    background-clip: text;
+    color: transparent;
+}
+
+.form-right input {
+    padding-left: 15px;
+    height: 50px;
+    width: 100%;
+    border-radius: 40px;
+    outline: none;
+}
+
+.form-right button {
+    height: 40px;
+    border-radius: 40px;
+}
+
+.form-right .form-items {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border-radius: 40px;
+    padding-left: 10px;
+    font-size: 18px;
+}
 
 /* navigation */
 .navbar-link::after {
