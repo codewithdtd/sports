@@ -116,7 +116,7 @@ exports.login = async (req, res, next) => {
                     role: result.chuc_vu
                 },  
                 process.env.JWT_ACCESS_TOKEN,
-                { expiresIn: "1d" }
+                { expiresIn: "30m" }
             );
             // refresh
             const refreshToken = jwt.sign(
@@ -166,7 +166,7 @@ exports.refreshToken = async (req, res, next) => {
                 role: user.role
             },  
             process.env.JWT_ACCESS_TOKEN,
-            { expiresIn: "1d" }
+            { expiresIn: "30m" }
         );
         // refresh
         const newRefreshToken = jwt.sign(

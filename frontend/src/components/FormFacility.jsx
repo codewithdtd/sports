@@ -201,13 +201,13 @@ function FromFacility(props) {
 
             {/* Bảng dịch vụ */}
             <div className='flex-1 text-end'>
-              <div className='flex text-center font-bold bg-gray-400'>
+              <div className='flex text-center font-bold bg-blue-400'>
                   <div className="flex-1 border border-gray-300">Tên</div>
                   <div className="flex-1 border border-gray-300">Số lượng</div>
                   <div className="flex-1 border border-gray-300">Giá</div> 
               </div>
-              {data.datSan?.dichVu?.map(item =>
-              <div key={item._id} className='flex text-center'>
+              {data.datSan?.dichVu?.map((item, index) =>
+              <div key={item._id} className={`flex text-center ${index % 2 != 0 && 'bg-blue-200'}`}>
                   <div className="flex-1 border-b border-gray-400">{item.ten_DV}</div>
                   <div className="flex-1 border border-t-0 border-gray-400">{item.soluong}</div>
                   <div className="flex-1 border-b border-gray-400">{formatNumber(item.thanhTien)}</div> 
@@ -217,8 +217,8 @@ function FromFacility(props) {
 
 
               <button type='button'
-                className='border-green-600 border flex-1 my-2 rounded-lg 
-                text-green-600 p-2 py-1 hover:bg-green-500 hover:text-white'
+                className='border-blue-600 border flex-1 my-2 rounded-lg 
+                text-blue-600 p-2 py-1 hover:bg-blue-500 hover:text-white'
                 onClick={e => openModalService()}
               >+ Thêm
               </button>
@@ -240,7 +240,7 @@ function FromFacility(props) {
               </select>
             </div>
             <div className='flex mt-4'>
-                {/* <button type='button' className='border-green-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-green-600 hover:bg-green-500 hover:text-white' 
+                {/* <button type='button' className='border-blue-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-blue-600 hover:bg-blue-500 hover:text-white' 
                   onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckIn: getTime()}})}}>
                     Nhận sân
                 </button> */}
@@ -252,7 +252,7 @@ function FromFacility(props) {
                     }}}>
                   Trả sân
                 </button>
-                <button className='bg-green-600 flex-1 py-1 mx-2 rounded-lg text-white hover:bg-green-500'>Xác nhận</button>
+                <button className='bg-blue-600 flex-1 py-1 mx-2 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
             </div>
           </div>
 
@@ -274,7 +274,7 @@ function FromFacility(props) {
                   <div key={item._id} className='flex border-b border-gray-300 items-center text-center hover:bg-gray-200'>
                     <div className="w-1/2">{item.ten_DV}</div>
                     <div className="w-1/3">{formatNumber(item.gia)}</div>
-                    <i className="w-1/6 ri-add-circle-fill text-lg text-green-600 cursor-pointer hover:scale-125" onClick={e => addSelected(item)}></i>
+                    <i className="w-1/6 ri-add-circle-fill text-lg text-blue-600 cursor-pointer hover:scale-125" onClick={e => addSelected(item)}></i>
                   </div> ) 
                   : '' }
 
@@ -316,8 +316,8 @@ function FromFacility(props) {
                   <button type='button' className='border-gray-600 flex-1 mb-0 bg-gray-200 border px-3 m-4 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white' onClick={e => setModalService(!modalService)}>Đóng</button>
                   <button 
                     type='button' 
-                    className='bg-green-600 m-4 flex-1 mb-0 py-1 
-                                  rounded-lg text-white hover:bg-green-500'
+                    className='bg-blue-600 m-4 flex-1 mb-0 py-1 
+                                  rounded-lg text-white hover:bg-blue-500'
                     onClick={e => saveServiceSelected()}
                   >
                     Lưu
