@@ -17,11 +17,21 @@ const FormReview = (props) => {
   // Gửi đánh giá mới
   const submitReview = () => {
     if (comment) {
+      const currentDate = new Date();
+      const day = String(currentDate.getDate()).padStart(2, '0');
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+      const year = currentDate.getFullYear();
+      const hours = String(currentDate.getHours()).padStart(2, '0');
+      const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+      const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+      const ngayTao = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
       const newReview = {
-        danhGia: feedback,
-        noiDung: comment,
-        phanHoi: reviewed,
-        khachHang: user?.user,
+        phanHoi: {
+          nhanVien: user?.user,
+          noiDung: comment,
+          ngayTao: ngayTao,
+        }
       };
       if(createReview(newReview)) { // Thêm đánh giá mới
         setComment('');
@@ -34,7 +44,7 @@ const FormReview = (props) => {
 
   const createReview = async (data) => {
     try {
-        const review = await reviewService.create(data);
+        const review = await reviewService.update(reviewed._id, data);
         return review;
     } catch (error) {
         console.log(error)
@@ -44,15 +54,15 @@ const FormReview = (props) => {
   const getReview = async (id) => {
     try {
         const review = await reviewService.get(id)
-        const reviewRes = await reviewService.getOne({ 'phanHoi._id': id })
+        // const reviewRes = await reviewService.getOne({ 'phanHoi._id': id })
         if(review) {
             // handleFeedbackChange(review.danhGia)
             setReviewed(review);
         }
-        if(reviewRes) {
-            // handleFeedbackChange(review.danhGia)
-            setReviewedRes(reviewRes);
-        }
+        // if(reviewRes) {
+        //     // handleFeedbackChange(review.danhGia)
+        //     setReviewedRes(reviewRes);
+        // }
     } catch (error) {
         console.log(error)
     }
@@ -99,13 +109,13 @@ const FormReview = (props) => {
             <h2 className="text-xl font-bold mb-4">Phản hồi</h2>
             <div>
                 <div>
-                    <p className='font-medium'>{reviewedRes?.khachHang.ho_NV} {reviewedRes?.khachHang.ten_NV}</p>
-                    <p className='font-bold text-gray-600 text-sm'>{reviewedRes?.ngayTao_DG}</p>
+                    <p className='font-medium'>{reviewed?.phanHoi?.nhanVien?.ho_NV} {reviewed?.phanHoi?.nhanVien?.ten_NV}</p>
+                    <p className='font-bold text-gray-600 text-sm'>{reviewed?.phanHoi?.ngayTao}</p>
                 </div>
                 {/* Form nhập bình luận */}
                 <textarea
-                    value={reviewedRes?.noiDung}
-                    disabled = {reviewedRes?.noiDung}
+                    value={reviewed?.phanHoi?.noiDung || comment}
+                    disabled = {reviewed?.phanHoi?.noiDung}
                     onChange={(e) => setComment(e.target.value)}
                     placeholder="Nhập phản hồi của bạn"
                     rows={4}
@@ -118,7 +128,7 @@ const FormReview = (props) => {
 
 
             {/* Nút gửi đánh giá */}
-            { !reviewedRes ? 
+            { !reviewed?.phanHoi ? 
             <button
                 onClick={submitReview}
                 className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700"

@@ -1,17 +1,20 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import Form from '../components/Form';
-import userService from '../services/user.service';
+import UserService from '../services/user.service';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from 'react-redux';
+
 const SignUp = () => {
+  const dispatch = useDispatch();
+  const userService = new UserService(dispatch);
 
   const handleData= async (data) => {
     try {
       const response = await userService.create(data);
       console.log('Thành Công');
       if(response) {
-        setError('')
         toast.success('Đăng ký thành công')
         console.log('Thành Công');
         return true;
@@ -26,7 +29,7 @@ const SignUp = () => {
     }
   };
   return (
-    <div className='flex h-screen items-center'>
+    <div className='flex h-screen items-center bg-blue-300'>
       <ToastContainer autoClose='2000' />
       <div className='h-[90vh] w-[90vw] m-auto border border-gray-400 shadow-lg shadow-gray-800'>
         <Form name='signUp' sendData={handleData}/>

@@ -6,11 +6,19 @@ const Invoice = (props) => {
   }
   return (
     <div className='w-full flex h-full bg-black bg-opacity-70 absolute top-0'  onClick={e => props.toggle(false)}>
-      <div className='relative bg-white m-auto print p-4 rounded-lg text-center' onClick={e => e.stopPropagation()}>
+      <div className='relative bg-white m-auto print p-6 px-8 rounded-lg text-center' onClick={e => e.stopPropagation()}>
         <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
-        <h1 className='text-center font-bold text-xl'>HÓA ĐƠN</h1>
-        <p className='text-sm font-medium'>Mã hóa đơn: {props.data._id}</p>
-        <div className='flex text-start justify-between gap-14'>
+        <div className='flex justify-between mb-10'>
+          <div className="logo flex items-center text-4xl font-bold italic text-blue-700">
+            <img src="./src/assets/logo.svg" alt="" className='md:w-3/4' />
+            <span className='md:block hidden'>DSOPRT</span>
+          </div>
+          <div>
+            <h1 className='text-center font-bold text-5xl text-blue-700'>HÓA ĐƠN</h1>
+            <p className='text-sm font-medium'>Mã hóa đơn: {props.data._id}</p>
+          </div>
+        </div>
+        <div className='flex text-start justify-between gap-16 text-xl'>
           <div>
             <p className='p-1'>Khách hàng: {props.data.khachHang.ho_KH } {props.data.khachHang.ten_KH }</p>
             <p className='p-1'>Số điện thoại: {props.data.khachHang.sdt_KH } </p>
@@ -26,23 +34,23 @@ const Invoice = (props) => {
             <p className='p-1'>Check-out: {props.data.datSan.thoiGianCheckOut }</p>
           </div>
         </div>
-        <div className='gap-14'>
-          <div className='flex justify-around text-center font-bold bg-gray-400'>
-            <p className='p-1 border border-gray-500 w-full'>TÊN</p>
-            <p className='p-1 border border-gray-500 w-full'>SỐ LƯỢNG</p>
-            <p className='p-1 border border-gray-500 w-full'>GIÁ</p>
+        <div className='gap-14 text-xl pt-5'>
+          <div className='flex justify-around text-center font-bold bg-blue-400'>
+            <p className='p-1 w-full'>TÊN</p>
+            <p className='p-1 w-full'>SỐ LƯỢNG</p>
+            <p className='p-1 w-full'>GIÁ</p>
           </div>
           <div>
             <div className='flex justify-around text-center'>
-                <p className='p-1 border border-gray-500 w-full'>{props.data.datSan.san.ma_San}</p>
-                <p className='p-1 border border-gray-500 w-full'>1</p>
-                <p className='p-1 border border-gray-500 w-full'>{formatNumber(props.data.datSan.san.bangGiaMoiGio)}</p>
+                <p className={`p-1 w-full`}>{props.data.datSan.san.ma_San}</p>
+                <p className={`p-1 w-full`}>1</p>
+                <p className={`p-1 w-full`}>{formatNumber(props.data.datSan.san.bangGiaMoiGio)}</p>
             </div>
-            {props.data.datSan.dichVu?.map((item) => 
-            <div className='flex justify-around text-center items-center'>
-                <p className='p-1 border border-gray-500 w-full'>{item.ten_DV}</p>
-                <p className='p-1 border border-gray-500 w-full'>{item.soluong}</p>
-                <p className='p-1 border border-gray-500 w-full'>{formatNumber(item.thanhTien)}</p>
+            {props.data.datSan.dichVu?.map((item, idx) => 
+            <div className={`flex justify-around text-center items-center ${idx % 2 == 0 ? 'bg-blue-200' : ''}`}>
+                <p className={`p-1 w-full`}>{item.ten_DV}</p>
+                <p className={`p-1 w-full`}>{item.soluong}</p>
+                <p className={`p-1 w-full`}>{formatNumber(item.thanhTien)}</p>
             </div>
             )} 
           </div>

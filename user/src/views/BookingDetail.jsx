@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import facilityService from '../services/facility.service'
 import sportTypeService from '../services/sportType.service'
 import Booking from '../services/booking.service'
-import serviceService from '../services/service.service'
+import ServiceService from '../services/service.service'
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import FormService from '../components/FormService';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
+import FormComfirm from '../components/FormComfirm';
 
 const BookingDetail = () => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -22,8 +23,9 @@ const BookingDetail = () => {
   const [checkedSlots, setCheckedSlots] = useState([]);
   const [bookingsByDate, setBookingsByDate] = useState({});
   const [listService, setListService] = useState([])
-  const [modalService, setModalService] = useState(null)
-  const [validateDate, setValidateDate] = useState(false)
+  const [modalConfirm, setModalConfirm] = useState(null);
+  const [modalService, setModalService] = useState(null);
+  const [validateDate, setValidateDate] = useState(false);
   const [submit, setSubmit] = useState(false);
 
   
@@ -38,6 +40,7 @@ const BookingDetail = () => {
   const interval = loai_san == 'Bóng đá' ?  1.5 : 1; // 1 giờ 30 phút
   
   const bookingService = new Booking(user, dispatch);
+  const serviceService = new ServiceService(user, dispatch);
   
   const timeSlots = [];
 
@@ -117,8 +120,8 @@ const BookingDetail = () => {
   }
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (infoUser) => {
+    // e.preventDefault();
     if(!user) {
       // toast.error("Vui lòng đăng nhập để đặt sân", {
       // });
@@ -128,6 +131,7 @@ const BookingDetail = () => {
     try {
       setSubmit(true)
       for(const item of booking) {
+        item.khachHang = infoUser
         await createBooking(item);
       }
       toast.success("Đặt sân thành công !", {
@@ -267,7 +271,7 @@ const BookingDetail = () => {
   return (
     <div className='m-3 p-4 border-2 border-gray-400 bg-white rounded-lg shadow-lg shadow-gray-400'>
       <ToastContainer autoClose='2000' />
-      <div className='mb-3 text-green-600 font-bold'>
+      <div className='mb-3 text-blue-600 font-bold'>
         <Link to={'/booking'}>{'< '}Quay lại</Link>
       </div>
       <div className=''>
@@ -290,7 +294,7 @@ const BookingDetail = () => {
       </div>
       <form className='flex flex-col md:flex-row gap-3' action="" onSubmit={e => handleSubmit(e)}>
         <div className='flex-1'>
-          <h1 className='text-center text-green-500 font-bold text-3xl uppercase'>
+          <h1 className='text-center text-blue-500 font-bold text-3xl uppercase'>
             {field.ten_loai}
           </h1>
           <div className='flex justify-between'>
@@ -333,7 +337,7 @@ const BookingDetail = () => {
               </div>
               <div className="flex-1">
                 {listFac?.map((san) => 
-                <div className={`flex py-2 border border-gray-400
+                <div className={`flex py-2 border border-gray-400 hover:bg-gray-300
                     ${
                       san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
                       ? 'bg-gray-300' : ''
@@ -369,7 +373,7 @@ const BookingDetail = () => {
                       onChange={e => handleBooking({
                         thoiGianBatDau: slot.formattedTimeStart,
                         thoiGianKetThuc: slot.formattedTimeEnd,
-                        khachHang: user.user,
+                        // khachHang: user.user,
                         san: san,
                         ngayDat: currentDate,
                         thanhTien: san.bangGiaMoiGio
@@ -397,7 +401,7 @@ const BookingDetail = () => {
                   <p>{bk.thoiGianBatDau} - {bk.thoiGianKetThuc}</p>
                   <p>{bk.san.ten_San}</p>
                   <p>{formatNumber(bk.thanhTien || 0)}</p>
-                  <button type='button' onClick={e=> setModalService(bk)} className='border border-green-600 p-1 rounded-md text-green-600 hover:text-white hover:bg-green-500'>Thêm dịch vụ</button>
+                  <button type='button' onClick={e=> setModalService(bk)} className='border border-blue-600 p-1 rounded-md text-blue-600 hover:text-white hover:bg-blue-500'>Thêm dịch vụ</button>
                 </div>
                 {bk.dichVu?.map((dichVu, index) => 
                   <div key={dichVu._id} className='ml-7 flex border-b text-center justify-between p-2 border-l-2 border-gray-400'>
@@ -406,7 +410,7 @@ const BookingDetail = () => {
                     <p className='flex-1'>{formatNumber(dichVu.thanhTien)}</p>
                   </div>
                  )} 
-                {modalService ? <FormService toggle={setModalService} service={modalService} handle={handleService} /> : ''}
+                {modalService ? <FormService toggle={setModalService} service={modalService} allService={listService} setService={setListService} handle={handleService} /> : ''}
               </div>
             )}
           </div>
@@ -417,9 +421,12 @@ const BookingDetail = () => {
               return a + tienSan + tienDichVu;
             }, 0))}</b>
           </p>
-          <button type={`${submit ? 'button' : ''}`} className='bg-green-500 p-1 px-3 rounded-lg text-white font-bold'>Xác nhận</button>
+          {/* <button type={`${submit ? 'button' : ''}`} className='bg-blue-500 p-1 px-3 rounded-lg text-white font-bold'>Xác nhận</button> */}
+          <button type={`button`} className='bg-blue-500 p-1 px-3 rounded-lg text-white font-bold' onClick={e => booking.length > 0 && setModalConfirm(true)}>Xác nhận</button>
         </div>
+            
       </form>
+          {modalConfirm && booking.length > 0 ? <FormComfirm data={booking} toggle={setModalConfirm} user={user.user} submit={handleSubmit} /> : ''}
     </div>
   )
 }

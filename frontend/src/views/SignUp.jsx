@@ -13,6 +13,12 @@ const SignUp = () => {
 
   const handleData= async (data) => {
     try {
+      const formDate = new FormData();
+      formDate.append('ho_NV', data.ho_NV);
+      formDate.append('ten_NV', data.ten_NV);
+      formDate.append('sdt_NV', data.sdt_NV);
+      formDate.append('email_NV', data.email_NV);
+      formDate.append('matKhau_NV', data.matKhau_NV);
       const response = await staffService.create(data);
       if(response) {
         setError('')

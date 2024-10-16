@@ -6,6 +6,7 @@ import User from '../services/user.service';
 import Form from '../components/Form'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const Login = () => {
     }
   };
   return (
-    <div className='flex h-screen items-center'>
+    <div className='flex h-screen items-center bg-blue-300'>
       <ToastContainer autoClose='2000' /> 
       <div className='h-[90vh] w-[90vw] m-auto border border-gray-400 shadow-lg shadow-gray-800'>
         <Form sendData={handleData} />

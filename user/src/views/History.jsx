@@ -223,16 +223,12 @@ const History = () => {
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div> 
-        <div className='shadow-gray-600 shadow-md rounded-lg'>
-          <div className="flex justify-between py-2 bg-green-500 border-b border-gray-300 text-center rounded-t-lg">
-            <div className="w-1/12 font-semibold">STT</div>
+        <div className='rounded-lg'>
+          {/* <div className="flex justify-between py-2 bg-blue-500 border-b mb-3 border-gray-300 shadow-md shadow-gray-400 text-center rounded-lg">
+            <div className="w-1/6 font-semibold">TÊN</div>
             <div className="w-1/6 font-semibold">TÊN SÂN</div>
             <div className="w-1/6 font-semibold flex justify-center">
               TỔNG TIỀN
-              <div className="">
-                <i className="ri-arrow-up-fill"></i>
-                {/* <i className="ri-arrow-down-fill"></i> */}
-              </div>
             </div>
             <div className="w-3/12 font-semibold flex justify-center">
               CHI TIẾT
@@ -242,21 +238,20 @@ const History = () => {
             </div>
             <div className="w-1/6 font-semibold flex justify-center">
               TRẠNG THÁI
-              <div className="">
-                <i className={''}></i>
-                <i className="ri-arrow-down-fill"></i>
-              </div>
             </div>
             <div className="w-1/6">
-              {/* <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i> */}
+              
             </div>
-          </div>
+          </div> */}
 
 
           {filterFacility()?.map((item, index) => 
           ((currentPage-1)*6 <= index && index < currentPage*6) ?
-          <div key={index} className="flex items-center justify-between py-2 mb-3 shadow-md shadow-gray-400 border-b border-gray-300 text-center min-h-32">
-            <div className="w-1/12">{index +1}</div>
+          <div key={index} className={`flex rounded-lg items-center justify-between py-2 mb-3 shadow-md shadow-gray-400 border-2 border-gray-400 text-center min-h-32`}>
+            {/* <div className="w-1/12"></div> */}
+            <div className="w-1/6 text-center">
+            {item.khachHang.ho_KH + ' ' + item.khachHang.ten_KH}
+            </div>
             <div className="w-1/6 text-start">
               <p>{item.san.ten_San + ' - ' + item.san.ma_San}</p>
               <ul className='ml-4 list-disc'>

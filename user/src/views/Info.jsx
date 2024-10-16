@@ -62,7 +62,7 @@ const Info = () => {
     <div className='flex h-[85vh] py-5 flex-col'>
       <div className='info relative flex flex-1 items-center overflow-hidden justify-center w-[90%] border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-[90%] m-auto'>
         <ToastContainer autoClose='2000' />
-        <div className='w-1/3 h-full flex flex-col justify-center items-center text-center bg-green-500'>
+        <div className='w-1/3 h-full flex flex-col justify-center items-center text-center bg-blue-500'>
           { user.user.hinhAnh_KH && !avatarPre ? 
             <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_KH}`} className="border-[7px] border-white rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
             : <img src={`${avatarPre ? avatarPre : './src/assets/user-profile.png'}`} className="rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
@@ -76,7 +76,7 @@ const Info = () => {
           <input type="file" id='avatar' className='hidden' onChange={handleFileUploadAvatar}/>
         </div>
         <form className='flex-1 md:w-1/2 flex flex-col rounded-lg p-4' onSubmit={e => handleSubmit(e)}>
-          <h1 className='text-center text-2xl md:text-3xl text-green-600 font-bold py-3'>CẬP NHẬT THÔNG TIN CỦA BẠN</h1>
+          <h1 className='text-center text-2xl md:text-3xl text-blue-600 font-bold py-3'>CẬP NHẬT THÔNG TIN CỦA BẠN</h1>
           <div className='w-full md:text-lg'>
             <div className='flex items-center py-1'>
               <label htmlFor="" className='md:w-1/4 w-1/5 font-bold text-gray-800'>Họ: </label>
@@ -98,7 +98,7 @@ const Info = () => {
               <label htmlFor="" className='md:w-1/4 w-1/5 font-bold text-gray-800'>Email: </label>
               <input type="email" className='bg-gray-200 m-2 p-2 px-2 flex-1' value={info.email_KH} onChange={e => setInfo({...info, email_KH: e.target.value})}/>
             </div>
-            <button type={`${submit ? 'button' : ''}`} className='bg-green-500 w-full p-1 my-4 rounded-xl text-white hover:bg-green-700'>Xác nhận</button>
+            <button type={`${submit ? 'button' : ''}`} className='bg-blue-500 w-full p-1 my-4 rounded-xl text-white hover:bg-blue-700'>Xác nhận</button>
           </div>
         </form>
       </div>

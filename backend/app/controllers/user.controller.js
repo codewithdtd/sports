@@ -24,6 +24,7 @@ const convertToDateReverse = (dateStr) => {
 
 exports.create = async (req, res, next) => {
     const users = new Users();
+    const newUser = req.body;
     salt = await bcrypt.genSalt(10);
     newUser.matKhau_KH = await bcrypt.hash(newUser.matKhau_KH, salt);
     try {

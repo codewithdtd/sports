@@ -15,6 +15,9 @@ input:-webkit-autofill {
 input {
     outline: none;
 }
+.logo img {
+    filter: hue-rotate(116deg) saturate(500%);
+}
 /* Form */
 .form-left {
     position: relative;
@@ -41,7 +44,7 @@ input {
 .form-right h1 {
     font-size: 40px;
     font-weight: 700;
-    background: linear-gradient(to bottom, #22ff56 0%, #115525 100%);
+    background: linear-gradient(to bottom, #2285ff 0%, #112b55 100%);
     background-clip: text;
     color: transparent;
 }
@@ -72,15 +75,7 @@ input {
 .navbar-link::after {
     content: '';
     height: 2px;
-    background-color: rgb(0, 173, 0);
-    display: block;
-    width: 0;
-}
-
-.navbar-link::after {
-    content: '';
-    height: 2px;
-    background-color: rgb(58, 212, 58);
+    background-color: rgb(76, 123, 244);
     display: block;
     width: 0;
 }
@@ -102,7 +97,7 @@ input {
     font-family: "Baloo Bhaijaan 2", sans-serif;
 }
 .home-container {
-    background-color: rgba(0, 0, 0, 0.633);
+    background-color: rgba(0, 0, 0, 0.693);
     /* background: url('./background.png') no-repeat;
     background-size: cover;
     background-position: center; */
@@ -151,17 +146,17 @@ input {
 .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
     /* Độ rộng của thanh scrollbar dọc */
-    height: 4px;
+    height: 5px;
     /* Độ rộng của thanh scrollbar ngang (nếu có) */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f2f2f2;
+    background: #ababab;
     /* Màu của phần track (kênh trượt) */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #777;
+    background-color: #456dff;
     /* Màu của phần thumb (phần kéo) */
     border-radius: 10px;
     /* Bo tròn góc của thumb */

@@ -73,26 +73,42 @@ const Review = () => {
         ) : (
           filterFacility()?.map((review, index) => 
              ((currentPage-1)*5 <= index && index < currentPage*5) ? (
-            <div key={review._id} className=" shadow-gray-600 bg-gray-200 rounded-xl flex items-center shadow-md mb-3 p-4 border text-lg border-gray-400">
-              <img src="./src/assets/user-profile.png" className='hidden sm:block w-20 h-20 mr-5' alt="" />
-              <div>
-                <div className='font-medium flex items-center'>
-                  <img src="./src/assets/user-profile.png" className='sm:hidden w-20 h-20 mr-5' alt="" />
-                  <div>
-                    <p>{review.khachHang.ho_KH + ' ' + review.khachHang.ten_KH}</p>
-                    <p className='sm:hidden text-sm font-medium text-gray-700'>{review.ngayTao_DG}</p>
+            <div key={review._id} className='shadow-gray-600 bg-gray-100 rounded-xl shadow-md border text-lg border-gray-400 mb-5'>
+              <div className="rounded-xl flex p-4 text-lg">
+                <img src="./src/assets/user-profile.png" className='hidden sm:block w-14 h-14 mr-5' alt="" />
+                <div>
+                  <div className='font-medium flex items-center'>
+                    <img src="./src/assets/user-profile.png" className='sm:hidden w-20 h-20 mr-5' alt="" />
+                    <div>
+                      <p>{review.khachHang.ho_KH + ' ' + review.khachHang.ten_KH}</p>
+                      <p className='sm:hidden text-sm font-medium text-gray-700'>{review.ngayTao_DG}</p>
+                    </div>
                   </div>
+                  <p className='hidden sm:block text-sm font-medium text-gray-700'>{review.ngayTao_DG}</p>
+                  <span
+                    className={`font-semibold ${review.danhGia === 'Tốt' ? 'text-green-500' : 'text-red-500'}`}
+                  >
+                    {review.danhGia} 
+                    {review.danhGia === 'Tốt' ?  <i className="pl-1 ri-thumb-up-fill"></i> : <i className="pl-1 ri-thumb-down-fill"></i>}
+                  </span>
+                  <p className="text-gray-700 max-w-">{review.noiDung}</p>
+                  {/* <p className='text-base text-gray-500 font-medium'>Phản hồi</p> */}
                 </div>
-                <p className='hidden sm:block text-sm font-medium text-gray-700'>{review.ngayTao_DG}</p>
-                <span
-                  className={`font-semibold ${review.danhGia === 'Tốt' ? 'text-green-500' : 'text-red-500'}`}
-                >
-                  {review.danhGia} 
-                  { review.danhGia === 'Tốt' ?  <i className="pl-1 ri-thumb-up-fill"></i> : <i className="pl-1 ri-thumb-down-fill"></i>}
-                </span>
-                <p className="text-gray-700 max-w-">{review.noiDung}</p>
-                {/* <p className='text-base text-gray-500 font-medium'>Phản hồi</p> */}
               </div>
+              {review.phanHoi && (
+                <div className='ml-20 pl-4 pb-2 rounded-lg text-sm'>
+                  <p className='font-medium text-gray-500'>Phản hồi:</p>
+                  <div className='font-medium flex items-center'>
+                    <img src="./src/assets/user-profile.png" className='sm:hidden w-20 h-20 mr-5' alt="" />
+                    <div>
+                      <p>{review.phanHoi.nhanVien.ho_NV + ' ' + review.phanHoi.nhanVien.ten_NV}</p>
+                      <p className='sm:hidden text-xs font-medium text-gray-700'>{review.ngayTao_DG}</p>
+                    </div>
+                  </div>
+                  <p className='hidden sm:block text-xs font-medium text-gray-700'>{review.ngayTao_DG}</p>
+                  <p>{review.phanHoi.noiDung}</p>
+                </div>
+              )}
             </div>
           ): '') 
         )}
