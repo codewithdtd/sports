@@ -106,6 +106,14 @@ class Bookings extends db {
       throw new Error('Error finding document: ' + err.message);
     }
   }
+  async updateMany(data, newData) {
+      try {
+        const result = await this.model.updateMany(data, newData);
+        return result;
+      } catch (error) {
+        throw new Error('Error finding document: ' + error.message);
+      }
+  }
 
     //   Xóa phần tử trong mảng chi tiết đặt sân
   // async removeBookingDetail(bookingId, maSan) {

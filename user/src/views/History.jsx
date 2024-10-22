@@ -148,6 +148,20 @@ const History = () => {
     console.log(diffInDays < 0)
     return diffInDays;
   }
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Lưu ý: Tháng trong JavaScript bắt đầu từ 0
+    const year = date.getFullYear();
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  }
+
 
 
   // GỌI SERVICE BACKEND
@@ -247,60 +261,67 @@ const History = () => {
 
           {filterFacility()?.map((item, index) => 
           ((currentPage-1)*6 <= index && index < currentPage*6) ?
-          <div key={index} className={`flex rounded-lg items-center justify-between py-2 mb-3 shadow-md shadow-gray-400 border-2 border-gray-400 text-center min-h-32`}>
-            {/* <div className="w-1/12"></div> */}
-            <div className="w-1/6 text-center">
-            {item.khachHang.ho_KH + ' ' + item.khachHang.ten_KH}
-            </div>
-            <div className="w-1/6 text-start">
-              <p>{item.san.ten_San + ' - ' + item.san.ma_San}</p>
-              <ul className='ml-4 list-disc'>
-                {item.dichVu?.map((dichVu) =>
-                  <li key={dichVu._id}>{dichVu.ten_DV} x{dichVu.soluong}</li>
-                )}
-              </ul>
-            </div>
-            <div className="w-1/6 flex justify-center">
-              {formatNumber(item.thanhTien)}
-            </div>
-            <div className="w-3/12 md:flex justify-around">
-              <p>{item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
-              <p>{item.ngayDat}</p>
-            </div>
-            <div className="w-1/6 flex justify-center">
-              {item.ngayTao}
-            </div>
-            <div className="w-1/6 flex justify-center h-fit">
-              <p className={`${item.trangThai == 'Hoàn thành' ? 'text-green-700 rounded-lg bg-green-200 border-green-500 border-2 shadow-md ' 
-                : item.trangThai == 'Đã hủy' ? 'text-red-700 rounded-lg bg-red-300 border-red-500 border-2 shadow-md ' 
-                : item.trangThai == 'Đã duyệt' ? 'text-blue-700 rounded-lg bg-blue-300 border-blue-500 border-2 shadow-md ' 
-                : item.trangThai == 'Nhận sân' ? 'text-yellow-700 rounded-lg bg-yellow-300 border-yellow-600 border-2 shadow-md ' 
-                : 'rounded-lg'} w-fit p-1 md:px-3`}>
-                {item.trangThai}
-              </p>
-            </div>
-            <div className="w-1/6">
-            {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
-                <i
-                  className="ri-bill-line hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg"
-                  onClick={(e) => handleData(listInvoice.find((invoice) => invoice.datSan._id == item._id))}
-                ></i>
-              )
-              : ''}
+              <div key={index} className='shadow-md shadow-gray-400 py-2 rounded-lg border-2 border-gray-400  mb-3'>
+            <div className={`flex items-center justify-between text-center min-h-32`}>
+              {/* <div className="w-1/12"></div> */}
+              <div className="w-1/6 text-center">
+              {item.khachHang.ho_KH + ' ' + item.khachHang.ten_KH}
+              </div>
+              <div className="w-1/6 text-start">
+                <p>{item.san.ten_San + ' - ' + item.san.ma_San}</p>
+                <ul className='ml-4 list-disc'>
+                  {item.dichVu?.map((dichVu) =>
+                    <li key={dichVu._id}>{dichVu.ten_DV} x{dichVu.soluong}</li>
+                  )}
+                </ul>
+              </div>
+              <div className="w-1/6 ">
+                {formatNumber(item.thanhTien)}
+                    <p className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-green-600 bg-green-200 border-green-500 shadow-md border-2' : ''} p-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</p>
+              </div>
+              <div className="w-3/12 md:flex justify-around">
+                <p>{item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
+                <p>{item.ngayDat}</p>
+              </div>
+              <div className="w-1/6 flex justify-center">
+                {item.ngayTao}
+              </div>
+              <div className="w-1/6 flex justify-center h-fit">
+                <p className={`${item.trangThai == 'Hoàn thành' ? 'text-green-700 rounded-lg bg-green-200 border-green-500 border-2 shadow-md ' 
+                  : item.trangThai == 'Đã hủy' ? 'text-red-700 rounded-lg bg-red-300 border-red-500 border-2 shadow-md ' 
+                  : item.trangThai == 'Đã duyệt' ? 'text-blue-700 rounded-lg bg-blue-300 border-blue-500 border-2 shadow-md ' 
+                  : item.trangThai == 'Nhận sân' ? 'text-yellow-700 rounded-lg bg-yellow-300 border-yellow-600 border-2 shadow-md ' 
+                            : 'rounded-lg'} w-fit font-medium p-1 md:px-3 shadow-gray-500`}>
+                  {item.trangThai}
+                </p>
+              </div>
+              <div className="w-1/6">
+              {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
+                  <i
+                    className="ri-bill-line hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg"
+                    onClick={(e) => handleData(listInvoice.find((invoice) => invoice.datSan._id == item._id))}
+                  ></i>
+                )
+                : ''}
 
-              {item.trangThai === 'Chưa duyệt' ? 
-              <button className='bg-red-500 shadow-md shadow-gray-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
-              : ''}
-              {/* Hiển thị kết quả của getReview() */}
-              {reviews[item._id] ?
-                <button className='border-gray-500 text-gray-600 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Xem đánh giá</button>
-              : ''}
+                {item.trangThai === 'Chưa duyệt' ? 
+                <button className='bg-red-500 shadow-md shadow-gray-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
+                : ''}
+                {/* Hiển thị kết quả của getReview() */}
+                {reviews[item._id] ?
+                  <button className='border-gray-500 text-gray-600 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Xem đánh giá</button>
+                : ''}
 
 
-              {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ? 
-              <button className='text-white bg-green-500 hover:bg-green-700 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
-              : ''}
+                {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ? 
+                <button className='text-white bg-green-500 hover:bg-green-700 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
+                : ''}
+              </div>
             </div>
+            {item.expireAt && item.trangThai != 'Đã hủy' && <p className='italic ml-3'><span className='text-red-500'>* Đang chờ thanh toán đặt sân sẽ hủy vào lúc:</span> 
+              <span>{formatDate(item.expireAt)}</span>
+              <a className='ml-4 font-bold underline text-blue-600 hover:text-blue-800' href={item.order_url}>Thanh toán ngay</a>
+            </p>}
           </div> : ''
           )}  
           {(filterFacility()?.length < 1) ? <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div> : ''}

@@ -81,6 +81,12 @@ router.route("/")
     .get(middleware.verifyAdmin, user.findAll)
     .post(user.create);
 
+router.route("/payment")
+    .post(middleware.verifyToken, user.payment)
 
+router.route("/callback")
+    .post(user.callback)
 
+router.route("/payment-status/:app_trans_id")
+    .post(user.paymentStatus)
 module.exports = router;

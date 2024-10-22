@@ -58,6 +58,24 @@ class UserService extends BaseService {
             console.log(error)
         }
     }
+    async payment(data, accessToken) {
+        const user = (await this.api.post(`/payment`, data, {
+                headers: { 
+                    token: `Bearer ${accessToken}`,
+                }
+            })).data;
+            console.log(user)
+        return user;
+    }
+    async paymentStatus(id) {
+        const user = (await this.api.post(`/payment-status${id}`, data, {
+                headers: { 
+                    // token: `Bearer ${accessToken}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            })).data;
+        return user;    
+    }
 }
 
 export default UserService;

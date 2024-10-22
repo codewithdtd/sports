@@ -25,9 +25,12 @@ const bookingSchema = new mongoose.Schema({
   hoiVien: { type: String, },
   ghiChu: { type: String },
   dichVu: { type: Array, },
+  maGiaoDich: { type: String, },
   // datCoc: { type: Number },
   ngayDat: { type: String, required: true},
   ngayTao: { type: String, },
+  order_url: { type: String, },
+  expireAt: { type: Date, default: null, },
   da_xoa: { type: Boolean, default: false },
 });
 

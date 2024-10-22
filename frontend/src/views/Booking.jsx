@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import FormBooking from '../components/FormBooking';
 import BookingService from '../services/booking.service';
+import SportTypeService from '../services/sportType.service';
 import FacilityService from '../services/facility.service';
 import Pagination from '../components/Pagination';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +17,7 @@ const Booking = () => {
   const bookingService = new BookingService(user, dispatch);
   const facilityService = new FacilityService(user, dispatch);
   const serviceService = new ServiceService(user, dispatch);
+  const sportTypeService = new SportTypeService(user, dispatch);
   
   useEffect(() => {
     if(!user) {
@@ -25,6 +27,7 @@ const Booking = () => {
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [list, setList] = useState([]);
+  const [listSportType, setListSportType] = useState([]);
   const [fac, setFac] = useState({
     khachHang: {
       ho_KH: "",
@@ -192,7 +195,9 @@ const Booking = () => {
   // lấy dữ liệu
   const getBooking = async () => {
     const data = await bookingService.getAll();
+    const st = await sportTypeService.getAll();
     setList(data.reverse());
+    setListSportType(st);
   }
   const createBooking = async (data) => {
     const newFac = await bookingService.create(data);
@@ -216,7 +221,7 @@ const Booking = () => {
   }, [fac]);
   return (
     <div className='facility'>
-      <Header name="Quản lý Đặt sân" />
+      <Header name="Đặt sân" />
       <div className="flex justify-between mb-5">
         <div className='flex-1 flex relative justify-between'>
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
@@ -227,32 +232,6 @@ const Booking = () => {
             <i className="ri-arrow-down-double-line"></i>
             Lọc
           </div>
-          {filter ? 
-          <div className='bg-white shadow-black shadow-sm rounded-md p-2 h-fit flex flex-col top-full right-0 absolute justify-around'>
-            <select className='p-1 rounded-md bg-green-100 m-1' name="" id="">
-              <option value="">Loại sân</option>
-              <option value="">Bóng đá</option>
-              <option value="">Bóng chuyền</option>
-              <option value="">Cầu lông</option>
-            </select>
-            <select className='p-1 rounded-md bg-green-100 m-1' name="" id="">
-              <option value="">Tình trạng</option>
-              <option value="">Trống</option>
-              <option value="">Đã đặt trước</option>
-              <option value="">Đang sử dụng</option>
-              <option value="">Bảo trì</option>
-              <option value="">Quá hạn</option>
-            </select>
-            <select className='p-1 rounded-md bg-green-100 m-1' name="" id="">
-              <option value="">Giá</option>
-              <option value="">{'<'} 100.000</option>
-              <option value="">100.000 - 200.000</option>
-              <option value="">200.000 - 400.000</option>
-              <option value="">{'>'} 400.000</option>
-            </select>
-            <button className='bg-blue-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-700 m-auto rounded-md' onClick={e => setFilter(!filter)}>Xác nhận</button>
-          </div>
-        : '' }
         </div> 
         <button className="bg-blue-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-blue-700 w-10 h-10 m-auto rounded-xl"
                 onClick={e => handleData()}
@@ -261,7 +240,41 @@ const Booking = () => {
         </button>
       </div>
       {/* Lọc dữ liệu */}
-      
+       {filter ? 
+          <div className='bg-white shadow-black shadow-sm rounded-md p-2 h-fit flex top-full right-0 justify-between'>
+            <div className='flex-1 flex'>
+              <select className='p-1 rounded-md bg-green-100 m-1' name="" id="" >
+                <option value="">Loại sân</option>
+                {listSportType?.map((item) => 
+                  <option value="">{item.ten_loai}</option>
+                )}
+              </select>
+              <select className='p-1 rounded-md bg-green-100 m-1' name="" id="">
+                <option value="">Tình trạng</option>
+                <option value="">Chưa duyệt</option>
+                <option value="">Đã duyệt</option>
+                <option value="">Đã đặt</option>
+                <option value="">Hoàn thành</option>
+                <option value="">Đã hủy</option>
+              </select>
+              
+              <div className='flex'>
+                {/* Ô chọn ngày từ ngày X */}
+                <div className="m-1 flex">
+                  <label className='mr-2'>Từ ngày:</label>
+                  <input type="date" className="p-1 rounded-md bg-green-100" />
+                </div>
+
+                {/* Ô chọn ngày đến ngày Y */}
+                <div className="m-1 flex">
+                  <label className='mr-2'>Đến ngày:</label>
+                  <input type="date" className="p-1 rounded-md bg-green-100" />
+                </div>
+              </div>
+            </div>
+            <button className='bg-blue-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-700 m-auto rounded-md' onClick={e => setFilter(!filter)}>Xác nhận</button>
+          </div>
+        : '' }
 
       <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-300">
         {/* Header bảngg */}
@@ -306,7 +319,7 @@ const Booking = () => {
         {list.length > 0 ? filterFacility().map((facility, index) => 
         ((currentPage-1)*6 <= index && index < currentPage*6) ?
        
-          <div key={facility._id} className="flex justify-between p-4 mx-2 py-2 max-h-[70px] border-b border-gray-300 text-center items-center"> 
+          <div key={facility._id} className={`flex justify-between p-4 mx-2 py-2 max-h-[70px] border-b border-gray-300 text-center items-center ${index % 2 != 0 && 'bg-blue-200'}`}> 
             <div className="w-1/12">{ index+1 }</div>
             <div className="w-1/6">
               {facility.khachHang.ho_KH + " " + facility.khachHang.ten_KH}

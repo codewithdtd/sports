@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import facilityService from '../services/facility.service'
 import sportTypeService from '../services/sportType.service'
 import Booking from '../services/booking.service'
+import UserService from '../services/user.service'
 import ServiceService from '../services/service.service'
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
@@ -12,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import FormService from '../components/FormService';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
-import FormComfirm from '../components/FormComfirm';
+import FormConfirm from '../components/FormConfirm';
 
 const BookingDetail = () => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
@@ -27,58 +28,68 @@ const BookingDetail = () => {
   const [modalService, setModalService] = useState(null);
   const [validateDate, setValidateDate] = useState(false);
   const [submit, setSubmit] = useState(false);
+  const [trangThaiThanhToan, setTrangThaiThanhToan] = useState('Chưa thanh toán')
 
-  
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const user = useSelector((state) => state.user.login.user);
   const accessToken = user?.accessToken;
-  const { loai_san } = useParams(); 
+  const { loai_san } = useParams();
   const startTime = 8; // 8:00
   const endTime = 22; // 22:00
-  const interval = loai_san == 'Bóng đá' ?  1.5 : 1; // 1 giờ 30 phút
-  
+  const interval = loai_san == 'Bóng đá' ? 1.5 : 1; // 1 giờ 30 phút
+
   const bookingService = new Booking(user, dispatch);
   const serviceService = new ServiceService(user, dispatch);
-  
+  const userService = new UserService(user, dispatch);
+
   const timeSlots = [];
 
   // Dùng vòng lặp để tạo các thời gian với khoảng cách 1 giờ 30 phút
-  for (let time = startTime; time <= endTime && (time+interval) <= endTime ; time += interval) {
+  for (let time = startTime; time <= endTime && (time + interval) <= endTime; time += interval) {
     // Lấy giờ và phút
     const hour = Math.floor(time);
     const minute = (time % 1) * 60;
 
     // Láy giờ phút kết thúc
-    const hourEnd = Math.floor(time+interval);
-    const minuteEnd = ((time+interval) % 1) * 60;
+    const hourEnd = Math.floor(time + interval);
+    const minuteEnd = ((time + interval) % 1) * 60;
     // Format lại giờ cho đẹp
     const formattedTimeStart = `${hour.toString().padStart(2, '0')}:${minute === 0 ? '00' : minute}`;
     const formattedTimeEnd = `${hourEnd.toString().padStart(2, '0')}:${minuteEnd === 0 ? '00' : minuteEnd}`;
     // Tạo thời gian và thêm vào mảng
-    timeSlots.push({formattedTimeStart,formattedTimeEnd});
+    timeSlots.push({ formattedTimeStart, formattedTimeEnd });
   }
   function getCurrentDate() {
     const today = new Date();
-    
+
     const year = today.getFullYear(); // Lấy năm
     const month = String(today.getMonth() + 1).padStart(2, '0'); // Lấy tháng (bắt đầu từ 0 nên cần +1) và định dạng thành 2 chữ số
     const day = String(today.getDate()).padStart(2, '0'); // Lấy ngày và định dạng thành 2 chữ số
 
     return `${year}-${month}-${day}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
- }
+  }
   // định dạng số
   function formatNumber(num) {
     return new Intl.NumberFormat('vi-VN').format(num);
   }
 
-// Cơ sở dữ liệu
+  const totalPrice = () => {
+    return booking.reduce((a, c) => {
+      const tienSan = c.san?.bangGiaMoiGio || 0; // Tiền sân
+      const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
+      return a + tienSan + tienDichVu;
+    }, 0)
+  }
+
+  // Cơ sở dữ liệu
   const getFacility = async () => {
     const fields = await sportTypeService.get(loai_san);
     setField(fields)
 
-    const date = {ngayDat: currentDate};
+    const date = { ngayDat: currentDate };
     let list = await facilityService.getAllBooked(date);
     list = list.filter(fac => fac.loai_San.ten_loai === fields.ten_loai)
     setListFac(list)
@@ -91,7 +102,7 @@ const BookingDetail = () => {
   const handleBooking = (data, checked) => {
     const key = `${data.san._id}_${data.thoiGianBatDau}_${data.ngayDat}`;  // Tạo key duy nhất cho mỗi sân và thời gian
     if (checked) {
-      if(data.ngayDat < getCurrentDate()) {
+      if (data.ngayDat < getCurrentDate()) {
         setValidateDate(true)
         return;
       }
@@ -103,17 +114,17 @@ const BookingDetail = () => {
       // Xóa phần tử khỏi danh sách đặt sân và bỏ đánh dấu slot đã được check
       setBooking(prevBooking => prevBooking.filter(item => !(item.thoiGianBatDau === data.thoiGianBatDau && item.san._id === data.san._id && item.ngayDat === data.ngayDat)));
       // setCheckedSlots(prevCheckedSlots => prevCheckedSlots.filter(slot => slot !== key));
-      setCheckedSlots(prevCheckedSlots => 
+      setCheckedSlots(prevCheckedSlots =>
         prevCheckedSlots.filter(slot => {
           return slot !== key
-        }) 
+        })
       );
     }
   };
 
   const handleService = (data) => {
-    setBooking(prevBooking => 
-      prevBooking.map(item => 
+    setBooking(prevBooking =>
+      prevBooking.map(item =>
         item._id === data._id ? data : item
       )
     );
@@ -122,7 +133,7 @@ const BookingDetail = () => {
 
   const handleSubmit = async (infoUser) => {
     // e.preventDefault();
-    if(!user) {
+    if (!user) {
       // toast.error("Vui lòng đăng nhập để đặt sân", {
       // });
       alert('Vui lòng đăng nhập để đặt sân')
@@ -130,16 +141,32 @@ const BookingDetail = () => {
     }
     try {
       setSubmit(true)
-      for(const item of booking) {
-        item.khachHang = infoUser
+      const infoPayMent = {
+        userId: user?.user?._id,
+        thanhTien: totalPrice()
+      }
+      let returnPayment = '';
+      if (trangThaiThanhToan == 'Đã thanh toán') {
+        returnPayment = await payment(infoPayMent)
+      }
+      for (const item of booking) {
+        returnPayment ?
+         (item.maGiaoDich = returnPayment.app_trans_id,
+          item.expireAt = new Date(Date.now()),
+          item.order_url = returnPayment.order_url 
+          )
+        : '';
+        item.khachHang = infoUser;
         await createBooking(item);
       }
-      toast.success("Đặt sân thành công !", {
-     
-      });
-      setTimeout(() => {
-        navigate('/');  // Chuyển hướng sau 2 giây
-      }, 2500);
+      if(returnPayment)
+        window.location.href = returnPayment.order_url 
+      else {
+        toast.success("Đặt sân thành công !", {});
+        setTimeout(() => {
+          navigate('/');  // Chuyển hướng sau 2 giây
+        }, 2500);
+      }
     } catch (error) {
       toast.error("Đặt sân thất bại!", {
       });
@@ -161,9 +188,23 @@ const BookingDetail = () => {
     }
   }
 
+  const payment = async (data) => {
+    try {
+      // console.log(data)
+      const result = await userService.payment(data, accessToken);
+
+      // const { app_trans_id, order_url } = result;
+      return result;
+      // window.location.href = order_url;
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   function getCurrentDate() {
     const today = new Date();
-    
+
     const year = today.getFullYear(); // Lấy năm
     const month = String(today.getMonth() + 1).padStart(2, '0'); // Lấy tháng (bắt đầu từ 0 nên cần +1) và định dạng thành 2 chữ số
     const day = String(today.getDate()).padStart(2, '0'); // Lấy ngày và định dạng thành 2 chữ số
@@ -173,14 +214,14 @@ const BookingDetail = () => {
 
   function getCurrentTime() {
     const today = new Date();
-    
-    const hour = today.getHours(); 
+
+    const hour = today.getHours();
     const minute = today.getMinutes();
     return `${hour}:${minute}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
   }
 
-  const handleDate= (date) => {
-    if(date >= getCurrentDate()) {
+  const handleDate = (date) => {
+    if (date >= getCurrentDate()) {
       setValidateDate(false)
       setCurrentDate(date)
     }
@@ -249,23 +290,23 @@ const BookingDetail = () => {
 
 
   const buttonStyle = {
-      // width: "15px",
-      "fontSize": '30px',
-      // height: "30px",
-      'justifyContent': 'center',
-      'alignItems': 'center',
-      'borderRadius': '100%',
-      display: 'flex',
-      'zIndex': '1',
-      background: 'rgb(218 218 218)',
-      height: '40px',
-      width: '40px',
-      border: '0px'
+    // width: "15px",
+    "fontSize": '30px',
+    // height: "30px",
+    'justifyContent': 'center',
+    'alignItems': 'center',
+    'borderRadius': '100%',
+    display: 'flex',
+    'zIndex': '1',
+    background: 'rgb(218 218 218)',
+    height: '40px',
+    width: '40px',
+    border: '0px'
   };
 
   const properties = {
-      prevArrow: <button style={{ ...buttonStyle }}><i className="ri-arrow-drop-left-line"></i></button>,
-      nextArrow: <button style={{ ...buttonStyle }}><i className="ri-arrow-drop-right-line"></i></button>
+    prevArrow: <button style={{ ...buttonStyle }}><i className="ri-arrow-drop-left-line"></i></button>,
+    nextArrow: <button style={{ ...buttonStyle }}><i className="ri-arrow-drop-right-line"></i></button>
   }
 
   return (
@@ -299,7 +340,7 @@ const BookingDetail = () => {
           </h1>
           <div className='flex justify-between'>
             <div>
-              <input type="date" min={getCurrentDate()} className={`border border-gray-400 rounded-md p-1 ${validateDate ? 'bg-red-300': ''}`} value={currentDate} onChange={e => handleDate(e.target.value)} />
+              <input type="date" min={getCurrentDate()} className={`border border-gray-400 rounded-md p-1 ${validateDate ? 'bg-red-300' : ''}`} value={currentDate} onChange={e => handleDate(e.target.value)} />
               {validateDate ? <p className='text-red-600'>Chọn ngày hiện tại trở lên</p> : ''}
               {/* <select className='mx-4 border border-gray-400 rounded-md p-1' name="" id="">
                 <option value="">Bắt đầu</option>
@@ -324,39 +365,38 @@ const BookingDetail = () => {
               <div className='flex-1 font-bold'>Tình trạng</div>
               <div className='mx-4'></div>
             </div>
-            {timeSlots.map((slot, index) => 
-            (currentDate === getCurrentDate() ? 
-              (slot.formattedTimeStart > getCurrentTime()) : true) 
-              ? 
-            <div className={`flex items-center border-b text-center border-gray-400`} key={index}>
-              <div className='w-1/6'>
-                {slot.formattedTimeStart}
-              </div>
-              <div className='w-1/6'>
-                {slot.formattedTimeEnd}
-              </div>
-              <div className="flex-1">
-                {listFac?.map((san) => 
-                <div className={`flex py-2 border border-gray-400 hover:bg-gray-300
-                    ${
-                      san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
-                      ? 'bg-gray-300' : ''
-                    }
-                  `} 
-                  key={san._id}
-                >
-                  <div className="flex-1">
-                    {san.ten_San }
+            {timeSlots.map((slot, index) =>
+              (currentDate === getCurrentDate() ?
+                (slot.formattedTimeStart > getCurrentTime()) : true)
+                ?
+                <div className={`flex items-center border-b text-center border-gray-400`} key={index}>
+                  <div className='w-1/6'>
+                    {slot.formattedTimeStart}
                   </div>
-                  <div className="flex-1">{formatNumber(san.bangGiaMoiGio || 0)}</div>
-                  <div className="flex-1">
-                    {
-                      san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
-                      ? 'Đã đặt' : 'Trống'
-                    }
+                  <div className='w-1/6'>
+                    {slot.formattedTimeEnd}
                   </div>
-                  <div className='mx-2'>
-                    {/* <button type='button'
+                  <div className="flex-1">
+                    {listFac?.map((san) =>
+                      <div className={`flex py-2 border border-gray-400 hover:bg-gray-300
+                    ${san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                          ? 'bg-gray-300' : ''
+                        }
+                  `}
+                        key={san._id}
+                      >
+                        <div className="flex-1">
+                          {san.ten_San}
+                        </div>
+                        <div className="flex-1">{formatNumber(san.bangGiaMoiGio || 0)}</div>
+                        <div className="flex-1">
+                          {
+                            san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                              ? 'Đã đặt' : 'Trống'
+                          }
+                        </div>
+                        <div className='mx-2'>
+                          {/* <button type='button'
                       onClick={e => handleBooking({
                         thoiGianBatDau: slot.formattedTimeStart,
                         thoiGianKetThuc: slot.formattedTimeEnd,
@@ -368,25 +408,25 @@ const BookingDetail = () => {
                     >
                       <i class="ri-add-circle-fill"></i>
                     </button> */}
-                    <input type="checkbox" className='w-5 h-5' 
-                      checked={checkedSlots.includes(`${san._id}_${slot.formattedTimeStart}_${currentDate}`)} 
-                      onChange={e => handleBooking({
-                        thoiGianBatDau: slot.formattedTimeStart,
-                        thoiGianKetThuc: slot.formattedTimeEnd,
-                        // khachHang: user.user,
-                        san: san,
-                        ngayDat: currentDate,
-                        thanhTien: san.bangGiaMoiGio
-                      }, e.target.checked)}
-                      disabled={san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd}
-                    />
+                          <input type="checkbox" className='w-5 h-5'
+                            checked={checkedSlots.includes(`${san._id}_${slot.formattedTimeStart}_${currentDate}`)}
+                            onChange={e => handleBooking({
+                              thoiGianBatDau: slot.formattedTimeStart,
+                              thoiGianKetThuc: slot.formattedTimeEnd,
+                              // khachHang: user.user,
+                              san: san,
+                              ngayDat: currentDate,
+                              thanhTien: san.bangGiaMoiGio
+                            }, e.target.checked)}
+                            disabled={san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-                )}
-              </div>
-            </div>
-            : '')}
-            { currentDate === getCurrentDate() && timeSlots.every(slot => slot.formattedTimeStart < getCurrentTime()) ? 
+                : '')}
+            {currentDate === getCurrentDate() && timeSlots.every(slot => slot.formattedTimeStart < getCurrentTime()) ?
               <p>Đã hết giờ đặt sân của ngày hôm nay vui lòng chọn ngày khác để đặt sân !!!</p> : ''
             }
           </div>
@@ -394,39 +434,35 @@ const BookingDetail = () => {
         <div className='flex flex-col flex-1 pt-1'>
           Sân đã chọn:
           <div className="flex-1 overflow-y-scroll border-2 px-2 min-h-60 md:max-h-[65vh] max-h-80 border-gray-400 rounded-lg">
-            {booking?.map((bk, index) => 
+            {booking?.map((bk, index) =>
               <div key={index} className='flex flex-col justify-around'>
                 <div className='flex py-2 justify-around items-center border-b border-gray-400'>
                   <p>{bk.ngayDat}</p>
                   <p>{bk.thoiGianBatDau} - {bk.thoiGianKetThuc}</p>
                   <p>{bk.san.ten_San}</p>
                   <p>{formatNumber(bk.thanhTien || 0)}</p>
-                  <button type='button' onClick={e=> setModalService(bk)} className='border border-blue-600 p-1 rounded-md text-blue-600 hover:text-white hover:bg-blue-500'>Thêm dịch vụ</button>
+                  <button type='button' onClick={e => setModalService(bk)} className='border border-blue-600 p-1 rounded-md text-blue-600 hover:text-white hover:bg-blue-500'>Thêm dịch vụ</button>
                 </div>
-                {bk.dichVu?.map((dichVu, index) => 
+                {bk.dichVu?.map((dichVu, index) =>
                   <div key={dichVu._id} className='ml-7 flex border-b text-center justify-between p-2 border-l-2 border-gray-400'>
                     <p className='flex-1'>{dichVu.ten_DV}</p>
                     <p className='flex-1'>x {dichVu.soluong}</p>
                     <p className='flex-1'>{formatNumber(dichVu.thanhTien)}</p>
                   </div>
-                 )} 
+                )}
                 {modalService ? <FormService toggle={setModalService} service={modalService} allService={listService} setService={setListService} handle={handleService} /> : ''}
               </div>
             )}
           </div>
-          
-          <p>Tổng tiền: <b>{formatNumber(booking.reduce((a, c) => {
-              const tienSan = c.san?.bangGiaMoiGio || 0; // Tiền sân
-              const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
-              return a + tienSan + tienDichVu;
-            }, 0))}</b>
+
+          <p>Tổng tiền: <b>{formatNumber(totalPrice())}</b>
           </p>
           {/* <button type={`${submit ? 'button' : ''}`} className='bg-blue-500 p-1 px-3 rounded-lg text-white font-bold'>Xác nhận</button> */}
           <button type={`button`} className='bg-blue-500 p-1 px-3 rounded-lg text-white font-bold' onClick={e => booking.length > 0 && setModalConfirm(true)}>Xác nhận</button>
         </div>
-            
+
       </form>
-          {modalConfirm && booking.length > 0 ? <FormComfirm data={booking} toggle={setModalConfirm} user={user.user} submit={handleSubmit} /> : ''}
+      {modalConfirm && booking.length > 0 ? <FormConfirm data={booking} toggle={setModalConfirm} user={user.user} submit={handleSubmit} thanhToan={setTrangThaiThanhToan} /> : ''}
     </div>
   )
 }
