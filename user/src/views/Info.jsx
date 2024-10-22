@@ -69,7 +69,7 @@ const Info = () => {
           }
           <p className='mt-3 font-medium text-lg text-white'>
             ẢNH ĐẠI DIỆN
-            <label htmlFor="avatar" className='hover:bg-gray-300 rounded-full p-2 py-1 cursor-pointer'>
+            <label htmlFor="avatar" className='hover:bg-gray-300 hover:text-gray-700 rounded-full p-2 py-1 cursor-pointer'>
               <i className="ri-image-edit-fill"></i>
             </label>
           </p>

@@ -19,6 +19,8 @@ require('dotenv').config();
 const bcrypt = require("bcrypt");
 const bodyParser = require('body-parser');
 const qs = require('qs')
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const app = express();
 app.use(bodyParser.json());
@@ -54,7 +56,7 @@ exports.update = async (req, res, next) => {
     const users = new Users();
     try {
         const newUpdate = req.body;
-        console.log(req.file)
+        const oldUser = await users.findById(req.user.id);
         if(newUpdate.matKhauCu) {
             let oldPass = newUpdate.matKhauCu;
             const user = await users.findById(req.params.id);
@@ -74,7 +76,20 @@ exports.update = async (req, res, next) => {
 
         let hinhAnhDaiDien = null;
         if (req.file) {
-            console.log(req.file)
+            if(oldUser.hinhAnh_KH) {
+                const oldImagePath = path.join(__dirname, '../uploads/', oldUser.hinhAnh_KH);
+                fs.access(oldImagePath, fs.constants.F_OK, (err) => {
+                    if (!err) {
+                        fs.unlink(oldImagePath, (err) => {
+                            if (err) {
+                                console.error('Lỗi khi xóa ảnh cũ:', err);
+                            } else {
+                                console.log('Ảnh cũ đã được xóa:', oldUser.hinhAnhDaiDien);
+                            }
+                        });
+                    }
+                });
+            }
             hinhAnhDaiDien = req.file.filename;
             newUpdate.hinhAnh_KH = hinhAnhDaiDien;
         }
@@ -763,7 +778,6 @@ cron.schedule('* * * * *', async () => {
             },
             { $set: { trangThai: 'Đã hủy' } }  // Chuyển trạng thái thành "Đã hủy"
         );
-        console.log('Đã cập nhật các booking quá hạn thành "Đã hủy"');
     } catch (error) {
         console.error('Lỗi khi cập nhật trạng thái booking:', error);
     }

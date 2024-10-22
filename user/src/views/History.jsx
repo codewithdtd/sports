@@ -229,7 +229,7 @@ const History = () => {
 
   return (
     <div className='py-4'>
-      <h1 className='text-2xl font-bold text-center'>LỊCH SỬ ĐẶT SÂN</h1>
+      <h1 className='text-3xl text-blue-600 font-bold text-center'>LỊCH SỬ ĐẶT SÂN</h1>
       <div className='px-4'>
         <div className='flex-1 flex justify-between py-5'>
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
@@ -261,7 +261,7 @@ const History = () => {
 
           {filterFacility()?.map((item, index) => 
           ((currentPage-1)*6 <= index && index < currentPage*6) ?
-              <div key={index} className='shadow-md shadow-gray-400 py-2 rounded-lg border-2 border-gray-400  mb-3'>
+          <div key={index} className='shadow-md bg-gray-100 shadow-gray-400 py-2 rounded-lg border-2 border-gray-400 mb-3'>
             <div className={`flex items-center justify-between text-center min-h-32`}>
               {/* <div className="w-1/12"></div> */}
               <div className="w-1/6 text-center">
@@ -276,8 +276,8 @@ const History = () => {
                 </ul>
               </div>
               <div className="w-1/6 ">
-                {formatNumber(item.thanhTien)}
-                    <p className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-green-600 bg-green-200 border-green-500 shadow-md border-2' : ''} p-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</p>
+                <p className='font-bold'>{formatNumber(item.thanhTien)}</p>
+                <p className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-green-600 bg-green-200 border-green-500 shadow-md border-2' : ''} p-1 px-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</p>
               </div>
               <div className="w-3/12 md:flex justify-around">
                 <p>{item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>

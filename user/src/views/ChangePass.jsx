@@ -55,7 +55,7 @@ const ChangePass = () => {
     <div className='flex h-[85vh] py-5 flex-col'>
       <div className='info relative flex flex-1 overflow-hidden justify-center w-[90%] border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-[85vh] m-auto'>
         <ToastContainer autoClose='2000' />
-        <div className='w-1/3 z-[2] h-full flex flex-col justify-center items-center text-center bg-blue-500'>
+        <div className='w-1/3 h-full flex flex-col justify-center items-center text-center bg-blue-500 text-white'>
           { user.user.hinhAnh_KH ? 
             <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_KH}`} className="border-[7px] border-white rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
             : <img src={`./src/assets/user-profile.png`} className="rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
