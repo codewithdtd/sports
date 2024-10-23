@@ -57,7 +57,7 @@ const ChangePass = () => {
       <Header name={'Đổi mật khẩu'} />
       <div className='info relative flex flex-1 overflow-hidden justify-center w-full border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-[85vh]'>
         <ToastContainer autoClose='2000' />
-        <div className='w-1/3 z-[2] h-full flex flex-col justify-center items-center text-center bg-blue-600'>
+        <div className='w-1/3 z-[2] h-full flex flex-col justify-center items-center text-center bg-blue-600 text-white'>
           <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_NV}`} className="border-[3px] border-white rounded-full w-1/2 md:w-[50%] aspect-square object-cover" alt="" />
           <p className='mt-3 font-bold text-lg'>
             {user.user.ho_NV + ' ' + user.user.ten_NV}

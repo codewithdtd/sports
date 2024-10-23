@@ -568,6 +568,15 @@ exports.findBooking = async (req, res, next) => {
         res.status(500).json({ error: err.message });
     }
 };
+exports.filterBooking = async (req, res, next) => {
+    const booking = new Bookings();
+    try {
+        const result = await booking.filterBookings(req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 // Hóa đơn
 // 
 // 

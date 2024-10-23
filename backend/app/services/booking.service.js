@@ -114,6 +114,42 @@ class Bookings extends db {
         throw new Error('Error finding document: ' + error.message);
       }
   }
+  async filterBookings(filterValue) {
+    const convertMongoDateToISO = (mongoDate) => {
+      const [day, month, year] = mongoDate.split('/');
+      return `${year}-${month}-${day}`; // Trả về định dạng 'yyyy-MM-dd'
+    };
+      try {
+        const query = { da_xoa: false }; // Bắt đầu với điều kiện không xóa
+
+        // Kiểm tra và thêm các điều kiện lọc nếu có
+        if (filterValue.loaiSan) {
+          query['san.loai_San.ten_loai'] = filterValue.loaiSan;
+        }
+        if (filterValue.tinhTrang) {
+          query.trangThai = filterValue.tinhTrang;
+        }
+        if (filterValue.trangThaiThanhToan) {
+          query.trangThaiThanhToan = filterValue.trangThaiThanhToan;
+        }
+
+        const bookings = await this.model.find(query).lean();
+
+        // Lọc thủ công dựa trên việc chuyển đổi `ngayDat` từ `dd/MM/yyyy` sang `yyyy-MM-dd`
+        const filteredBookings = bookings.filter((booking) => {
+          const ngayDatISO = convertMongoDateToISO(booking.ngayDat);
+          return (
+            (!filterValue.ngayBatDau || ngayDatISO >= filterValue.ngayBatDau) &&
+            (!filterValue.ngayKetThuc || ngayDatISO <= filterValue.ngayKetThuc)
+          );
+        });
+
+      return filteredBookings;
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      throw error;
+    }
+  };
 
     //   Xóa phần tử trong mảng chi tiết đặt sân
   // async removeBookingDetail(bookingId, maSan) {
