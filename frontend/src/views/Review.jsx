@@ -127,7 +127,7 @@ const Review = () => {
         {/* List dữ liệu */}
         {list.length > 0 ? filterFacility()?.map((item, index) =>
         ((currentPage-1)*5 <= index && index < currentPage*5) ?
-        <div key={index} className="flex justify-between items-center min-h-20 max-h-24 p-4 border-b border-gray-300 text-center">
+        <div key={index} className={`flex justify-between items-center min-h-20 max-h-24 p-4 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">
           {item.khachHang?.ho_KH +' '} {item.khachHang?.ten_KH}

@@ -122,12 +122,12 @@ function FacilityManagement() {
     return editFac;
   }
   const deleteFacility = async (data) => {
-    const confirm = window.confirm('Xác nhận xóa!!!');
     const today = await bookingService.getToday({sanId: data._id});
     if(today && today.length > 0) {
       toast.error('Không thể xóa !!!')
       return;
     }
+    const confirm = window.confirm('Xác nhận xóa!!!');
     if(confirm) {
       const deleteFac = await facilityService.delete(data._id);
       return deleteFac;
@@ -200,7 +200,7 @@ function FacilityManagement() {
         {/* Nội dung bảng */}
         {facilities ? filterFacility().map((facility, index) => 
         ((currentPage-1)*4 <= index && index < currentPage*4) ?
-          <div key={facility._id} className="hover:bg-slate-200 p-4 text-sm md:text-base flex flex-grow justify-between py-2 border-b border-gray-300 text-center items-center"> 
+            <div key={facility._id} className={` p-4 text-sm md:text-base flex flex-grow justify-between py-2 border-b border-gray-300 text-center items-center ${index % 2 != 0 && 'bg-blue-100'}`}> 
             <div className="w-1/12">{ index+1 }</div>
             {/* <div className="w-1/6 md:w-[10%] hidden sm:block">
               {

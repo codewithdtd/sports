@@ -56,7 +56,7 @@ exports.update = async (req, res, next) => {
     const users = new Users();
     try {
         const newUpdate = req.body;
-        const oldUser = await users.findById(req.user.id);
+        const oldUser = await users.findById(req.params.id);
         if(newUpdate.matKhauCu) {
             let oldPass = newUpdate.matKhauCu;
             const user = await users.findById(req.params.id);

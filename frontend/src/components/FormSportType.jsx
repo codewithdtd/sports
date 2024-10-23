@@ -88,12 +88,12 @@ function FromSportType(props) {
             <h1 className='text-center text-2xl font-bold p-3'>THÔNG TIN</h1>
             <div className="flex">
               <label htmlFor="" className='w-1/4'>Loại thể thao:</label>
-              <input name='ten_loai' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ten_loai} onChange={e => setData({...data, ten_loai: e.target.value})}/>
+              <input required name='ten_loai' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ten_loai} onChange={e => setData({...data, ten_loai: e.target.value})}/>
             </div>
             <div className='flex'>
               <label htmlFor="" className='w-1/4'>Ảnh đại diện:</label>
               <div className='w-3/4 flex'>
-                {data.hinhAnhDaiDien ?
+                {data.hinhAnhDaiDien && !avatar ?
                 <div className='relative w-1/2'>
                   <img src={`http://localhost:3000/uploads/${data.hinhAnhDaiDien}`} alt='' className='object-contain mb-2' />
                 </div>

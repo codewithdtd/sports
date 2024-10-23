@@ -105,8 +105,23 @@ function FromFacility(props) {
         return [...prevList, data];
       }
     });
+
+    setListService((prevList = []) =>
+      prevList.map(item =>
+        item._id === data._id
+          ? { ...item, tonKho: item.tonKho - 1 }
+          : item
+      )
+    );
   }
   const removeSelected = (data) =>{
+    setListService((prevList = []) =>
+      prevList.map(item =>
+        item._id === data._id
+          ? { ...item, tonKho: item.tonKho + data.soluong }
+          : item
+      )
+    );
     setListServiceSelected(listServiceSelected.filter(item => item._id !== data._id));
   }
 
@@ -127,11 +142,23 @@ function FromFacility(props) {
   }
 // Hàm xử lý khi thay đổi số lượng
   const handleQuantityChange = (id, newQuantity) => {
-    setListServiceSelected(prevList => 
-      prevList.map(item => 
-        item._id === id ? { ...item, soluong: newQuantity } : item
-      )
-    );
+    const existingItem = listService.find(item => item._id === id);
+    const existingItemSelected = listServiceSelected.find(item => item._id === id);
+    const changeQuantity = newQuantity - existingItemSelected.soluong;
+    if (existingItem.tonKho - changeQuantity >= 0) {
+      setListService((prevList = []) =>
+        prevList.map(item =>
+          item._id === id
+            ? { ...item, tonKho: item.tonKho - changeQuantity }
+            : item
+        )
+      );
+      setListServiceSelected(prevList => 
+        prevList.map(item => 
+          item._id === id ? { ...item, soluong: newQuantity } : item
+        )
+      );
+    }
   };
 
   // Bấm đóng modal dịch vụ
@@ -234,8 +261,7 @@ function FromFacility(props) {
                 onChange={e => setData({...data, phuongThucThanhToan: e.target.value})}
               >
                 <option value="">Chọn</option>
-                <option value="Momo">Momo</option>
-                <option value="VNPay">VNPay</option>
+                <option value="Momo">Chuyển khoản</option>
                 <option value="Tiền mặt">Tiền mặt</option>
               </select>
             </div>
@@ -266,15 +292,20 @@ function FromFacility(props) {
                 <input type="text" className='border border-gray-400 mb-2 rounded-md pl-2 w-full' placeholder='Tìm kiếm'/>
                 <div className="border border-gray-500 rounded-lg h-32 lg:h-40 px-2 overflow-x-hidden overflow-y-scroll">
                   <div className='flex text-center font-bold border-b border-gray-400 '>
-                    <div className="w-1/2">Tên</div>
-                    <div className="w-1/3">Giá</div> 
+                    <div className="w-1/3">Tên</div>
+                    <div className="w-1/4">Giá</div> 
+                    <div className='w-1/4'>Số lượng</div>
                   </div>
                   
                   {listService ? listService?.map(item => 
                   <div key={item._id} className='flex border-b border-gray-300 items-center text-center hover:bg-gray-200'>
-                    <div className="w-1/2">{item.ten_DV}</div>
-                    <div className="w-1/3">{formatNumber(item.gia)}</div>
+                    <div className="w-1/3">{item.ten_DV}</div>
+                    <div className="w-1/4">{formatNumber(item.gia)}</div>
+                    <div className="w-1/4">{item.tonKho}</div>
+                    {item.tonKho > 0 ?
                     <i className="w-1/6 ri-add-circle-fill text-lg text-blue-600 cursor-pointer hover:scale-125" onClick={e => addSelected(item)}></i>
+                    : <i className="w-1/6 ri-add-circle-fill text-lg text-gray-700 cursor-not-allowed"></i>
+                    }
                   </div> ) 
                   : '' }
 
@@ -336,16 +367,3 @@ function FromFacility(props) {
 
 export default FromFacility;
 
-const convertToBase64 = (file) => {
-  const fileReader = new FileReader();
-  return new Promise((resolve, reject) => {
-    fileReader.readAsDataURL(file);
-
-    fileReader.onload = () => {
-      resolve(fileReader.result);
-    };
-    fileReader.onerror = (error) => {
-      reject(error);
-    };
-  });
-}

@@ -114,6 +114,7 @@ const Booking = () => {
       }
       if(await editBooking(data)) {
         console.log('Đã cập nhật');
+        setFac(fac);
       }
     }
     if(data.phuongThuc == 'create') {
@@ -130,8 +131,10 @@ const Booking = () => {
       //   );
       // }  
       // if(await createBooking(data) && updatedServices)
-      if(await createBooking(data))
+      if(await createBooking(data)){
         console.log('Đã thêm mới');
+        setFac(fac)
+      }
     }
     setEdit(!edit);  
   };
@@ -278,7 +281,7 @@ const Booking = () => {
 
       <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-300">
         {/* Header bảngg */}
-        <div className="flex justify-between p-4 px-6 pb-2 border-b bg-blue-500 border-gray-300 text-white text-center ">
+        <div className="flex justify-between p-4 pb-2 border-b bg-blue-500 border-gray-300 text-white text-center ">
           <div className="w-1/12 font-semibold">STT</div>
           <div className="w-1/6 font-semibold">KHÁCH HÀNG</div>
           <div className="w-1/6 font-semibold flex justify-center">
@@ -319,14 +322,14 @@ const Booking = () => {
         {list.length > 0 ? filterFacility().map((facility, index) => 
         ((currentPage-1)*6 <= index && index < currentPage*6) ?
        
-          <div key={facility._id} className={`flex justify-between p-4 mx-2 py-2 max-h-[70px] border-b border-gray-300 text-center items-center ${index % 2 != 0 && 'bg-blue-200'}`}> 
+          <div key={facility._id} className={`flex justify-between p-4 py-2 max-h-[70px] border-b border-gray-300 text-center items-center ${index % 2 != 0 && 'bg-blue-100'}`}> 
             <div className="w-1/12">{ index+1 }</div>
             <div className="w-1/6">
               {facility.khachHang.ho_KH + " " + facility.khachHang.ten_KH}
             </div>
             <div className="w-1/6">
               { formatNumber(parseInt(facility.thanhTien))}
-              <p>{ facility.trangThaiThanhToan }</p>
+              <p className={`${facility.trangThaiThanhToan == 'Đã thanh toán' ? 'text-blue-800 font-bold' : ''}`}>{ facility.trangThaiThanhToan }</p>
             </div>
             <div className="w-3/12">
   

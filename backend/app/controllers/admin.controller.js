@@ -58,6 +58,7 @@ exports.updateStaff = async (req, res, next) => {
     try {
         const newUpdate = req.body;
         console.log(req.file)
+        const oldUser = await staff.findById(req.params.id);
         if(newUpdate.matKhauCu) {
             let oldPass = newUpdate.matKhauCu;
             const user = await staff.findById(req.params.id);
@@ -77,6 +78,20 @@ exports.updateStaff = async (req, res, next) => {
 
         let hinhAnhDaiDien = null;
         if (req.file) {
+            if(oldUser.hinhAnh_NV) {
+                const oldImagePath = path.join(__dirname, '../uploads/', oldUser.hinhAnh_NV);
+                fs.access(oldImagePath, fs.constants.F_OK, (err) => {
+                    if (!err) {
+                        fs.unlink(oldImagePath, (err) => {
+                            if (err) {
+                                console.error('Lỗi khi xóa ảnh cũ:', err);
+                            } else {
+                                console.log('Ảnh cũ đã được xóa:', oldUser.hinhAnhDaiDien);
+                            }
+                        });
+                    }
+                });
+            }
             console.log(req.file)
             hinhAnhDaiDien = req.file.filename;
             newUpdate.hinhAnh_NV = hinhAnhDaiDien;

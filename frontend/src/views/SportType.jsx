@@ -178,7 +178,7 @@ const SportType = () => {
         {/* List dữ liệu */}
         {list.length > 0 ? filterFacility()?.map((item, index) =>
         ((currentPage-1)*7 <= index && index < currentPage*7) ?
-        <div key={index} className="hover:bg-gray-200 flex p-4 justify-between items-center min-h-14 max-h-20 border-b border-gray-300 text-center">
+            <div key={index} className={`flex p-4 justify-between items-center min-h-14 max-h-20 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">{item.ten_loai}</div>
           <div className="w-1/6 ">

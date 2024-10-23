@@ -235,7 +235,7 @@ const Invoice = () => {
         {/* List dữ liệu */}
         {list.length > 0 ? filterFacility()?.map((item, index) =>
         ((currentPage-1)*6 <= index && index < currentPage*6) ?
-        <div key={index} className="flex p-4 px-6 pb-2 hover:bg-gray-200 justify-between items-center min-h-14 max-h-16 py-2 border-b border-gray-300 text-center">
+        <div key={index} className={`flex p-4 px-6 pb-2 justify-between items-center min-h-14 max-h-16 py-2 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">{item.khachHang?.ho_KH +' '} {item.khachHang?.ten_KH}</div>
           

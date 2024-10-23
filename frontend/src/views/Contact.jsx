@@ -122,7 +122,7 @@ const Contact = () => {
         {/* List dữ liệu */}
         {list.length > 0 ? filterFacility()?.map((item, index) =>
         ((currentPage-1)*5 <= index && index < currentPage*5) ?
-        <div key={index} className="flex p-4 justify-between items-center min-h-20 max-h-24 py-2 border-b border-gray-300 text-center">
+        <div key={index} className={`flex p-4 justify-between items-center min-h-20 max-h-24 py-2 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">
             {item.hoTen} 
@@ -135,7 +135,7 @@ const Contact = () => {
           </div>
           <div className="w-1/3 py-2 flex justify-center">
             {/* <p className='overflow-hidden w-1/2'>{item.noiDung}</p> */}
-            <p className='border-2 border-gray-400 p-1 rounded-md cursor-pointer hover:bg-gray-300' onClick={e => handleData(item.noiDung)}>Xem chi tiết</p>
+            <p className='border-2 border-gray-400 p-1 rounded-md cursor-pointer bg-white hover:bg-gray-300' onClick={e => handleData(item.noiDung)}>Xem chi tiết</p>
           </div>
           <div className="w-1/6 flex justify-center">
             {item.ngayTao}

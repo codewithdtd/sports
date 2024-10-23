@@ -126,36 +126,7 @@ const Equipment = () => {
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <div className="bg-blue-500 cursor-pointer hover:bg-blue-700 ml-2 max-w-50% shadow-gray-700 shadow-sm text-white overflow-hidden rounded-lg p-2" onClick={e => setFilter(!filter)}>
-            <i className="ri-arrow-down-double-line"></i>
-            Lọc
-          </div>
-          {filter ? 
-          <div className='bg-white shadow-black shadow-sm rounded-md p-2 h-fit flex flex-col top-full right-0 absolute justify-around'>
-            <select className='p-1 rounded-md bg-blue-100 m-1' name="" id="">
-              <option value="">Loại sân</option>
-              <option value="">Bóng đá</option>
-              <option value="">Bóng chuyền</option>
-              <option value="">Cầu lông</option>
-            </select>
-            <select className='p-1 rounded-md bg-blue-100 m-1' name="" id="">
-              <option value="">Tình trạng</option>
-              <option value="">Trống</option>
-              <option value="">Đã đặt trước</option>
-              <option value="">Đang sử dụng</option>
-              <option value="">Bảo trì</option>
-              <option value="">Quá hạn</option>
-            </select>
-            <select className='p-1 rounded-md bg-blue-100 m-1' name="" id="">
-              <option value="">Giá</option>
-              <option value="">{'<'} 100.000</option>
-              <option value="">100.000 - 200.000</option>
-              <option value="">200.000 - 400.000</option>
-              <option value="">{'>'} 400.000</option>
-            </select>
-            <button className='bg-blue-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-700 m-auto rounded-md' onClick={e => setFilter(!filter)}>Xác nhận</button>
-          </div>
-        : '' }
+          
         </div> 
         <button className="bg-blue-500 ml-3 w-11 h-11 text-white cursor-pointer hover:bg-blue-700 m-auto rounded-lg shadow-xl text-2xl"
               onClick={e => handleData()}
@@ -190,7 +161,7 @@ const Equipment = () => {
         </div>
         {list.length > 0 ? filterFacility()?.map((item, index) =>
         ((currentPage-1)*7 <= index && index < currentPage*7) ?
-        <div key={index} className="flex justify-between items-center p-4 px-6 min-h-14 max-h-16 border-b border-gray-300 text-center">
+        <div key={index} className={`flex justify-between items-center p-4 px-6 min-h-14 max-h-16 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">{item.ten_DV}</div>
           <div className="w-1/6 flex justify-center">

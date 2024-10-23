@@ -58,6 +58,7 @@ const Customer = () => {
     setFac(data)
     if(data.phuongThuc == 'edit') {
       console.log('edit')
+      console.log(data)
       if(await editData(data))
         console.log('Đã cập nhật');
     }
@@ -131,7 +132,7 @@ const Customer = () => {
         </div>
         {list.length > 0 ? filterFacility()?.map((item, index) =>
         ((currentPage-1)*7 <= index && index < currentPage*7) ?
-        <div key={index} className="flex justify-between items-center p-4 min-h-14 max-h-16 py-2 border-b border-gray-300 text-center">
+        <div key={index} className={`flex justify-between items-center p-4 min-h-14 max-h-16 py-2 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
           <div className="w-1/12">{index+1}</div>
           <div className="w-1/6">{item.ho_KH} {item.ten_KH}</div>
           <div className="w-1/6 flex justify-center">
