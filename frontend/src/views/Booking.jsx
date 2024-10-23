@@ -364,10 +364,6 @@ const Booking = () => {
           </div>
           <div className="w-1/6 font-semibold flex justify-center">
             TRẠNG THÁI
-            <div className="">
-              <i className={''}></i>
-              <i className="ri-arrow-down-fill"></i>
-            </div>
           </div>
           <div className="w-1/6">
             {/* <i className="ri-reset-left-line border border-black p-2 rounded-lg"></i> */}
