@@ -18,7 +18,7 @@ const cron = require('node-cron');
 require('dotenv').config();
 const bcrypt = require("bcrypt");
 const bodyParser = require('body-parser');
-const qs = require('qs')
+const qs = require('qs');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -640,7 +640,8 @@ const config = {
     app_id: "2554",
     key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
     key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf",
-    endpoint: "https://sb-openapi.zalopay.vn/v2/create"
+    endpoint: "https://sb-openapi.zalopay.vn/v2/create",
+    refund_url: "https://sb-openapi.zalopay.vn/v2/refund"
 };
 
 
@@ -759,6 +760,37 @@ exports.paymentStatus = async (req, res, next) => {
 
     try {
         const result = await axios(postConfig);
+        return res.status(200).json(result.data)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error.message)
+    }
+}
+
+exports.refund = async (req, res, next) => {
+    const config = {
+        app_id: "2554",
+        key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
+        key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf",
+        refund_url: "https://sb-openapi.zalopay.vn/v2/refund"
+    };
+    const timestamp = Date.now();
+    const uid = `${timestamp}${Math.floor(111 + Math.random() * 999)}`;
+
+    let params = {
+        app_id: config.app_id,
+        m_refund_id: `${moment().format('YYMMDD')}_${config.app_id}_${uid}`,
+        timestamp, // miliseconds
+        zp_trans_id: '190508000000022',
+        amount: '50000',
+        description: 'ZaloPay Refund Demo',
+    };
+
+    let data = params.app_id + "|" + params.zp_trans_id + "|" + params.amount + "|" + params.description + "|" + params.timestamp;
+    params.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
+
+    try {
+        const result = await axios.post(config.refund_url, null, { params });
         return res.status(200).json(result.data)
     } catch (error) {
         console.log(error);

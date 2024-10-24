@@ -7,6 +7,7 @@ import reviewService from '../services/review.service';
 import Pagination from '../components/Pagination';
 import Invoice from '../components/Invoice';
 import Feedback from '../components/Feedback';
+import sportTypeService from '../services/sportType.service';
 
 const History = () => {
   const user = useSelector((state)=> state.user.login.user)
@@ -25,6 +26,7 @@ const History = () => {
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [list, setList] = useState([]);
+  const [listSportType, setListSportType] = useState([]);
   const [listInvoice, setListInvoice] = useState([]);
   const [fac, setFac] = useState({
     khachHang: {
@@ -170,8 +172,10 @@ const History = () => {
     const id = { id: user.user._id }
     const data = await bookingService.getAll(id, accessToken, dispatch);
     const invoice = await invoiceService.getAll(user.user._id)
+    const sportType = await sportTypeService.getAll();
     setList(data.reverse());
-    setListInvoice(invoice)
+    setListInvoice(invoice);
+    setListSportType(sportType);
   }
   const createBooking = async (data) => {
     const newFac = await bookingService.create(data);
@@ -237,7 +241,7 @@ const History = () => {
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div> 
-        <div className='rounded-lg'>
+        <div className='rounded-lg grid md:grid-cols-2 gap-4'>
           {/* <div className="flex justify-between py-2 bg-blue-500 border-b mb-3 border-gray-300 shadow-md shadow-gray-400 text-center rounded-lg">
             <div className="w-1/6 font-semibold">TÊN</div>
             <div className="w-1/6 font-semibold">TÊN SÂN</div>
@@ -261,46 +265,54 @@ const History = () => {
 
           {filterFacility()?.map((item, index) => 
           ((currentPage-1)*6 <= index && index < currentPage*6) ?
-          <div key={index} className='shadow-md bg-gray-100 shadow-gray-400 py-2 rounded-lg border-2 border-gray-400 mb-3'>
-            <div className={`flex items-center justify-between text-center min-h-32`}>
+          <div key={index} className='flex shadow-md bg-gray-100 shadow-gray-400 rounded-lg border-2 border-gray-400 mb-3 p-2 text-lg'>
+            <div className='flex w-1/2 md:w-1/2 p-5'>
+                <img src={`http://localhost:3000/uploads/${listSportType.find(element => element._id === item.san.loai_San._id).hinhAnhDaiDien }`} className='m-auto object-contain bg-blue-200 rounded-xl' alt="" />
+            </div>
+            <div className={`flex flex-col items-start text-center min-h-32 p-5`}>
               {/* <div className="w-1/12"></div> */}
-              <div className="w-1/6 text-center">
-              {item.khachHang.ho_KH + ' ' + item.khachHang.ten_KH}
+              <div className="p-1">
+              Khách hàng: {item.khachHang.ho_KH + ' ' + item.khachHang.ten_KH}
               </div>
-              <div className="w-1/6 text-start">
-                <p>{item.san.ten_San + ' - ' + item.san.ma_San}</p>
-                <ul className='ml-4 list-disc'>
+              <div className="p-1 text-start">
+                <p>Tên sân: {item.san.ten_San + ' - ' + item.san.ma_San}</p>
+                <ul className='list-disc'> 
                   {item.dichVu?.map((dichVu) =>
-                    <li key={dichVu._id}>{dichVu.ten_DV} x{dichVu.soluong}</li>
+                    <li key={dichVu._id} className='ml-20'>{dichVu.ten_DV} x{dichVu.soluong}</li>
                   )}
                 </ul>
               </div>
-              <div className="w-1/6 ">
-                <p className='font-bold'>{formatNumber(item.thanhTien)}</p>
-                <p className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-green-600 bg-green-200 border-green-500 shadow-md border-2' : ''} p-1 px-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</p>
+              <div className="text-start">
+                <p className='p-1 font-bold'>Tiền thanh toán: {formatNumber(item.thanhTien)}</p>
+                <p className='p-1'>
+                  Trạng thái thanh toán: 
+                  <span className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-green-600 bg-green-200 border-green-500 shadow-md border-2' : ''} p-1 ml-2 px-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</span>
+                </p>
               </div>
-              <div className="w-3/12 md:flex justify-around">
-                <p>{item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
-                <p>{item.ngayDat}</p>
+              <div className="">
+                <p className='p-1'>Giờ đặt: {item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
+                <p className='p-1'>Ngày đặt: {item.ngayDat}</p>
               </div>
-              <div className="w-1/6 flex justify-center">
-                {item.ngayTao}
+              <div className="p-1 flex justify-center">
+                Ngày tạo: {item.ngayTao}
               </div>
-              <div className="w-1/6 flex justify-center h-fit">
+              <div className="p-1 flex justify-center items-center h-fit">
+                Trạng thái: 
                 <p className={`${item.trangThai == 'Hoàn thành' ? 'text-green-700 rounded-lg bg-green-200 border-green-500 border-2 shadow-md ' 
                   : item.trangThai == 'Đã hủy' ? 'text-red-700 rounded-lg bg-red-300 border-red-500 border-2 shadow-md ' 
                   : item.trangThai == 'Đã duyệt' ? 'text-blue-700 rounded-lg bg-blue-300 border-blue-500 border-2 shadow-md ' 
                   : item.trangThai == 'Nhận sân' ? 'text-yellow-700 rounded-lg bg-yellow-300 border-yellow-600 border-2 shadow-md ' 
-                            : 'rounded-lg'} w-fit font-medium p-1 md:px-3 shadow-gray-500`}>
+                            : 'rounded-lg'} w-fit font-medium p-1 ml-3 shadow-gray-500`}>
                   {item.trangThai}
                 </p>
               </div>
-              <div className="w-1/6">
+              <div className="flex pt-4 w-full justify-between">
               {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
-                  <i
-                    className="ri-bill-line hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg"
+                      <span className='hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg'><i
+                    className="ri-bill-line"
                     onClick={(e) => handleData(listInvoice.find((invoice) => invoice.datSan._id == item._id))}
-                  ></i>
+                  ></i> Hóa đơn
+                  </span>
                 )
                 : ''}
 

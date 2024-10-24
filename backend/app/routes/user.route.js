@@ -82,11 +82,14 @@ router.route("/")
     .post(user.create);
 
 router.route("/payment")
-    .post(middleware.verifyToken, user.payment)
+    .post(user.payment)
 
 router.route("/callback")
     .post(user.callback)
 
 router.route("/payment-status/:app_trans_id")
     .post(user.paymentStatus)
+
+router.route("/refund")
+    .post(user.refund)
 module.exports = router;

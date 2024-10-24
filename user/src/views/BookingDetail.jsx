@@ -100,6 +100,12 @@ const BookingDetail = () => {
 
   // Xử lý đặt sân
   const handleBooking = (data, checked) => {
+    if (!user) {
+      // toast.error("Vui lòng đăng nhập để đặt sân", {
+      // });
+      alert('Vui lòng đăng nhập để đặt sân')
+      return;
+    }
     const key = `${data.san._id}_${data.thoiGianBatDau}_${data.ngayDat}`;  // Tạo key duy nhất cho mỗi sân và thời gian
     if (checked) {
       if (data.ngayDat < getCurrentDate()) {

@@ -59,12 +59,12 @@ const Review = () => {
     getAll();
   }, [])
   return (
-    <div className='p-5 px-8'>
+    <div className='p-5 px-8 bg-gray-200'>
       <h1 className='text-3xl font-bold text-center pt-5'>Đánh giá</h1>
       <div className='px-6'>
-        <button className={`bg-gray-300 p-2 mr-3 rounded-lg ${feedback == 'Tốt' ? 'bg-green-500 text-white' : ''}`} onClick={e => {setFeedback('Tốt'), handlePageChange(1) }}>Tốt  <i className="pl-1 ri-thumb-up-fill"></i> </button>
-        <button className={`bg-gray-300 p-2 mr-3 rounded-lg ${feedback == 'Tệ' ? 'bg-red-500 text-white' : ''}`} onClick={e => { setFeedback('Tệ'), handlePageChange(1) }}>Tệ  <i className="pl-1 ri-thumb-down-fill"></i> </button>
-        <button className={`bg-gray-300 p-2 mr-3 rounded-lg ${feedback == '' ? 'bg-green-500 text-white' : ''}`} onClick={e => setFeedback('')}>Tất cả </button> 
+        <button className={`p-2 mr-3 rounded-lg ${feedback == 'Tốt' ? 'bg-green-500 text-white' : 'bg-white'}`} onClick={e => {setFeedback('Tốt'), handlePageChange(1) }}>Tốt  <i className="pl-1 ri-thumb-up-fill"></i> </button>
+        <button className={`p-2 mr-3 rounded-lg ${feedback == 'Tệ' ? 'bg-red-500 text-white' : 'bg-white'}`} onClick={e => { setFeedback('Tệ'), handlePageChange(1) }}>Tệ  <i className="pl-1 ri-thumb-down-fill"></i> </button>
+        <button className={`p-2 mr-3 rounded-lg ${feedback == '' ? 'bg-green-500 text-white' : 'bg-white'}`} onClick={e => setFeedback('')}>Tất cả </button> 
       </div>
       {/* Hiển thị các đánh giá */}
       <div className="mt-6 px-6 min-h-[50vh]">
@@ -73,7 +73,7 @@ const Review = () => {
         ) : (
           filterFacility()?.map((review, index) => 
              ((currentPage-1)*5 <= index && index < currentPage*5) ? (
-            <div key={review._id} className='shadow-gray-600 bg-gray-100 rounded-xl shadow-md border text-lg border-gray-400 mb-5'>
+            <div key={review._id} className='shadow-gray-600 bg-white rounded-md shadow-md border text-lg border-gray-400 mb-5'>
               <div className="rounded-xl flex p-4 text-lg">
                 <img src="./src/assets/user-profile.png" className='hidden sm:block w-14 h-14 mr-5' alt="" />
                 <div>
