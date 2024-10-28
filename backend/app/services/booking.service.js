@@ -25,7 +25,6 @@ class Bookings extends db {
       };
       // Nếu có điều kiện thời gian bắt đầu, thêm vào điều kiện truy vấn
       if (payload.thoiGianBatDau != '' && payload.thoiGianBatDau) {
-          console.log('have')
           query.thoiGianBatDau = { $gte: payload.thoiGianBatDau };
       }
 
@@ -37,7 +36,6 @@ class Bookings extends db {
       if (!result) {
         throw new Error('Document not found');
       }
-      console.log(query)
       return result
     } catch (err) {
       throw new Error('Error finding document: ' + err.message);

@@ -78,7 +78,7 @@ router.route("/:id")
     .put(middleware.verifyAdmin, upload.single('hinhAnh_KH'), user.update);
     
 router.route("/")
-    .get(middleware.verifyAdmin, user.findAll)
+    .get(user.findAll)
     .post(user.create);
 
 router.route("/payment")

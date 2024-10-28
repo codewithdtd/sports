@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Booking from '../services/booking.service';
+import UserService from '../services/user.service';
 import invoiceService from '../services/invoice.service';
 import reviewService from '../services/review.service';
 import Pagination from '../components/Pagination';
@@ -10,19 +11,20 @@ import Feedback from '../components/Feedback';
 import sportTypeService from '../services/sportType.service';
 
 const History = () => {
-  const user = useSelector((state)=> state.user.login.user)
-  const accessToken = user?.accessToken; 
+  const user = useSelector((state) => state.user.login.user)
+  const accessToken = user?.accessToken;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const bookingService = new Booking(user, dispatch);
+  const userService = new UserService(user, dispatch);
   useEffect(() => {
-    if(!user) {
+    if (!user) {
       navigate('/login');
     }
   })
   const [review, setReview] = useState(false);
   const [reviewed, setReviewed] = useState(null);
-  const [reviews, setReviews] = useState({}); 
+  const [reviews, setReviews] = useState({});
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [list, setList] = useState([]);
@@ -58,34 +60,34 @@ const History = () => {
     ghiChu: "",
     ngayDat: "",
     ngayTao: "",
-      
+
   });
   const [search, setSearch] = useState('');
   // Phân trang
   const [currentPage, setCurrentPage] = useState(1);
-  
+
 
   const handleData = async (data = {}) => {
     (data.khachHang)
-      ? setFac(data) 
+      ? setFac(data)
       : '';
-      console.log(data)
-    if(data.phuongThuc == 'edit') {
+    console.log(data)
+    if (data.phuongThuc == 'edit') {
       console.log('edit')
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const timeNow = `${hours}:${minutes}`
-      if(data.trangThai === 'Nhận sân') {
+      if (data.trangThai === 'Nhận sân') {
         data.san.tinhTrang = "Đang sử dụng"
         data.thoiGianCheckIn = timeNow;
         await editFacility(data.san)
       }
-      if(await editBooking(data)) {
+      if (await editBooking(data)) {
         console.log('Đã cập nhật');
       }
     }
-    if(data.phuongThuc == 'create') {
+    if (data.phuongThuc == 'create') {
       console.log('create')
       console.log(data)
       const updatedServices = await Promise.all(
@@ -95,10 +97,10 @@ const History = () => {
           return await serviceService.update(service._id, service);
         })
       );
-      if(await createBooking(data) && updatedServices)
+      if (await createBooking(data) && updatedServices)
         console.log('Đã thêm mới');
     }
-    setEdit(!edit);  
+    setEdit(!edit);
   };
   // định dạng số
   function formatNumber(num) {
@@ -110,12 +112,12 @@ const History = () => {
       const { ho_KH, ten_KH, email_KH, sdt_KH } = item.khachHang;
       const { loai_San, tinhTrang, khuVuc, bangGiaMoiGio, ngayTao_San, ngayCapNhat_San, ten_San, ma_San } = item.san;
       const { trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, ngayTao } = item;
-      return [ ho_KH, ten_KH, email_KH, sdt_KH, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, ten_San, ma_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, ngayTao ].join(" ").toLowerCase();
+      return [ho_KH, ten_KH, email_KH, sdt_KH, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, ten_San, ma_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, ngayTao].join(" ").toLowerCase();
     });
   }
   // Lọc dữ liệu
   const filterFacility = () => {
-    if(search == '') 
+    if (search == '')
       return list;
 
     const searchTerms = search.toLowerCase().split(' ');
@@ -179,11 +181,21 @@ const History = () => {
   }
   const createBooking = async (data) => {
     const newFac = await bookingService.create(data);
-    return newFac;  
+    return newFac;
   }
   const editBooking = async (data) => {
     const isConfirmed = window.confirm("Bạn có chắc chắn muốn hủy sân?");
     if (isConfirmed) {
+      if (data.trangThaiThanhToan == 'Đã thanh toán') {
+        const refund = await userService.refund(data, accessToken)
+        if (refund) {
+          data.trangThai = 'Đã hủy';
+          data.trangThaiThanhToan = 'Đã hoàn tiền';
+          const editFac = await bookingService.update(data._id, data);
+          setFac(edit)
+          return editFac;
+        }
+      }
       data.trangThai = 'Đã hủy';
       const editFac = await bookingService.update(data._id, data);
       setFac(edit)
@@ -193,17 +205,17 @@ const History = () => {
 
   const getReview = async (id) => {
     try {
-        const datSan = { 'datSan._id': id }
-        const review = await reviewService.getOne(datSan)
-        if(review) {
-            return review;
-        }
-        else {
-          return false;
-        }
-    } catch (error) {
-        console.log(error)
+      const datSan = { 'datSan._id': id }
+      const review = await reviewService.getOne(datSan)
+      if (review) {
+        return review;
+      }
+      else {
         return false;
+      }
+    } catch (error) {
+      console.log(error)
+      return false;
     }
   }
   const fetchAllReviews = async () => {
@@ -240,7 +252,7 @@ const History = () => {
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-        </div> 
+        </div>
         <div className='rounded-lg grid md:grid-cols-2 gap-4'>
           {/* <div className="flex justify-between py-2 bg-blue-500 border-b mb-3 border-gray-300 shadow-md shadow-gray-400 text-center rounded-lg">
             <div className="w-1/6 font-semibold">TÊN</div>
@@ -263,90 +275,92 @@ const History = () => {
           </div> */}
 
 
-          {filterFacility()?.map((item, index) => 
-          ((currentPage-1)*6 <= index && index < currentPage*6) ?
-          <div key={index} className='flex shadow-md bg-gray-100 shadow-gray-400 rounded-lg border-2 border-gray-400 mb-3 p-2 text-lg'>
-            <div className='flex w-1/2 md:w-1/2 p-5'>
-                <img src={`http://localhost:3000/uploads/${listSportType.find(element => element._id === item.san.loai_San._id).hinhAnhDaiDien }`} className='m-auto object-contain bg-blue-200 rounded-xl' alt="" />
-            </div>
-            <div className={`flex flex-col items-start text-center min-h-32 p-5`}>
-              {/* <div className="w-1/12"></div> */}
-              <div className="p-1">
-              Khách hàng: {item.khachHang.ho_KH + ' ' + item.khachHang.ten_KH}
-              </div>
-              <div className="p-1 text-start">
-                <p>Tên sân: {item.san.ten_San + ' - ' + item.san.ma_San}</p>
-                <ul className='list-disc'> 
-                  {item.dichVu?.map((dichVu) =>
-                    <li key={dichVu._id} className='ml-20'>{dichVu.ten_DV} x{dichVu.soluong}</li>
-                  )}
-                </ul>
-              </div>
-              <div className="text-start">
-                <p className='p-1 font-bold'>Tiền thanh toán: {formatNumber(item.thanhTien)}</p>
-                <p className='p-1'>
-                  Trạng thái thanh toán: 
-                  <span className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-green-600 bg-green-200 border-green-500 shadow-md border-2' : ''} p-1 ml-2 px-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</span>
-                </p>
-              </div>
-              <div className="">
-                <p className='p-1'>Giờ đặt: {item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
-                <p className='p-1'>Ngày đặt: {item.ngayDat}</p>
-              </div>
-              <div className="p-1 flex justify-center">
-                Ngày tạo: {item.ngayTao}
-              </div>
-              <div className="p-1 flex justify-center items-center h-fit">
-                Trạng thái: 
-                <p className={`${item.trangThai == 'Hoàn thành' ? 'text-green-700 rounded-lg bg-green-200 border-green-500 border-2 shadow-md ' 
-                  : item.trangThai == 'Đã hủy' ? 'text-red-700 rounded-lg bg-red-300 border-red-500 border-2 shadow-md ' 
-                  : item.trangThai == 'Đã duyệt' ? 'text-blue-700 rounded-lg bg-blue-300 border-blue-500 border-2 shadow-md ' 
-                  : item.trangThai == 'Nhận sân' ? 'text-yellow-700 rounded-lg bg-yellow-300 border-yellow-600 border-2 shadow-md ' 
-                            : 'rounded-lg'} w-fit font-medium p-1 ml-3 shadow-gray-500`}>
-                  {item.trangThai}
-                </p>
-              </div>
-              <div className="flex pt-4 w-full justify-between">
-              {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
-                      <span className='hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg'><i
-                    className="ri-bill-line"
-                    onClick={(e) => handleData(listInvoice.find((invoice) => invoice.datSan._id == item._id))}
-                  ></i> Hóa đơn
-                  </span>
-                )
-                : ''}
+          {filterFacility()?.map((item, index) =>
+            ((currentPage - 1) * 6 <= index && index < currentPage * 6) ?
+              <div key={index} className='flex flex-col shadow-md bg-gray-100 shadow-gray-400 rounded-lg border-2 border-gray-400 mb-3 p-2 text-lg'>
+                <div className='flex'>
+                  <div className='flex w-1/2 md:w-1/2 p-5'>
+                    <img src={`http://localhost:3000/uploads/${listSportType.find(element => element._id === item.san.loai_San._id).hinhAnhDaiDien}`} className='m-auto object-contain bg-blue-200 rounded-xl' alt="" />
+                  </div>
+                  <div className={`flex flex-col items-start text-center min-h-32 p-5`}>
+                    {/* <div className="w-1/12"></div> */}
+                    <div className="p-1">
+                      Khách hàng: {item.khachHang.ho_KH + ' ' + item.khachHang.ten_KH}
+                    </div>
+                    <div className="p-1 text-start">
+                      <p>Tên sân: {item.san.ten_San + ' - ' + item.san.ma_San}</p>
+                      <ul className='list-disc'>
+                        {item.dichVu?.map((dichVu) =>
+                          <li key={dichVu._id} className='ml-20'>{dichVu.ten_DV} x{dichVu.soluong}</li>
+                        )}
+                      </ul>
+                    </div>
+                    <div className="text-start">
+                      <p className='p-1 font-bold'>Tiền thanh toán: {formatNumber(item.thanhTien)}</p>
+                      <p className='p-1'>
+                        Trạng thái thanh toán:
+                        <span className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-green-600 bg-green-200 border-green-500 shadow-md border-2' : ''} p-1 ml-2 px-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</span>
+                      </p>
+                    </div>
+                    <div className="">
+                      <p className='p-1'>Giờ đặt: {item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
+                      <p className='p-1'>Ngày đặt: {item.ngayDat}</p>
+                    </div>
+                    <div className="p-1 flex justify-center">
+                      Ngày tạo: {item.ngayTao}
+                    </div>
+                    <div className="p-1 flex justify-center items-center h-fit">
+                      Trạng thái:
+                      <p className={`${item.trangThai == 'Hoàn thành' ? 'text-green-700 rounded-lg bg-green-200 border-green-500 border-2 shadow-md '
+                        : item.trangThai == 'Đã hủy' ? 'text-red-700 rounded-lg bg-red-300 border-red-500 border-2 shadow-md '
+                          : item.trangThai == 'Đã duyệt' ? 'text-blue-700 rounded-lg bg-blue-300 border-blue-500 border-2 shadow-md '
+                            : item.trangThai == 'Nhận sân' ? 'text-yellow-700 rounded-lg bg-yellow-300 border-yellow-600 border-2 shadow-md '
+                              : 'rounded-lg'} w-fit font-medium p-1 ml-3 shadow-gray-500`}>
+                        {item.trangThai}
+                      </p>
+                    </div>
+                    <div className="flex pt-4 w-full justify-between">
+                      {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
+                        <span className='hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg'><i
+                          className="ri-bill-line"
+                          onClick={(e) => handleData(listInvoice.find((invoice) => invoice.datSan._id == item._id))}
+                        ></i> Hóa đơn
+                        </span>
+                      )
+                        : ''}
 
-                {item.trangThai === 'Chưa duyệt' ? 
-                <button className='bg-red-500 shadow-md shadow-gray-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
-                : ''}
-                {/* Hiển thị kết quả của getReview() */}
-                {reviews[item._id] ?
-                  <button className='border-gray-500 text-gray-600 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Xem đánh giá</button>
-                : ''}
+                      {item.trangThai === 'Chưa duyệt' ?
+                        <button className='bg-red-500 shadow-md shadow-gray-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
+                        : ''}
+                      {/* Hiển thị kết quả của getReview() */}
+                      {reviews[item._id] ?
+                        <button className='border-gray-500 text-gray-600 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => { setReview(true), setReviewed(item) }}>Xem đánh giá</button>
+                        : ''}
 
 
-                {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ? 
-                <button className='text-white bg-green-500 hover:bg-green-700 p-1 rounded-md mx-2' onClick={e => {setReview(true), setReviewed(item)}}>Đánh giá</button>
-                : ''}
-              </div>
-            </div>
-            {item.expireAt && item.trangThai != 'Đã hủy' && <p className='italic ml-3'><span className='text-red-500'>* Đang chờ thanh toán đặt sân sẽ hủy vào lúc:</span> 
-              <span>{formatDate(item.expireAt)}</span>
-              <a className='ml-4 font-bold underline text-blue-600 hover:text-blue-800' href={item.order_url}>Thanh toán ngay</a>
-            </p>}
-          </div> : ''
-          )}  
+                      {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ?
+                        <button className='text-white bg-green-500 hover:bg-green-700 p-1 rounded-md mx-2' onClick={e => { setReview(true), setReviewed(item) }}>Đánh giá</button>
+                        : ''}
+                    </div>
+                  </div>
+                </div>
+                {item.expireAt && item.trangThai != 'Đã hủy' && <p className='italic ml-3'><span className='text-red-500'>* Đang chờ thanh toán đặt sân sẽ hủy vào lúc:</span>
+                  <span>{formatDate(item.expireAt)}</span>
+                  <a className='ml-4 font-bold underline text-blue-600 hover:text-blue-800' href={item.order_url}>Thanh toán ngay</a>
+                </p>}
+              </div> : ''
+          )}
           {(filterFacility()?.length < 1) ? <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div> : ''}
         </div>
       </div>
-       <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-          />
-        {/* from nhập dữ liệu */}
-      {edit ? <Invoice toggle={setEdit} data={fac} /> : '' }
-      { review ? <Feedback toggle={setReview} data={reviewed} /> : '' }
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
+      {/* from nhập dữ liệu */}
+      {edit ? <Invoice toggle={setEdit} data={fac} /> : ''}
+      {review ? <Feedback toggle={setReview} data={reviewed} /> : ''}
     </div>
   )
 }

@@ -447,7 +447,6 @@ exports.findAllReview = async (req, res, next) => {
 
 exports.findOneReview = async (req, res, next) => {
     const review = new Reviews();
-    console.log(req.body)
     try {
         let result;
         if(!req.params.id) {
@@ -673,7 +672,7 @@ exports.payment = async (req, res, next) => {
         amount: thanhTien,
         description: `DSport - Payment for the order #${transID}`,
         bank_code: "",
-        callback_url: 'https://0db3-113-161-208-91.ngrok-free.app/api/user/callback'
+        callback_url: 'https://db02-14-241-183-210.ngrok-free.app/api/user/callback'
     };
 
     // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -723,7 +722,7 @@ exports.callback = async (req, res, next) =>  {
       const bookings = await booking.find({maGiaoDich: dataJson["app_trans_id"]});
       console.log(bookings.length);
       for(let item of bookings) {
-        const update = await booking.update(item._id, {expireAt: null, trangThaiThanhToan: 'Đã thanh toán', order_url: ''});
+        const update = await booking.update(item._id, {expireAt: null, trangThaiThanhToan: 'Đã thanh toán', order_url: '', zp_trans_id: dataJson["zp_trans_id"]});
       }
       console.log('Đã update')
       result.return_code = 1;
@@ -768,6 +767,7 @@ exports.paymentStatus = async (req, res, next) => {
 }
 
 exports.refund = async (req, res, next) => {
+    let {thanhTien, zp_trans_id, maGiaoDich, _id} = req.body;
     const config = {
         app_id: "2554",
         key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
@@ -781,16 +781,20 @@ exports.refund = async (req, res, next) => {
         app_id: config.app_id,
         m_refund_id: `${moment().format('YYMMDD')}_${config.app_id}_${uid}`,
         timestamp, // miliseconds
-        zp_trans_id: '190508000000022',
-        amount: '50000',
+        zp_trans_id: zp_trans_id,
+        amount: thanhTien,
         description: 'ZaloPay Refund Demo',
     };
 
-    let data = params.app_id + "|" + params.zp_trans_id + "|" + params.amount + "|" + params.description + "|" + params.timestamp;
+    let data = `${params.app_id}|${params.zp_trans_id}|${params.amount}|${params.description}|${params.timestamp}`;
     params.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
 
     try {
-        const result = await axios.post(config.refund_url, null, { params });
+        const result = await axios.post(config.refund_url, new URLSearchParams(params).toString(), {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
         return res.status(200).json(result.data)
     } catch (error) {
         console.log(error);
@@ -800,7 +804,7 @@ exports.refund = async (req, res, next) => {
 
 // Chạy mỗi phút để kiểm tra các booking chưa thanh toán
 cron.schedule('* * * * *', async () => {
-    const expiredTime = new Date(Date.now() -  5 * 15 * 1000);  // Lấy thời gian 5 phút trước
+    const expiredTime = new Date(Date.now() -  5 * 60 * 1000); // Lấy thời gian 5 phút trước
     try {
         const booking = new Bookings();
         const result = await booking.updateMany(

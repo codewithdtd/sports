@@ -76,6 +76,14 @@ class UserService extends BaseService {
             })).data;
         return user;    
     }
+    async refund(data, accessToken) {
+        const user = (await this.api.post(`/refund`, data, {
+                headers: { 
+                    token: `Bearer ${accessToken}`,
+                }
+            })).data;
+        return user;    
+    }
 }
 
 export default UserService;
