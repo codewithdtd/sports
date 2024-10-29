@@ -15,13 +15,13 @@ import Equipment from '../views/Equipment';
 import Review from '../views/Review';
 import Customer from '../views/Customer';
 import Staff from '../views/Staff';
-import Membership from '../views/Membership';
-import Event from '../views/Event';
+// import Membership from '../views/Membership';
+// import Event from '../views/Event';
 import Info from '../views/Info';
 import ChangePass from '../views/ChangePass';
 import FacilityManagement from '../views/FacilityManagement';
 import SportType from '../views/SportType';
-import UserMembership from '../views/UserMembership';
+// import UserMembership from '../views/UserMembership';
 import Contact from '../views/Contact';
 export const router = createBrowserRouter([
   {
@@ -69,18 +69,18 @@ export const router = createBrowserRouter([
         path: "customer",
         element: <Customer />,
       },
-      {
-        path: "membership",
-        element: <Membership />,
-      },
-      {
-        path: "userMembership",
-        element: <UserMembership />,
-      },
-      {
-        path: "event",
-        element: <Event />,
-      },
+      // {
+      //   path: "membership",
+      //   element: <Membership />,
+      // },
+      // {
+      //   path: "userMembership",
+      //   element: <UserMembership />,
+      // },
+      // {
+      //   path: "event",
+      //   element: <Event />,
+      // },
       {
         path: "staff",
         element: <Staff />,

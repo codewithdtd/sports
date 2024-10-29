@@ -621,7 +621,15 @@ exports.findOneInvoice = async (req, res, next) => {
     }
 }
 
-
+exports.filterInvoice = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        const result = await invoice.filter(req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 // Dụng  cụ thiết bị
 // 
 // 

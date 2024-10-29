@@ -71,6 +71,8 @@ router.route("/booking/:id")
 // Hóa đơn
 // 
 // 
+router.route("/invoice/filter")
+    .post(admin.filterInvoice)
 router.route("/invoice")
     .get(admin.findAllInvoice)
     .post(middleware.verifyAdmin, admin.createInvoice)
