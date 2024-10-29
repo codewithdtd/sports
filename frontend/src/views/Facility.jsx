@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import InvoiceService from '../services/invoice.service';
 import BookingService from '../services/booking.service';
 import FacilityService from '../services/facility.service';
 import SportTypeService from '../services/sportType.service';
+import ServiceService from '../services/service.service';
 import Pagination from '../components/Pagination';
 
 function Facility() {
@@ -14,7 +15,7 @@ function Facility() {
   const [edit, setEdit] = useState(false);
   const [facilities, setFacilities] = useState([]);
   const [sportType, setSportType] = useState([]);
-  const user = useSelector((state)=> state.user.login.user)
+  const user = useSelector((state) => state.user.login.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -22,14 +23,15 @@ function Facility() {
   const bookingService = new BookingService(user, dispatch);
   const facilityService = new FacilityService(user, dispatch);
   const sportTypeService = new SportTypeService(user, dispatch);
+  const serviceService = new ServiceService(user, dispatch);
 
   useEffect(() => {
-    if(!user || user.user.chuc_vu != 'admin') {
+    if (!user || user.user.chuc_vu != 'admin') {
       navigate('/login');
     }
   })
   // xử lý sân đã đặt
-  
+
   const [fac, setFac] = useState({
     _id: null,
     datSan: {},
@@ -64,23 +66,23 @@ function Facility() {
     // }
     const foundSport = sportType.find(item => item.ten_loai === data);
     return foundSport ? foundSport.hinhAnhDaiDien : null;
-  } 
+  }
 
   const handleFacility = async (data = {}) => {
-    setFac(data) 
+    setFac(data)
     console.log(data)
-      
-    if(data.phuongThuc == 'edit') {
+
+    if (data.phuongThuc == 'edit') {
       console.log('edit')
-      if(data.thoiGianCheckIn != '--:--') {
+      if (data.thoiGianCheckIn != '--:--') {
         data.tinhTrang = 'Đang sử dụng';
         await editFacility(data)
       }
-      if(await editBooking(data))
+      if (await editBooking(data))
         console.log('Đã cập nhật');
       setFac(fac)
     }
-    if(data.phuongThuc == 'thanhToan') {
+    if (data.phuongThuc == 'thanhToan') {
       console.log('check out')
       data.tinhTrang = "Trống";
       data.datSan.trangThai = "Hoàn thành";
@@ -88,9 +90,14 @@ function Facility() {
       const bookingSuccess = await editBooking(data);
       const facilitySuccess = await editFacility(data);
       const invoiceSuccess = await createInvoice(data)
+      if (data.datSan.dichVu?.length > 0) {
+        for (let dichVu of data.datSan.dichVu) {
+          const updateService = await editService(dichVu);
+        }
+      }
       setFac(fac)
     }
-    setEdit(!edit);  
+    setEdit(!edit);
   };
 
   // định dạng số
@@ -106,7 +113,7 @@ function Facility() {
   }
   // Lọc dữ liệu
   const filterFacility = () => {
-    if(search == '') 
+    if (search == '')
       return facilities;
 
 
@@ -131,21 +138,21 @@ function Facility() {
 
   // Hàm để lấy giờ hiện tại và định dạng thành 'HH:MM'
   function getFormattedTime() {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      return `${hours}:${minutes}`;
-      // return "21:12";
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+    // return "21:12";
   }
 
   // Hàm để lấy ngày hiện tại và định dạng thành 'dd/mm/yyyy'
   function getFormattedDate() {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng 0-11, cần +1
-      const year = now.getFullYear();
-      return `${year}-${month}-${day}`;
-      // return `2024-09-07`;
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng 0-11, cần +1
+    const year = now.getFullYear();
+    return `${year}-${month}-${day}`;
+    // return `2024-09-07`;
   }
 
 
@@ -158,7 +165,7 @@ function Facility() {
     setSportType(sp)
     console.log('tải lại')
   }
-    // Lấy dữ liệu sân đã đặt
+  // Lấy dữ liệu sân đã đặt
   const getFacilityBooked = async () => {
     const time = {
       ngayDat: currentDate,
@@ -205,13 +212,19 @@ function Facility() {
     console.log(editFac)
     // return editFac;
   }
+  const editService = async (data) => {
+    const find = await serviceService.get(data._id)
+    const editFac = await serviceService.update(data._id, { tonKho: find.tonKho + data.soluong });
+    console.log(editFac)
+    // return editFac;
+  }
 
   const editBooking = async (data) => {
     console.log('have datSan')
     console.log(data)
     const newEditBooking = await bookingService.update(data.datSan._id, data.datSan);
     return newEditBooking;
- } 
+  }
   const deleteFacility = async (data) => {
     const deleteFac = await facilityService.delete(data._id);
     return deleteFac;
@@ -241,7 +254,7 @@ function Facility() {
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-        </div> 
+        </div>
         {/* <button className="bg-green-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-green-700 w-10 h-10 m-auto rounded-xl"
                 onClick={e => handleFacility()}
         >
@@ -250,7 +263,7 @@ function Facility() {
       </div>
       <div className='flex pb-2'>
         <div className='flex items-center'>
-          <input name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" value={currentDate} readOnly/>
+          <input name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" value={currentDate} readOnly />
         </div>
         <div className='flex items-center'>
           <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' value={currentTime} readOnly />
@@ -261,43 +274,43 @@ function Facility() {
         </div> */}
       </div>
       {/* Lọc dữ liệu */}
-      
+
       {/* Phân chia xem hiển thị dạng grid hay bảng */}
-      
-      
-        <div className='grid grid-cols-3 lg:grid-cols-5 gap-4'>
-        {facilities ? filterFacility().map((facility, index) => 
-          <div 
-            key={facility._id} 
-            className={`${facility.tinhTrang == "Trống" 
-                            ? 'bg-white' : facility.tinhTrang == "Đã đặt" 
-                            ? 'bg-blue-400' : facility.tinhTrang == "Đang sử dụng" ? 'bg-green-400' : 'bg-yellow-400'} 
+
+
+      <div className='grid grid-cols-3 lg:grid-cols-5 gap-4'>
+        {facilities ? filterFacility().map((facility, index) =>
+          <div
+            key={facility._id}
+            className={`${facility.tinhTrang == "Trống"
+              ? 'bg-white' : facility.tinhTrang == "Đã đặt"
+                ? 'bg-blue-400' : facility.tinhTrang == "Đang sử dụng" ? 'bg-green-400' : 'bg-yellow-400'} 
               shadow-lg shadow-slate-500 rounded-lg overflow-hidden transition-all cursor-pointer hover:-translate-y-1`}
             onClick={e => handleFacility(facility)}
-          >  
+          >
             <div className={`px-1 text-sm flex justify-between `}>
               <p>{facility.ma_San}</p>
-              {facility.tinhTrang == 'Bảo trì' ?<p> Bảo trì</p> : ''}
-              {facility.datSan ? <p>{facility.datSan.khachHang.ho_KH+' '+facility.datSan.khachHang.ten_KH}</p> : '' }
+              {facility.tinhTrang == 'Bảo trì' ? <p> Bảo trì</p> : ''}
+              {facility.datSan ? <p>{facility.datSan.khachHang.ho_KH + ' ' + facility.datSan.khachHang.ten_KH}</p> : ''}
             </div>
             <div className='relative facility-item-name pl-1 min-h-20 sm:min-h-24 md:h-36 justify-center items-center bg-no-repeat bg-center flex text-lg font-extrabold'>
-              <img src={`http://localhost:3000/uploads/${backgroundSan(facility.loai_San.ten_loai)}`} className='absolute w-1/2 z-[0] opacity-80' alt="" /> 
+              <img src={`http://localhost:3000/uploads/${backgroundSan(facility.loai_San.ten_loai)}`} className='absolute w-1/2 z-[0] opacity-80' alt="" />
               <p className='text-3xl z-[1] xl:text-4xl italic'>{facility.tinhTrang}</p>
             </div>
             <div className='z-10 text-sm sm:text-base px-1 sm:flex justify-between'>
-              {facility.datSan ? facility.datSan.thoiGianBatDau+'-'+facility.datSan.thoiGianKetThuc : facility.ten_San} 
-              <p>{facility.datSan ? formatNumber(facility.datSan.thanhTien) : formatNumber(facility.bangGiaMoiGio)+"/h"}</p>
+              {facility.datSan ? facility.datSan.thoiGianBatDau + '-' + facility.datSan.thoiGianKetThuc : facility.ten_San}
+              <p>{facility.datSan ? formatNumber(facility.datSan.thanhTien) : formatNumber(facility.bangGiaMoiGio) + "/h"}</p>
             </div>
           </div>
-          ) : ''}
-        </div>
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-        {/* from nhập dữ liệu */}
-      {edit ? <FormFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
+        ) : ''}
+      </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
+      {/* from nhập dữ liệu */}
+      {edit ? <FormFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : ''}
     </div>
   )
 }
