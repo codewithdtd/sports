@@ -7,6 +7,8 @@ import 'package:mobile/components/rounded_input_field.dart';
 import 'package:mobile/contants.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/user.dart';
+import 'package:mobile/stores/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -26,7 +28,10 @@ class LoginScreen extends StatelessWidget {
     };
 
     try {
-      User? result = await UserService().login(newUser);
+      final result = await UserService().login({
+        'sdt_KH': phoneController.text,
+        'matKhau_KH': passwordController.text,
+      });
       return result != null
           ? "Thành công"
           : "Số điện thoại hoặc mật khẩu không đúng";
@@ -53,12 +58,21 @@ class LoginScreen extends StatelessWidget {
     if (validationResult == "Thành công") {
       // Navigate to login screen
       // ignore: use_build_context_synchronously
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) {
-          return HomeScreen();
-        }),
-      );
+      final user = await UserService().login({
+        'sdt_KH': phoneController.text,
+        'matKhau_KH': passwordController.text,
+      });
+      if (user != null) {
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUser(user["user"], user["token"]);
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return HomeScreen();
+          }),
+        );
+      }
     }
   }
 

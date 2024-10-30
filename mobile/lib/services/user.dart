@@ -3,6 +3,7 @@ import 'package:mobile/services/api.dart';
 import 'package:mobile/models/user.dart';
 import 'package:http/http.dart' as http;
 
+
 class UserService extends ApiService<User> {
   UserService({String? token})
       : super(baseUrl: 'http://192.168.56.1:3000/api/user', token: token);
@@ -40,8 +41,9 @@ class UserService extends ApiService<User> {
   }
 
   // Hàm đăng nhập
-  Future<User?> login(Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>?> login(Map<String, dynamic> data) async {
     final url = Uri.parse('$baseUrl/login');
+
     try {
       final response = await http.post(
         url,
@@ -51,10 +53,12 @@ class UserService extends ApiService<User> {
 
       if (response.statusCode == 200) {
         final userData = json.decode(response.body);
-        final user = fromJson(userData);
+        final user = fromJson(userData["user"]);
+        final token = userData["accessToken"];
+
         // Cập nhật token sau khi đăng nhập thành công
         // token = userData['token'];
-        return user;
+        return {"user": user, "token": token};
       } else {
         print('Login failed with status: ${response.statusCode}');
         return null;
