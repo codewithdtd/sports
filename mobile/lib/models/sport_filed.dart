@@ -1,52 +1,49 @@
+import 'package:mobile/models/booking_models.dart';
+
 class SportField {
   SportField({
     required this.id,
+    required this.maSan,
     required this.tenSan,
     required this.loaiSan,
     required this.tinhTrang,
     required this.khuVuc,
-    required this.hinhAnhSan,
-    required this.daXoa,
     required this.bangGiaMoiGio,
-    required this.maSan,
+    required this.daXoa,
+    required this.ngayTaoSan,
+    required this.v,
+    required this.hinhAnhSan,
+    this.datSan,
   });
 
-  final Id? id;
+  final String? id;
+  final String? maSan;
   final String? tenSan;
   final LoaiSan? loaiSan;
   final String? tinhTrang;
   final String? khuVuc;
-  final String? hinhAnhSan;
-  final bool? daXoa;
   final int? bangGiaMoiGio;
-  final String? maSan;
+  final bool? daXoa;
+  final String? ngayTaoSan;
+  final int? v;
+  final String? hinhAnhSan;
+  final Booking? datSan;
 
   factory SportField.fromJson(Map<String, dynamic> json) {
     return SportField(
-      id: json["_id"] == null ? null : Id.fromJson(json["_id"]),
+      id: json["_id"],
+      maSan: json["ma_San"],
       tenSan: json["ten_San"],
       loaiSan:
           json["loai_San"] == null ? null : LoaiSan.fromJson(json["loai_San"]),
       tinhTrang: json["tinhTrang"],
       khuVuc: json["khuVuc"],
-      hinhAnhSan: json["hinhAnh_San"],
-      daXoa: json["da_xoa"],
       bangGiaMoiGio: json["bangGiaMoiGio"],
-      maSan: json["ma_San"],
-    );
-  }
-}
-
-class Id {
-  Id({
-    required this.oid,
-  });
-
-  final String? oid;
-
-  factory Id.fromJson(Map<String, dynamic> json) {
-    return Id(
-      oid: json["\u0024oid"],
+      daXoa: json["da_xoa"],
+      ngayTaoSan: json["ngayTao_San"],
+      v: json["__v"],
+      hinhAnhSan: json["hinhAnh_San"],
+      datSan: json["datSan"] == null ? null : Booking.fromJson(json["datSan"]),
     );
   }
 }
