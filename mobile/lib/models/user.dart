@@ -28,4 +28,16 @@ class User {
       matKhauKh: json["matKhau_KH"],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "_id": id,
+      "ho_KH": hoKh,
+      "ten_KH": tenKh,
+      "hinhAnh_KH": hinhAnhKh,
+      "email_KH": emailKh,
+      "sdt_KH": sdtKh,
+      "matKhau_KH": matKhauKh,
+    };
+  }
 }

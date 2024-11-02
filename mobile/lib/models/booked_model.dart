@@ -31,6 +31,18 @@ class LoaiSan {
       hinhAnhDaiDien: json['hinhAnhDaiDien'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'ten_loai': tenLoai,
+      'da_xoa': daXoa ?? false,
+      'ngayTao': ngayTao,
+      '__v': v,
+      'hinhAnh': hinhAnh,
+      'hinhAnhDaiDien': hinhAnhDaiDien,
+    };
+  }
 }
 
 class KhachHang {
@@ -65,6 +77,19 @@ class KhachHang {
       ngayTaoKh: json['ngayTao_KH'],
       v: json['__v'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'ho_KH': hoKh,
+      'ten_KH': tenKh,
+      'email_KH': emailKh,
+      'sdt_KH': sdtKh,
+      'da_xoa': daXoa ?? false,
+      'ngayTao_KH': ngayTaoKh,
+      '__v': v,
+    };
   }
 }
 
@@ -109,6 +134,22 @@ class DichVu {
       soluong: json['soluong'],
       thanhTien: json['thanhTien'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'ten_DV': tenDv,
+      'gia': gia,
+      'ngayTao_DV': ngayTaoDv,
+      'da_xoa': daXoa ?? false,
+      '__v': v,
+      'so_luong': soLuong,
+      'choMuon': choMuon,
+      'tonKho': tonKho,
+      'soluong': soluong,
+      'thanhTien': thanhTien,
+    };
   }
 }
 
@@ -155,7 +196,8 @@ class DatSan {
       khachHang: KhachHang.fromJson(json['khachHang']),
       trangThai: json['trangThai'],
       trangThaiThanhToan: json['trangThaiThanhToan'],
-      san: SportFieldBooked.fromJson(json["loai_san"]), // Có thể định nghĩa rõ hơn nếu cần
+      san: SportFieldBooked.fromJson(
+          json["san"]), // Có thể định nghĩa rõ hơn nếu cần
       thoiGianBatDau: json['thoiGianBatDau'],
       thoiGianKetThuc: json['thoiGianKetThuc'],
       thoiGianCheckIn: json['thoiGianCheckIn'],
@@ -168,6 +210,27 @@ class DatSan {
       ngayTao: json['ngayTao'],
       v: json['__v'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'khachHang': khachHang?.toJson(),
+      'trangThai': trangThai,
+      'trangThaiThanhToan': trangThaiThanhToan,
+      'san': san?.toJson(),
+      'thoiGianBatDau': thoiGianBatDau,
+      'thoiGianKetThuc': thoiGianKetThuc,
+      'thoiGianCheckIn': thoiGianCheckIn,
+      'thoiGianCheckOut': thoiGianCheckOut,
+      'dichVu': dichVu?.map((x) => x.toJson()).toList(),
+      'thanhTien': thanhTien,
+      'ngayDat': ngayDat,
+      'expireAt': expireAt,
+      'da_xoa': daXoa ?? false,
+      'ngayTao': ngayTao,
+      '__v': v,
+    };
   }
 }
 
@@ -218,5 +281,23 @@ class SportFieldBooked {
       idAsString: json['_idAsString'],
       datSan: json['datSan'] != null ? DatSan.fromJson(json['datSan']) : null,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'ten_San': tenSan,
+      'loai_San': loaiSan?.toJson(),
+      'tinhTrang': tinhTrang,
+      'khuVuc': khuVuc,
+      'hinhAnh_San': hinhAnhSan,
+      'ngayTao_San': ngayTaoSan,
+      'ngayCapNhat_San': ngayCapNhatSan,
+      'da_xoa': daXoa ?? false,
+      'bangGiaMoiGio': bangGiaMoiGio,
+      'ma_San': maSan,
+      '_idAsString': idAsString,
+      'datSan': datSan?.toJson(),
+    };
   }
 }

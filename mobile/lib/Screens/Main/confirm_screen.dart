@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/Screens/Main/home_screen.dart';
 import 'package:mobile/models/booked_model.dart';
+import 'package:mobile/services/booking.dart';
 import 'package:mobile/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -62,6 +64,92 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
+    final String? token = Provider.of<UserProvider>(context).token;
+
+    int _calculateTotalPrice(DatSan item) {
+      int newTotal = 0;
+
+      newTotal += item.thanhTien ?? 0;
+      if (item.dichVu != null) {
+        for (var dichVu in item.dichVu!) {
+          newTotal += dichVu.thanhTien ?? 0;
+        }
+      }
+
+      return newTotal;
+    }
+
+    int _calculateTotal() {
+      int newTotal = 0;
+
+      for (var field in widget.list) {
+        newTotal += field.thanhTien ?? 0;
+        if (field.dichVu != null) {
+          for (var dichVu in field.dichVu!) {
+            newTotal += dichVu.thanhTien ?? 0;
+          }
+        }
+      }
+
+      return newTotal;
+    }
+
+    Future<void> _createBooking() async {
+      try {
+        for (var booking in widget.list) {
+          booking.khachHang = KhachHang(
+            id: user?.id,
+            hoKh: _firstNameController.text,
+            tenKh: _lastNameController.text,
+            emailKh: _emailController.text,
+            sdtKh: _phoneController.text,
+          );
+          booking.ngayDat = booking.ngayDat?.split(' ')[0];
+          final newBooking = {
+            ...booking
+                .toJson(), // Sử dụng toJson() để chuyển đổi đối tượng booking thành Map
+          };
+          // print(newBooking);
+
+          final response =
+              await BookingService(token: token).createBooking(newBooking);
+
+          if (response == null) {
+            throw Exception("Booking creation failed");
+          }
+        }
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              "Thành công",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        );
+
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } catch (e) {
+        print("Error: $e");
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              "Thất bại",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        );
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Xác nhận'),
@@ -124,6 +212,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
                     ),
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
@@ -134,12 +223,28 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
                               style: TextStyle(
                                   fontSize: 16.0, fontWeight: FontWeight.w500),
                             ),
+                            if (item.dichVu != null)
+                              ...item.dichVu!
+                                  .map((e) => Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('${e.tenDv} x ${e.soluong}'),
+                                          Text(
+                                              'Thành tiền: ${formatCurrency(e.thanhTien)}đ'),
+                                        ],
+                                      ))
+                                  .toList(),
                             Text(
-                                'Thành tiền: ${formatCurrency(item.thanhTien)}'),
+                              'Tổng: ${formatCurrency(_calculateTotalPrice(item))}đ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16.0),
+                            ),
                           ],
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               '${item.ngayDat?.split(' ')[0]}',
@@ -167,7 +272,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Tổng: 0đ',
+                'Tổng: ${formatCurrency(_calculateTotal())}',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -186,9 +291,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
               //   ),
               // )
               ElevatedButton(
-                onPressed: () {
-                  // Xử lý logic thanh toán ở đây
-                },
+                onPressed: () => _createBooking(),
                 child: Text(
                   'Đặt sân',
                   style: TextStyle(

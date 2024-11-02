@@ -1,19 +1,39 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=Tilt+Neon&display=swap&family=Keania+One&display=swap"
-      rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>D Sport</title>
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=Tilt+Neon&display=swap&family=Keania+One&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D Sport</title>
+  <title>Vite + React</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <df-messenger
+    chat-icon="https://png.pngtree.com/png-vector/20230225/ourmid/pngtree-smart-chatbot-cartoon-clipart-png-image_6620453.png"
+    intent="WELCOME" chat-title="Chatbot_Dsport" agent-id="ec76d4d3-2ae6-4056-8b32-b96390df2ae0" language-code="en">
+    <style>
+      df-messenger {
+        --df-messenger-bot-message: #fff;
+        --df-messenger-button-titlebar-color: #00ff99;
+        --df-messenger-button-titlebar-color: #07d683;
+        --df-messenger-chat-background-color: #fafafa;
+        --df-messenger-font-color: #000;
+        --df-messenger-send-icon: #00adff;
+        --df-messenger-user-message: #00ff99;
+        --df-messenger-chip-border-color: #00ff99;
+      }
+    </style>
+  </df-messenger>
+</body>
+
 </html>

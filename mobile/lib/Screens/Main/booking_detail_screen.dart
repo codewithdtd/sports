@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/Main/confirm_screen.dart';
+import 'package:mobile/components/service_modal.dart';
 import 'package:mobile/models/booked_model.dart';
 import 'package:mobile/models/sport_filed.dart';
+import 'package:mobile/services/service.dart';
 import 'package:mobile/services/sport_field.dart';
 import 'package:intl/intl.dart';
 
@@ -19,6 +21,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
   final Map<String, SportFieldBooked> selectedFieldMap = {};
   final List<SportFieldBooked> fields = [];
   final List<DatSan> fieldsSelected = [];
+  final List<DichVu> services = [];
 
   DateTime? selectedDate;
   int total = 0;
@@ -57,7 +60,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != selectedDate) {
@@ -75,11 +78,68 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
 
     for (var field in fieldsSelected) {
       newTotal += field.thanhTien ?? 0;
+      if (field.dichVu != null) {
+        for (var dichVu in field.dichVu!) {
+          newTotal += dichVu.thanhTien ?? 0;
+        }
+      }
     }
 
     setState(() {
       total = newTotal;
     });
+  }
+
+  bool _isSameBooking(DatSan booking1, DatSan booking2) {
+    return booking1.san?.id == booking2.san?.id &&
+        booking1.thoiGianBatDau == booking2.thoiGianBatDau &&
+        booking1.thoiGianKetThuc == booking2.thoiGianKetThuc &&
+        booking1.ngayDat == booking2.ngayDat;
+  }
+
+  void _showServiceOptions(String key, SportFieldBooked field, DatSan booking) {
+    List<DichVu> resetServices = services.map((service) {
+      // Tạo bản sao sâu cho từng dịch vụ
+      return DichVu(
+        id: service.id,
+        tenDv: service.tenDv,
+        tonKho: service.tonKho, // Đặt soluong về 0
+        gia: service.gia,
+        thanhTien: 0, // Đặt thanhTien về 0 nếu cần
+        soluong: 0, // Đặt soluong về 0
+      );
+    }).toList();
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ServiceSelectionSheet(
+          availableServices:
+              resetServices, // Sử dụng danh sách đã tạo bản sao sâu
+          onConfirm: (List<DichVu> selectedServices) {
+            setState(() {
+              // Cập nhật tonKho cho mỗi dịch vụ đã chọn
+              for (var selectedService in selectedServices) {
+                var index = services
+                    .indexWhere((service) => service.id == selectedService.id);
+                if (index != -1) {
+                  services[index].tonKho = (services[index].tonKho ?? 0) -
+                      (selectedService.soluong ?? 0);
+                }
+              }
+
+              booking.dichVu =
+                  selectedServices; // Cập nhật dịch vụ riêng cho booking
+              selectedFieldMap[key] = field;
+              fieldsSelected.removeWhere((existingBooking) =>
+                  _isSameBooking(existingBooking, booking)); // Xóa nếu trùng
+              fieldsSelected.add(booking); // Thêm lại với dịch vụ mới
+            });
+            _calculateTotalPrice(); // Cập nhật tổng số tiền
+          },
+        );
+      },
+    );
   }
 
   Future<void> _getAllBooked() async {
@@ -108,9 +168,15 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     }
   }
 
+  Future<void> _getAllService() async {
+    final List<DichVu> allService = await DichVuService().getAll();
+    setState(() {
+      services.addAll(allService);
+    });
+  }
+
   void _toggleSelection(String key, SportFieldBooked field, String startTime,
       String endTime, String ngayDat) {
-    print(key);
     DatSan booking = DatSan(
       thanhTien: field.bangGiaMoiGio,
       thoiGianBatDau: startTime,
@@ -118,16 +184,35 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
       san: field,
       ngayDat: ngayDat,
     );
+
     setState(() {
       if (selectedFieldMap.containsKey(key)) {
-        selectedFieldMap.remove(key); // Bỏ chọn nếu đã chọn
-        fieldsSelected.remove(booking);
+        // Bỏ chọn nếu đã chọn
+        selectedFieldMap.remove(key);
+        fieldsSelected.removeWhere((existingBooking) {
+          bool isSameBooking = _isSameBooking(existingBooking, booking);
+          if (isSameBooking && existingBooking.dichVu != null) {
+            // Hoàn trả số lượng dịch vụ tương ứng
+            for (var service in existingBooking.dichVu!) {
+              var index = services.indexWhere((s) => s.id == service.id);
+              if (index != -1) {
+                services[index].tonKho =
+                    (services[index].tonKho ?? 0) + (service.soluong ?? 0);
+              }
+            }
+          }
+          return isSameBooking; // Trả về true để xóa booking
+        });
+
+        _calculateTotalPrice();
       } else {
-        selectedFieldMap[key] = field; // Thêm vào nếu chưa chọn
-        fieldsSelected.add(booking);
+        // selectedFieldMap[key] = field; // Thêm vào nếu chưa chọn
+        // fieldsSelected.add(booking);
+        _showServiceOptions(key, field,
+            booking); // Hiển thị ServiceSelectionSheet khi chọn field
       }
     });
-    _calculateTotalPrice();
+
     print(key);
   }
 
@@ -137,6 +222,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
     selectedDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     _getAllBooked();
+    _getAllService();
   }
 
   @override
@@ -280,7 +366,17 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                 child: ElevatedButton(
                                   onPressed: (field.datSan?.thoiGianBatDau ==
                                               startText ||
-                                          field.tinhTrang == 'Bảo trì')
+                                          field.tinhTrang == 'Bảo trì' ||
+                                          (int.tryParse(startText.substring(
+                                                      0, 2))! <=
+                                                  DateTime.now().hour) &&
+                                              selectedDate?.isAtSameMomentAs(
+                                                      DateTime(
+                                                          DateTime.now().year,
+                                                          DateTime.now().month,
+                                                          DateTime.now()
+                                                              .day)) ==
+                                                  true)
                                       ? null
                                       : () {
                                           String key =

@@ -19,7 +19,7 @@ class ApiService<T> {
   Map<String, String> getHeaders() {
     final headers = {'Content-Type': 'application/json'};
     if (token != null && token!.isNotEmpty) {
-      headers['Authorization'] = 'Bearer $token';
+      headers['token'] = 'Bearer $token';
     }
     return headers;
   }
@@ -63,11 +63,12 @@ class ApiService<T> {
         headers: getHeaders(),
         body: jsonEncode(data),
       );
+      print(jsonEncode(data));
       if (response.statusCode == 201 || response.statusCode == 200) {
         final responseData = json.decode(response.body) as Map<String, dynamic>;
         return fromJson(responseData);
       } else {
-        throw Exception('Failed to create data');
+        throw Exception('Failed to create data ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Failed to create data due to an error: $e');
