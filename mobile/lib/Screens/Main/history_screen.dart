@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/Screens/Main/add_review_screen.dart';
 import 'package:mobile/models/booked_model.dart';
+import 'package:mobile/models/rating_model.dart';
 import 'package:mobile/services/booking.dart';
+import 'package:mobile/services/review.dart';
 import 'package:mobile/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -16,11 +19,13 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   late Future<List<DatSan>> futureList;
+  final List<Rating> reviewed = [];
 
   @override
   void initState() {
     super.initState();
     futureList = _fetchData();
+    _fetchReviewed();
   }
 
   Future<List<DatSan>> _fetchData() async {
@@ -38,6 +43,39 @@ class _HistoryState extends State<History> {
         SnackBar(content: Text('Không thể tải dữ liệu. Vui lòng thử lại sau.')),
       );
       return [];
+    }
+  }
+
+  Future<void> _fetchReviewed() async {
+    try {
+      final String? token =
+          Provider.of<UserProvider>(context, listen: false).token;
+      final List<DatSan> datSanList = await futureList;
+
+      // Tạo danh sách tạm để lưu các review mà không cần gọi setState liên tục
+      final List<Rating> tempReviewed = [];
+
+      for (var item in datSanList) {
+        try {
+          // Gọi API và bắt lỗi riêng cho từng lần gọi
+          final review =
+              await ReviewService(token: token).getOne({"datSan._id": item.id});
+
+          if (review != null) {
+            tempReviewed.add(review); // Chỉ thêm review nếu không null
+          }
+        } catch (error) {
+          // Bắt lỗi riêng cho từng lần gọi API và in ra console
+          print('Không tìm thấy review cho ${item.id}: $error');
+        }
+      }
+
+      // Cập nhật state sau khi hoàn thành vòng lặp
+      setState(() {
+        reviewed.addAll(tempReviewed);
+      });
+    } catch (e) {
+      print('Lỗi khi lấy reviewed: $e');
     }
   }
 
@@ -89,8 +127,6 @@ class _HistoryState extends State<History> {
                   Text('Không thể cập nhật trạng thái. Vui lòng thử lại sau.')),
         );
       }
-      final response = await BookingService(token: token)
-          .updateBooking(item.id.toString(), {"trangThai": "Đã hủy"});
     }
   }
 
@@ -190,8 +226,10 @@ class _HistoryState extends State<History> {
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
@@ -241,25 +279,81 @@ class _HistoryState extends State<History> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  if (item.trangThai == "Hoàn thành" &&
-                                      tinhChenhLechNgay(item.ngayDat) < 4)
-                                    Container(
-                                      height: 35.0,
-                                      width: 80.0,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color: Colors.green, width: 2.0),
-                                        borderRadius:
-                                            BorderRadius.circular(6.0),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          'Đánh giá',
-                                          style: TextStyle(
+                                  if (reviewed.any(
+                                      (review) => review.datSan?.id == item.id))
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddRatingScreen(
+                                              datSan: item,
+                                              review: reviewed.firstWhere(
+                                                  (review) =>
+                                                      review.datSan?.id ==
+                                                      item.id // Trả về null nếu không tìm thấy
+                                                  ),
+                                              view: true,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 35.0,
+                                        width: 120.0,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: Colors.green, width: 2.0),
+                                          borderRadius:
+                                              BorderRadius.circular(6.0),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            'Xem đánh giá',
+                                            style: TextStyle(
                                               color: Colors.green,
                                               fontSize: 16.0,
-                                              fontWeight: FontWeight.w500),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  if (item.trangThai == "Hoàn thành" &&
+                                      tinhChenhLechNgay(item.ngayDat) < 4 &&
+                                      !reviewed.any((review) =>
+                                          review.datSan?.id == item.id))
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddRatingScreen(datSan: item),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 35.0,
+                                        width: 80.0,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: Colors.green, width: 2.0),
+                                          borderRadius:
+                                              BorderRadius.circular(6.0),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            'Đánh giá',
+                                            style: TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),

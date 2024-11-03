@@ -106,6 +106,7 @@ class ApiService<T> {
         );
       }
       if (response.statusCode == 201 || response.statusCode == 200) {
+        print('Response body: ${response.body}');
         final responseData = json.decode(response.body) as Map<String, dynamic>;
         return fromJson(responseData);
       } else {

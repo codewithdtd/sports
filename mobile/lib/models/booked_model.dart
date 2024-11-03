@@ -163,6 +163,7 @@ class DatSan {
   String? thoiGianKetThuc;
   String? thoiGianCheckIn;
   String? thoiGianCheckOut;
+  String? ghiChu;
   List<DichVu>? dichVu;
   int? thanhTien;
   String? ngayDat;
@@ -182,6 +183,7 @@ class DatSan {
     this.thoiGianCheckIn,
     this.thoiGianCheckOut,
     this.dichVu,
+    this.ghiChu,
     this.thanhTien,
     this.ngayDat,
     this.expireAt,
@@ -202,6 +204,7 @@ class DatSan {
       thoiGianKetThuc: json['thoiGianKetThuc'],
       thoiGianCheckIn: json['thoiGianCheckIn'],
       thoiGianCheckOut: json['thoiGianCheckOut'],
+      ghiChu: json["ghiChu"],
       dichVu: List<DichVu>.from(json['dichVu'].map((x) => DichVu.fromJson(x))),
       thanhTien: json['thanhTien'],
       ngayDat: json['ngayDat'],
@@ -223,6 +226,7 @@ class DatSan {
       'thoiGianKetThuc': thoiGianKetThuc,
       'thoiGianCheckIn': thoiGianCheckIn,
       'thoiGianCheckOut': thoiGianCheckOut,
+      'ghiChu': ghiChu,
       'dichVu': dichVu?.map((x) => x.toJson()).toList(),
       'thanhTien': thanhTien,
       'ngayDat': ngayDat,

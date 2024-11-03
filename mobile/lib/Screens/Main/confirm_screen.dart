@@ -23,6 +23,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
   late TextEditingController _lastNameController;
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
+  late TextEditingController _noteController;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
     _lastNameController = TextEditingController(text: user?.tenKh);
     _phoneController = TextEditingController(text: user?.sdtKh);
     _emailController = TextEditingController(text: user?.emailKh);
+    _noteController = TextEditingController();
   }
 
   String formatCurrency(int? number) {
@@ -48,6 +50,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
     _lastNameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
+    _noteController.dispose();
     super.dispose();
   }
 
@@ -104,6 +107,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
             emailKh: _emailController.text,
             sdtKh: _phoneController.text,
           );
+          booking.ghiChu = _noteController.text;
           booking.ngayDat = booking.ngayDat?.split(' ')[0];
           final newBooking = {
             ...booking
@@ -177,6 +181,10 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
               controller: _emailController,
               decoration: InputDecoration(labelText: 'Email'),
               keyboardType: TextInputType.emailAddress,
+            ),
+            TextField(
+              controller: _noteController,
+              decoration: InputDecoration(labelText: 'Ghi chú'),
             ),
             const SizedBox(height: 10),
             Center(
