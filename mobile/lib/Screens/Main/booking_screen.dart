@@ -15,24 +15,21 @@ class BookingScreen extends StatefulWidget {
 
 class _BookingScreenState extends State<BookingScreen> {
   late SportTypeService _sportTypeService;
-  List<SportType> _sportTypes = [];
 
   @override
   void initState() {
     super.initState();
     _sportTypeService = SportTypeService();
-    fetchData();
   }
 
-  Future<void> fetchData() async {
+  Future<List<SportType>> _fetchSportTypes() async {
     try {
       final data = await _sportTypeService.getAll();
-      setState(() {
-        _sportTypes = data;
-      });
+      return data;
     } catch (e) {
       // Xử lý lỗi nếu cần thiết
-      print('Failed to load sport Types: $e');
+      print('Failed to load sport types: $e');
+      return []; // Trả về danh sách rỗng trong trường hợp lỗi
     }
   }
 
@@ -74,8 +71,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       end: Alignment.bottomCenter,
                     ),
                     borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(30.0),
-                    ),
+                        bottom: Radius.circular(30.0)),
                   ),
                 ),
               ),
@@ -96,7 +92,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       ),
                     ),
                     Text(
-                      "Nơi thõa mãn niềm đam mê thể thao của bạn",
+                      "Nơi thỏa mãn niềm đam mê thể thao của bạn",
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.w600),
                     ),
@@ -130,26 +126,41 @@ class _BookingScreenState extends State<BookingScreen> {
               ),
             ],
           ),
-          SizedBox(
-            height: 40.0,
-          ),
+          SizedBox(height: 40.0),
           Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Số lượng phần tử trong mỗi hàng
-                mainAxisSpacing: 10.0, // Khoảng cách dọc giữa các hàng
-                crossAxisSpacing: 10.0, // Khoảng cách ngang giữa các phần tử
-                childAspectRatio: 1, // Tỉ lệ chiều cao / chiều rộng của phần tử
-              ),
-              itemCount: _sportTypes.length, // Số lượng phần tử trong lưới
-              itemBuilder: (context, index) {
-                return SportTypeItem(
-                  size: size,
-                  name: _sportTypes[index].tenLoai,
-                  sportType: _sportTypes[index],
-                );
+            child: FutureBuilder<List<SportType>>(
+              future: _fetchSportTypes(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Đã xảy ra lỗi khi tải dữ liệu'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('Không có dữ liệu'));
+                } else {
+                  final sportTypes = snapshot.data!;
+                  return GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Số lượng phần tử trong mỗi hàng
+                      mainAxisSpacing: 10.0, // Khoảng cách dọc giữa các hàng
+                      crossAxisSpacing:
+                          10.0, // Khoảng cách ngang giữa các phần tử
+                      childAspectRatio:
+                          1, // Tỉ lệ chiều cao / chiều rộng của phần tử
+                    ),
+                    itemCount: sportTypes.length, // Số lượng phần tử trong lưới
+                    itemBuilder: (context, index) {
+                      return SportTypeItem(
+                        size: size,
+                        name: sportTypes[index].tenLoai,
+                        sportType: sportTypes[index],
+                      );
+                    },
+                    padding: const EdgeInsets.all(8.0),
+                  );
+                }
               },
-              padding: const EdgeInsets.all(8.0),
             ),
           ),
         ],

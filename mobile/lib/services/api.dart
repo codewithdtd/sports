@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiService<T> {
   final String baseUrl;
-  final String? token;
+  late final String? token;
+  final _storage = FlutterSecureStorage();
 
   ApiService({required this.baseUrl, this.token});
 
@@ -24,10 +26,37 @@ class ApiService<T> {
     return headers;
   }
 
-  Future<List<T>> fetchData(String endpoint) async {
-    final url = Uri.parse('$baseUrl$endpoint');
+  // Lấy token từ storage
+  Future<String?> getRefreshToken() async {
+    return await _storage.read(key: 'refreshToken');
+  }
+
+  Future<void> refreshToken() async {
+    final url = Uri.parse('http://192.168.56.1/api/user/refresh');
+    final refreshToken = await getRefreshToken();
+    final response = await http.post(url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"refreshToken": refreshToken}));
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      token = responseData['accessToken'];
+    } else {
+      throw Exception('Failed to refresh token');
+    }
+  }
+
+  Future<List<T>> fetchData(String endpoint,
+      {Map<String, String?>? queryParams}) async {
+    final url =
+        Uri.parse('$baseUrl$endpoint').replace(queryParameters: queryParams);
     try {
-      final response = await http.get(url, headers: getHeaders());
+      var response = await http.get(url, headers: getHeaders());
+
+      if (response.statusCode == 403) {
+        await refreshToken();
+        response = await http.get(url, headers: getHeaders());
+      }
       if (response.statusCode == 200 || response.statusCode == 201) {
         return compute(parseResponse, response.body);
       } else {
@@ -35,14 +64,19 @@ class ApiService<T> {
             'Failed to fetch data with status code ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Failed to fetch data due to an error: $e');
+      throw Exception('Lỗi ở service: $e');
     }
   }
 
   Future<T> fetchOne(String endpoint) async {
     final url = Uri.parse('$baseUrl$endpoint');
     try {
-      final response = await http.get(url, headers: getHeaders());
+      var response = await http.get(url, headers: getHeaders());
+
+      if (response.statusCode == 403) {
+        await refreshToken();
+        response = await http.get(url, headers: getHeaders());
+      }
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body) as Map<String, dynamic>;
         return fromJson(data);
@@ -58,12 +92,19 @@ class ApiService<T> {
   Future<T> createData(String endpoint, Map<String, dynamic> data) async {
     final url = Uri.parse('$baseUrl$endpoint');
     try {
-      final response = await http.post(
+      var response = await http.post(
         url,
         headers: getHeaders(),
         body: jsonEncode(data),
       );
-      print(jsonEncode(data));
+      if (response.statusCode == 403) {
+        await refreshToken();
+        response = await http.post(
+          url,
+          headers: getHeaders(),
+          body: jsonEncode(data),
+        );
+      }
       if (response.statusCode == 201 || response.statusCode == 200) {
         final responseData = json.decode(response.body) as Map<String, dynamic>;
         return fromJson(responseData);
@@ -78,12 +119,21 @@ class ApiService<T> {
   Future<T> updateData(String endpoint, Map<String, dynamic> data) async {
     final url = Uri.parse('$baseUrl$endpoint');
     try {
-      final response = await http.put(
+      var response = await http.put(
         url,
         headers: getHeaders(),
         body: jsonEncode(data),
       );
-      if (response.statusCode == 200) {
+
+      if (response.statusCode == 403) {
+        await refreshToken();
+        response = await http.put(
+          url,
+          headers: getHeaders(),
+          body: jsonEncode(data),
+        );
+      }
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final responseData = json.decode(response.body) as Map<String, dynamic>;
         return fromJson(responseData);
       } else {
@@ -97,8 +147,13 @@ class ApiService<T> {
   Future<void> deleteData(String endpoint) async {
     final url = Uri.parse('$baseUrl$endpoint');
     try {
-      final response = await http.delete(url, headers: getHeaders());
-      if (response.statusCode != 200) {
+      var response = await http.delete(url, headers: getHeaders());
+
+      if (response.statusCode == 403) {
+        await refreshToken();
+        response = await http.delete(url, headers: getHeaders());
+      }
+      if (response.statusCode != 200 || response.statusCode != 201) {
         throw Exception('Failed to delete data');
       }
     } catch (e) {

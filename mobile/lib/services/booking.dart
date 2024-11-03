@@ -20,8 +20,8 @@ class BookingService extends ApiService<DatSan> {
   }
 
   // Gọi phương thức chung của ApiService
-  Future<List<DatSan>> getAll() async {
-    return await fetchData('/');
+  Future<List<DatSan>> getAll({Map<String, String?>? queryParams}) async {
+    return await fetchData('/', queryParams: queryParams);
   }
 
   Future<DatSan> getOne(String id) async {
