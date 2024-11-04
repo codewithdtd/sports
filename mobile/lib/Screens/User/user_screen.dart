@@ -65,7 +65,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
     if (!_isValidVietnamesePhoneNumber(_sdtController.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Số điện thoại không hợp lệ !!!')),
+        SnackBar(
+          content: Text('Số điện thoại không hợp lệ !!!'),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }

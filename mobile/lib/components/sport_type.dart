@@ -33,8 +33,8 @@ class SportTypeItem extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                const Color.fromARGB(255, 55, 176, 59), // Màu bắt đầu
-                const Color.fromARGB(255, 69, 233, 154), // Màu kết thúc
+                Color.fromARGB(255, 63, 238, 153), // Màu kết thúc
+                Color.fromARGB(255, 48, 146, 51), // Màu bắt đầu
               ],
               begin: Alignment.topCenter, // Điểm bắt đầu gradient
               end: Alignment.bottomCenter, // Điểm kết thúc gradient
@@ -56,10 +56,11 @@ class SportTypeItem extends StatelessWidget {
                       bottom: 0), // Khoảng cách từ dưới lên
                   child: Text(
                     sportType.tenLoai!,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 19.0,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
                     ),
                   ),
                 ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/Main/change_pass_sceen.dart';
 import 'package:mobile/Screens/User/user_screen.dart';
+import 'package:mobile/Screens/Welcome/welcome_screen.dart';
+import 'package:mobile/services/user.dart';
 import 'package:mobile/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +19,24 @@ class _ProfileState extends State<Profile> {
     final user = Provider.of<UserProvider>(context)
         .user; // Lấy user từ Provider trong phương thức build
     final token = Provider.of<UserProvider>(context).token;
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    Future<void> _logout() async {
+      try {
+        final logout = await UserService(token: token).logout();
+        userProvider.clearUser();
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const WelcomeScreen(),
+          ),
+        );
+      } catch (e) {
+        print('Lỗi đăng xuất');
+      }
+    }
+
     return Scaffold(
       body: user == null
           ? const Center(child: Text('Không tìm thấy người dùng.'))
@@ -87,38 +107,6 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     SizedBox(height: 20.0),
-                    // Center(
-                    //   child: Row(
-                    //     mainAxisSize: MainAxisSize.min,
-                    //     children: [
-                    //       Text(
-                    //         "Email:",
-                    //         style: TextStyle(fontSize: 18),
-                    //       ),
-                    //       SizedBox(
-                    //         width: 20.0,
-                    //       ),
-                    //       Text('${user.emailKh}',
-                    //           style: TextStyle(fontSize: 18)),
-                    //     ],
-                    //   ),
-                    // ),
-                    // SizedBox(height: 8),
-                    // Center(
-                    //   child: Row(
-                    //     mainAxisSize: MainAxisSize.min,
-                    //     children: [
-                    //       Text(
-                    //         "Số điện thoại:",
-                    //         style: TextStyle(fontSize: 18),
-                    //       ),
-                    //       SizedBox(
-                    //         width: 20.0,
-                    //       ),
-                    //       Text('${user.sdtKh}', style: TextStyle(fontSize: 18)),
-                    //     ],
-                    //   ),
-                    // ),
                     Padding(
                       padding: EdgeInsets.all(16.0),
                       child: ElevatedButton(
@@ -190,7 +178,7 @@ class _ProfileState extends State<Profile> {
                       padding: EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 16.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: _logout,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color.fromARGB(255, 255, 67, 67),
                           foregroundColor: Colors.white, // Đổi màu chữ

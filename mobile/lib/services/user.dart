@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:mobile/services/api.dart';
 import 'package:mobile/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +8,9 @@ import 'package:http/http.dart' as http;
 class UserService extends ApiService<User> {
   UserService({String? token})
       : super(baseUrl: 'http://192.168.56.1:3000/api/user', token: token);
+
+  final cookieJar = PersistCookieJar();
+  final Dio dio = Dio();
 
   @override
   List<User> parseResponse(String responseBody) {
@@ -86,6 +90,19 @@ class UserService extends ApiService<User> {
 
         // Cập nhật token sau khi đăng nhập thành công
         // token = userData['token'];
+        String? setCookie = response.headers['set-cookie'];
+        if (setCookie != null) {
+          // Tách chuỗi để lấy giá trị token
+          final refreshToken = extractTokenFromCookie(setCookie);
+
+          if (token != null) {
+            // Lưu token vào FlutterSecureStorage
+            await setTokens(refreshToken);
+            print('Token đã được lưu thành công! $refreshToken');
+          } else {
+            print('Không tìm thấy token trong cookie');
+          }
+        }
         return {"user": user, "token": token};
       } else {
         print('Login failed with status: ${response.statusCode}');
@@ -107,6 +124,7 @@ class UserService extends ApiService<User> {
       );
 
       if (response.statusCode == 200) {
+        await clearTokens();
         // token = null; // Xóa token để đăng xuất
         print('Logged out successfully');
       } else {
@@ -142,4 +160,11 @@ class UserService extends ApiService<User> {
     }
     return headers;
   }
+}
+
+String? extractTokenFromCookie(String setCookie) {
+  final tokenRegex = RegExp(
+      r'refreshToken=([^;]+)'); // Thay 'token' bằng tên cookie token từ server của bạn
+  final match = tokenRegex.firstMatch(setCookie);
+  return match?.group(1);
 }

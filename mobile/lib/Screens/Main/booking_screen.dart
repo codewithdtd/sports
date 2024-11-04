@@ -15,11 +15,37 @@ class BookingScreen extends StatefulWidget {
 
 class _BookingScreenState extends State<BookingScreen> {
   late SportTypeService _sportTypeService;
+  List<SportType> _sportTypes = [];
+  List<SportType> _filteredSportTypes = [];
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _sportTypeService = SportTypeService();
+    _loadSportTypes();
+  }
+
+  void _onSearchChanged(String query) {
+    setState(() {
+      _searchQuery = query;
+      _filteredSportTypes = _sportTypes
+          .where((sportType) =>
+              sportType.tenLoai!.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  Future<void> _loadSportTypes() async {
+    try {
+      final data = await _sportTypeService.getAll();
+      setState(() {
+        _sportTypes = data;
+        _filteredSportTypes = data;
+      });
+    } catch (e) {
+      print('Failed to load sport types: $e');
+    }
   }
 
   Future<List<SportType>> _fetchSportTypes() async {
@@ -28,6 +54,7 @@ class _BookingScreenState extends State<BookingScreen> {
       return data;
     } catch (e) {
       // Xử lý lỗi nếu cần thiết
+      // ignore: avoid_print
       print('Failed to load sport types: $e');
       return []; // Trả về danh sách rỗng trong trường hợp lỗi
     }
@@ -112,7 +139,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         color: Colors.grey.withOpacity(0.5), // Màu bóng
                         spreadRadius: 5,
                         blurRadius: 7,
-                        offset: Offset(0, 3), // Vị trí bóng
+                        offset: const Offset(0, 3), // Vị trí bóng
                       ),
                     ],
                   ),
@@ -120,48 +147,34 @@ class _BookingScreenState extends State<BookingScreen> {
                     vertical: 0.0,
                     hintText: 'Tìm kiếm',
                     icon: Icons.search,
-                    onChanged: (value) {},
+                    onChanged: _onSearchChanged,
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 40.0),
+          const SizedBox(height: 40.0),
           Expanded(
-            child: FutureBuilder<List<SportType>>(
-              future: _fetchSportTypes(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Đã xảy ra lỗi khi tải dữ liệu'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('Không có dữ liệu'));
-                } else {
-                  final sportTypes = snapshot.data!;
-                  return GridView.builder(
+            child: _filteredSportTypes.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Số lượng phần tử trong mỗi hàng
-                      mainAxisSpacing: 10.0, // Khoảng cách dọc giữa các hàng
-                      crossAxisSpacing:
-                          10.0, // Khoảng cách ngang giữa các phần tử
-                      childAspectRatio:
-                          1, // Tỉ lệ chiều cao / chiều rộng của phần tử
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10.0,
+                      crossAxisSpacing: 10.0,
+                      childAspectRatio: 1,
                     ),
-                    itemCount: sportTypes.length, // Số lượng phần tử trong lưới
+                    itemCount: _filteredSportTypes.length,
                     itemBuilder: (context, index) {
                       return SportTypeItem(
                         size: size,
-                        name: sportTypes[index].tenLoai,
-                        sportType: sportTypes[index],
+                        name: _filteredSportTypes[index].tenLoai,
+                        sportType: _filteredSportTypes[index],
                       );
                     },
                     padding: const EdgeInsets.all(8.0),
-                  );
-                }
-              },
-            ),
+                  ),
           ),
         ],
       ),

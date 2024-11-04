@@ -5,10 +5,18 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiService<T> {
   final String baseUrl;
-  late final String? token;
+  String? token;
   final _storage = FlutterSecureStorage();
 
   ApiService({required this.baseUrl, this.token});
+
+  Future<void> setTokens(String? refreshToken) async {
+    await _storage.write(key: 'refreshToken', value: refreshToken);
+  }
+
+  Future<void> clearTokens() async {
+    await _storage.delete(key: 'refreshToken');
+  }
 
   List<T> parseResponse(String responseBody) {
     throw UnimplementedError('parseResponse must be implemented by subclasses');
@@ -32,15 +40,31 @@ class ApiService<T> {
   }
 
   Future<void> refreshToken() async {
-    final url = Uri.parse('http://192.168.56.1/api/user/refresh');
+    final url = Uri.parse('http://192.168.56.1:3000/api/user/refresh');
     final refreshToken = await getRefreshToken();
-    final response = await http.post(url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"refreshToken": refreshToken}));
+
+    if (refreshToken == null) {
+      throw Exception("No refresh token found");
+    }
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({"refreshToken": refreshToken}),
+    );
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      token = responseData['accessToken'];
+      token = responseData['accessToken']; // Cập nhật token mới
+
+      // Cập nhật refreshToken nếu có cookie mới từ server
+      String? setCookie = response.headers['set-cookie'];
+      if (setCookie != null) {
+        final newRefreshToken = extractTokenFromCookie(setCookie);
+        if (newRefreshToken != null) {
+          await setTokens(newRefreshToken);
+        }
+      }
     } else {
       throw Exception('Failed to refresh token');
     }
@@ -161,4 +185,11 @@ class ApiService<T> {
       throw Exception('Failed to delete data due to an error: $e');
     }
   }
+}
+
+String? extractTokenFromCookie(String setCookie) {
+  final tokenRegex = RegExp(
+      r'refreshToken=([^;]+)'); // Thay 'token' bằng tên cookie token từ server của bạn
+  final match = tokenRegex.firstMatch(setCookie);
+  return match?.group(1);
 }

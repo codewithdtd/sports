@@ -86,7 +86,7 @@ function Facility() {
       console.log('check out')
       data.tinhTrang = "Trống";
       data.datSan.trangThai = "Hoàn thành";
-      data.trangThaiThanhToan = 'Đã thanh toán';
+      data.datSan.trangThaiThanhToan = 'Đã thanh toán';
       const bookingSuccess = await editBooking(data);
       const facilitySuccess = await editFacility(data);
       const invoiceSuccess = await createInvoice(data)

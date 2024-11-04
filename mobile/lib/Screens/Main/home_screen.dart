@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/Main/booking_screen.dart';
 import 'package:mobile/Screens/Main/history_screen.dart';
-import 'package:mobile/Screens/Main/notify_screen.dart';
+import 'package:mobile/Screens/Main/review_screen.dart';
 import 'package:mobile/Screens/Main/profile_screen.dart';
 import 'package:mobile/Screens/User/user_screen.dart';
 
@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Danh sách các màn hình cần hiển thị khi người dùng chọn từng mục trên BottomNavigationBar
   final List<Widget> screens = [
     BookingScreen(),
-    Notify(), // Màn hình thông báo
+    ReviewScreen(), // Màn hình thông báo
     History(), // Màn hình lịch sử
     Profile(), // Màn hình hồ sơ
   ];
@@ -42,21 +42,25 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Trang chủ',
           ),
           BottomNavigationBarItem(
-            icon: _buildIcon(Icons.notifications_none_sharp, 1),
-            label: 'Thông báo',
+            icon: _buildIcon(Icons.feedback, 1),
+            label: 'Đánh giá',
           ),
           BottomNavigationBarItem(
             icon: _buildIcon(Icons.receipt_long_rounded, 2),
-            label: 'Lịch sử',
+            label: 'Đơn hàng',
           ),
           BottomNavigationBarItem(
             icon: _buildIcon(Icons.account_circle_outlined, 3),
             label: 'Tài khoản',
           ),
         ],
-        // selectedItemColor: Colors.white, // Màu của mục được chọn
+        selectedItemColor: Colors.greenAccent[700], // Màu của mục được chọn
         unselectedItemColor: Colors.grey, // Màu của mục không được chọn
         showSelectedLabels: true, // Hiển thị label cho các mục không được chọn
+        selectedLabelStyle: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

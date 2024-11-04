@@ -121,7 +121,7 @@ class _AddRatingScreenState extends State<AddRatingScreen> {
                       title: const Text("Tệ"),
                       value: false,
                       groupValue: isSatisfied,
-                      activeColor: Colors.green,
+                      activeColor: Colors.red,
                       onChanged: (value) {
                         setState(() {
                           isSatisfied = value!;

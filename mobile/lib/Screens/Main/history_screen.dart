@@ -172,20 +172,34 @@ class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            "Lịch sử đặt sân",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 0, 216, 90),
+            ),
+          ),
+        ),
+        automaticallyImplyLeading: false,
+      ),
       body: Container(
+        color: Colors.grey[300],
         child: Column(
           children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.06,
-            ),
-            Text(
-              "Lịch sử đặt sân",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.greenAccent[700],
-              ),
-            ),
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.height * 0.06,
+            // ),
+            // const Text(
+            //   "Lịch sử đặt sân",
+            //   style: TextStyle(
+            //     fontSize: 24,
+            //     fontWeight: FontWeight.bold,
+            //     color: Color.fromARGB(255, 0, 216, 90),
+            //   ),
+            // ),
             Expanded(
               child: FutureBuilder<List<DatSan>>(
                 future: futureList,
@@ -200,8 +214,8 @@ class _HistoryState extends State<History> {
                   } else {
                     final list = snapshot.data!;
                     return ListView.builder(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 15.0),
+                      padding: const EdgeInsets.only(
+                          left: 16.0, right: 16.0, bottom: 15.0),
                       itemCount: list.length,
                       itemBuilder: (context, index) {
                         final item = list[index];
@@ -209,12 +223,12 @@ class _HistoryState extends State<History> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 7.0, vertical: 15.0),
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 153, 255, 211),
-                            borderRadius: BorderRadius.circular(10.0),
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(5.0),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.7),
-                                spreadRadius: 1,
+                                spreadRadius: 3,
                                 blurRadius: 5,
                                 offset: const Offset(3, 3),
                               ),
@@ -222,6 +236,7 @@ class _HistoryState extends State<History> {
                           ),
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Row(
                                 mainAxisAlignment:
@@ -234,10 +249,10 @@ class _HistoryState extends State<History> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${item.san!.maSan}',
+                                        '${item.san!.maSan} - ${item.san!.tenSan}',
                                         style: const TextStyle(
                                             fontSize: 16.0,
-                                            fontWeight: FontWeight.w500),
+                                            fontWeight: FontWeight.w700),
                                       ),
                                       if (item.dichVu != null)
                                         ...item.dichVu!.map((e) => Column(
@@ -261,16 +276,24 @@ class _HistoryState extends State<History> {
                                               fontWeight: FontWeight.w500)),
                                       Text(
                                           '${item.thoiGianBatDau} - ${item.thoiGianKetThuc}'),
-                                      Text('${item.trangThai}',
-                                          style: const TextStyle(
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.w500)),
+                                      Text(
+                                        '${item.trangThai}',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: item.trangThai == "Đã hủy"
+                                              ? Colors.red
+                                              : item.trangThai == "Đã duyệt"
+                                                  ? Colors.blue[700]
+                                                  : Colors.black,
+                                        ),
+                                      ),
                                     ],
                                   )
                                 ],
                               ),
                               Text(
-                                '${formatCurrency(_calculateTotalPrice(item))}đ (${item.trangThaiThanhToan})',
+                                '${item.trangThaiThanhToan} - ${formatCurrency(_calculateTotalPrice(item))}đ',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.0),

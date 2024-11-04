@@ -11,9 +11,9 @@ const RevenueChart = () => {
   const [endDay, setEndDay] = useState(null);
   const [typeTime, setTypeTime] = useState('month')
   const [doanhThu, setDoanhThu] = useState([]);
-  const [currentWeekOffset, setCurrentWeekOffset] = useState(0); 
+  const [currentWeekOffset, setCurrentWeekOffset] = useState(0);
   const [widthChart, setWidthCharts] = useState(700)
-  const user = useSelector((state)=> state.user.login.user)
+  const user = useSelector((state) => state.user.login.user)
 
   const dispatch = useDispatch();
   const sportTypeService = new SportTypeService(user, dispatch);
@@ -31,7 +31,7 @@ const RevenueChart = () => {
     return new Date(year, month - 1, day); // Tạo đối tượng Date (chú ý tháng trong Date bắt đầu từ 0)
   };
   const convertToMMDDYYYY = (dateString) => {
-    if(dateString) {
+    if (dateString) {
       const [day, month, year] = dateString.split('/'); // Tách các phần của ngày
       return `${year}-${month}-${day}`; // Sắp xếp lại theo định dạng mm-dd-yyyy
     }
@@ -67,10 +67,10 @@ const RevenueChart = () => {
       setWeekDays(daysInRange);  // Cập nhật mảng weekDays với các ngày trong khoảng
       return;
     }
-   
+
 
     // Nếu là tuần 
-    if(typeTime === 'week') {
+    if (typeTime === 'week') {
       const monday = new Date(today);
       monday.setDate(today.getDate() - ((currentDay === 0 ? 7 : currentDay) - 1) + weekOffset * 7); // Cộng thêm offset tuần
       // 2. Tính toán các ngày từ Thứ Hai đến Chủ Nhật trong tuần hiện tại
@@ -82,20 +82,20 @@ const RevenueChart = () => {
         daysOfWeek.push(formatDate(day));  // Thêm ngày vào mảng với định dạng dd/mm/yyyy
       }
       setStartDay(daysOfWeek[0])
-      setEndDay(daysOfWeek[daysOfWeek.length -1])
-      setWeekDays(daysOfWeek); 
+      setEndDay(daysOfWeek[daysOfWeek.length - 1])
+      setWeekDays(daysOfWeek);
     }
 
     // Nếu là tháng 
-    if(typeTime === 'month') {
+    if (typeTime === 'month') {
       currentMonth += weekOffset; // Điều chỉnh tháng theo offset
       // Xử lý nếu tháng vượt quá 12 hoặc dưới 1
       if (currentMonth > 11) {
-          currentMonth = 0;
-          currentYear++;
+        currentMonth = 0;
+        currentYear++;
       } else if (currentMonth < 0) {
-          currentMonth = 11;
-          currentYear--;
+        currentMonth = 11;
+        currentYear--;
       }
 
       // Lấy ngày đầu tiên và cuối cùng của tháng hiện tại
@@ -105,24 +105,24 @@ const RevenueChart = () => {
       // Tạo mảng chứa tất cả các ngày trong tháng
       const daysInMonth = [];
       for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
-          const date = new Date(currentYear, currentMonth, day);
-          daysInMonth.push(formatDate(date)); // Định dạng thành dd/mm/yyyy
+        const date = new Date(currentYear, currentMonth, day);
+        daysInMonth.push(formatDate(date)); // Định dạng thành dd/mm/yyyy
       }
       setStartDay(daysInMonth[0])
-      setEndDay(daysInMonth[daysInMonth.length -1])
+      setEndDay(daysInMonth[daysInMonth.length - 1])
       setWeekDays(daysInMonth);
     }
 
-    
+
   }
 
   const doanhThuTheoNgay = () => {
     let doanhThuMoi = [];
-    for(let day of weekDays) {
+    for (let day of weekDays) {
       const theoNgay = list.filter((item) => {
         return item.ngayDat == day && item.trangThai == 'Hoàn thành'
       })
-      if(theoNgay.length > 0) {
+      if (theoNgay.length > 0) {
         const tongTien = theoNgay.reduce((total, item) => total + item.thanhTien, 0);
         doanhThuMoi.push(tongTien);
       } else {
@@ -158,7 +158,7 @@ const RevenueChart = () => {
         setWidthCharts(600);
       } else if (window.innerWidth < 600) {
         setWidthCharts(500);
-      } 
+      }
       else {
         setWidthCharts(700);
       }
@@ -187,10 +187,10 @@ const RevenueChart = () => {
               <p className={`rounded-md font-extrabold text-xl m-2 hover:bg-blue-600 cursor-pointer`} onClick={e => getToDay('next')}><i className="ri-arrow-right-s-fill"></i></p>
             </div>
             <div className='flex pt-2'>
-              <input 
-                className='border border-gray-400 mx-2 rounded-md' 
-                type="date" 
-                value={weekDays.length > 0 ? formatToYYYYMMDD(parseDate(startDay)) : ''} 
+              <input
+                className='border border-gray-400 mx-2 rounded-md'
+                type="date"
+                value={weekDays.length > 0 ? formatToYYYYMMDD(parseDate(startDay)) : ''}
                 onChange={e => {
                   const newStartDay = formatDate(new Date(e.target.value));
                   setStartDay(newStartDay);
@@ -214,36 +214,36 @@ const RevenueChart = () => {
         <div className='flex flex-1'>
           <BarChart
             colors={[
-              '#5C8ED4', 
-              '#5FBF7A', 
-              '#FFDD54', 
-              '#C576B8', 
-              '#FF7E4D', 
-              '#4ED5D4', 
-              '#D68CD8', 
-              '#FFB84D', 
-              '#A66EDB', 
-              '#FF7F92', 
+              '#5C8ED4',
+              '#5FBF7A',
+              '#FFDD54',
+              '#C576B8',
+              '#FF7E4D',
+              '#4ED5D4',
+              '#D68CD8',
+              '#FFB84D',
+              '#A66EDB',
+              '#FF7F92',
             ]}
             xAxis={[
               {
                 id: 'barCategories',
                 data: weekDays.length > 0 ? weekDays : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 scaleType: 'band',
-                categoryGapRatio: 0.5,
+                categoryGapRatio: 0.2,
               },
             ]}
             series={[
-              
-                {data: doanhThu, stack: 'total'}, 
-                  // Dữ liệu doanh thu theo ngày
-                // label: 'Doanh thu',
-                // color: '#186eff',  // Nhãn cho loạt dữ liệu
-              
+
+              { data: doanhThu, stack: 'total' },
+              // Dữ liệu doanh thu theo ngày
+              // label: 'Doanh thu',
+              // color: '#186eff',  // Nhãn cho loạt dữ liệu
+
             ]}
             width={widthChart}
             height={350}
-            borderRadius={6}
+            borderRadius={0}
           />
         </div>
       </div>
