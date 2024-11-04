@@ -118,6 +118,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
           final response =
               await BookingService(token: token).createBooking(newBooking);
 
+          // ignore: unnecessary_null_comparison
           if (response == null) {
             throw Exception("Booking creation failed");
           }

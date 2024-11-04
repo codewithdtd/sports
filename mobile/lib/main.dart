@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/Main/booking_screen.dart';
-import 'package:mobile/Screens/User/user_screen.dart';
 import 'package:mobile/Screens/Welcome/welcome_screen.dart';
 import 'package:mobile/contants.dart';
 import 'package:mobile/stores/user_provider.dart';

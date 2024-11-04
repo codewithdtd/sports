@@ -23,6 +23,7 @@ class _ProfileState extends State<Profile> {
 
     Future<void> _logout() async {
       try {
+        // ignore: unused_local_variable
         final logout = await UserService(token: token).logout();
         userProvider.clearUser();
         // ignore: use_build_context_synchronously

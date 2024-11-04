@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile/components/rounded_button.dart';
-import 'package:mobile/components/rounded_input_field.dart';
 import 'package:mobile/contants.dart';
 import 'package:mobile/models/user.dart';
 import 'package:mobile/services/user.dart';
@@ -78,7 +77,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
 
     // Sử dụng Dio để gửi dữ liệu
-    var dio = Dio();
     var formData = FormData();
     formData.fields.addAll([
       MapEntry('ho_KH', _hoController.text),

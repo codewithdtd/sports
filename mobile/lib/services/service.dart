@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:mobile/models/booked_model.dart';
-import 'package:mobile/models/sport_type.dart';
 import 'package:mobile/services/api.dart';
 
 class DichVuService extends ApiService<DichVu> {

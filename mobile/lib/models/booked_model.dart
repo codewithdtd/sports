@@ -1,5 +1,3 @@
-import 'package:mobile/models/sport_filed.dart';
-
 class LoaiSan {
   String? id;
   String? tenLoai;

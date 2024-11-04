@@ -64,7 +64,7 @@ class _AddRatingScreenState extends State<AddRatingScreen> {
       final response = await ReviewService(token: token).createReview(newFb);
       print(response);
       _reviewController.clear();
-      // ignore: use_build_context_synchronously
+      // ignore: use_build_context_synchronously, unnecessary_null_comparison
       if (response != null) {
         Navigator.of(context).pop(true);
       }

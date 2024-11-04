@@ -5,7 +5,6 @@ import 'package:mobile/components/have_account.dart';
 import 'package:mobile/components/rounded_button.dart';
 import 'package:mobile/components/rounded_input_field.dart';
 import 'package:mobile/contants.dart';
-import 'package:mobile/models/user.dart';
 import 'package:mobile/services/user.dart';
 import 'package:mobile/stores/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +21,7 @@ class LoginScreen extends StatelessWidget {
     }
 
     // Create the new user data
+    // ignore: unused_local_variable
     final newUser = {
       'sdt_KH': phoneController.text,
       'matKhau_KH': passwordController.text,
@@ -78,7 +78,6 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       extendBodyBehindAppBar: true,
       // Thay đổi Container thành Scaffold

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile/Screens/Main/confirm_screen.dart';
 import 'package:mobile/components/service_modal.dart';
 import 'package:mobile/models/booked_model.dart';
-import 'package:mobile/models/sport_filed.dart';
 import 'package:mobile/services/service.dart';
 import 'package:mobile/services/sport_field.dart';
 import 'package:intl/intl.dart';

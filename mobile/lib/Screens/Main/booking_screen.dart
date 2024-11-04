@@ -17,6 +17,7 @@ class _BookingScreenState extends State<BookingScreen> {
   late SportTypeService _sportTypeService;
   List<SportType> _sportTypes = [];
   List<SportType> _filteredSportTypes = [];
+  // ignore: unused_field
   String _searchQuery = '';
 
   @override

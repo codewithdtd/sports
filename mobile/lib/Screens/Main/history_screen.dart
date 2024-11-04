@@ -61,6 +61,7 @@ class _HistoryState extends State<History> {
           final review =
               await ReviewService(token: token).getOne({"datSan._id": item.id});
 
+          // ignore: unnecessary_null_comparison
           if (review != null) {
             tempReviewed.add(review); // Chỉ thêm review nếu không null
           }
@@ -113,6 +114,7 @@ class _HistoryState extends State<History> {
           item.id.toString(),
           {"trangThai": "Đã hủy"},
         );
+        // ignore: unnecessary_null_comparison
         if (response != null) {
           setState(() {
             futureList = _fetchData();
