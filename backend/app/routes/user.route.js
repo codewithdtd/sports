@@ -29,7 +29,7 @@ router.route("/contact")
 // Đánh giá
 router.route("/review")
     .get(user.findAllReview)
-    .post(user.createReview)
+    .post(middleware.verifyToken, user.createReview)
 router.route("/review/:id")
     .get(user.findOneReview)
     .put(user.updateReview);
@@ -51,11 +51,11 @@ router.route("/invoice/:id")
 
 // Đặt Sân 
 router.route("/booking")
-    .get(middleware.verifyAdmin ,user.findAllBookingUser)
+    .get(middleware.verifyToken ,user.findAllBookingUser)
     .post(middleware.verifyToken, user.createBooking)
 router.route("/booking/:id")
     .get(user.findOneBooking)
-    .put(user.updateBooking);
+    .put(middleware.verifyToken, user.updateBooking);
    
 // Hội viên
 // 

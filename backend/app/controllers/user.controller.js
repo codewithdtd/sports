@@ -159,7 +159,8 @@ exports.login = async (req, res, next) => {
 };
 
 exports.refreshToken = async (req, res, next) => {
-    const refreshToken = req.cookies.refreshToken;
+    console.log('refresh')
+    const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
     if(!refreshToken) {
         return next(
             new ApiError(401, "You're not authenticated!")
@@ -253,6 +254,7 @@ exports.createBooking = async (req, res, next) => {
         const result = await booking.create(newBooking);
         res.status(201).json(result);
     } catch (err) {
+        console.log(err.message);
         res.status(500).json({ error: err.message });
     }
 }
