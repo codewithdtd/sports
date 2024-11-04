@@ -10,19 +10,21 @@ import 'package:mobile/services/user.dart';
 import 'package:mobile/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
-class UpdateProfileScreen extends StatefulWidget {
-  const UpdateProfileScreen({super.key});
+class UpdatePasswordScreen extends StatefulWidget {
+  const UpdatePasswordScreen({super.key});
   @override
-  _UpdateProfileScreenState createState() => _UpdateProfileScreenState();
+  _UpdatePasswordScreenState createState() => _UpdatePasswordScreenState();
 }
 
-class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   late final User user;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _hoController = TextEditingController();
   final TextEditingController _tenController = TextEditingController();
   final TextEditingController _sdtController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passController = TextEditingController();
+  final TextEditingController _newPassController = TextEditingController();
   File? _avatar; // Ảnh avatar người dùng chọn
   String? _initialAvatarUrl;
   bool _isSubmitting = false;
@@ -78,18 +80,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     var dio = Dio();
     var formData = FormData();
     formData.fields.addAll([
-      MapEntry('ho_KH', _hoController.text),
-      MapEntry('ten_KH', _tenController.text),
-      MapEntry('sdt_KH', _sdtController.text),
-      MapEntry('email_KH', _emailController.text),
+      MapEntry('matKhauCu', _passController.text),
+      MapEntry('matKhauMoi', _newPassController.text),
     ]);
-
-    if (_avatar != null) {
-      formData.files.add(MapEntry(
-        'hinhAnh_KH',
-        await MultipartFile.fromFile(_avatar!.path),
-      ));
-    }
 
     try {
       final response =
@@ -137,7 +130,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cập Nhật Thông Tin')),
+      appBar: AppBar(title: Text('Đổi mật khẩu')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -145,84 +138,65 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             key: _formKey,
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: Stack(
-                    children: [
-                      SizedBox(
-                        height: 150,
-                        width: 150,
-                        child: AspectRatio(
-                          aspectRatio: 1, // Tỷ lệ 1:1 để giữ ảnh hình vuông
-                          child: ClipOval(
-                            child: Image(
-                              image: _avatar != null
-                                  ? FileImage(_avatar!)
-                                  : (_initialAvatarUrl != null
-                                          ? NetworkImage(
-                                              "http://192.168.56.1:3000/uploads/$_initialAvatarUrl")
-                                          : AssetImage(
-                                              'assets/images/bg-main.jpg'))
-                                      as ImageProvider,
-                              fit: BoxFit.cover,
-                            ),
+                Stack(
+                  children: [
+                    SizedBox(
+                      height: 150,
+                      width: 150,
+                      child: AspectRatio(
+                        aspectRatio: 1, // Tỷ lệ 1:1 để giữ ảnh hình vuông
+                        child: ClipOval(
+                          child: Image(
+                            image: _avatar != null
+                                ? FileImage(_avatar!)
+                                : (_initialAvatarUrl != null
+                                        ? NetworkImage(
+                                            "http://192.168.56.1:3000/uploads/$_initialAvatarUrl")
+                                        : AssetImage(
+                                            'assets/images/bg-main.jpg'))
+                                    as ImageProvider,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      Positioned(
-                        top: 60, // Căn chỉnh để nằm giữa chiều cao
-                        left: 60, // Căn chỉnh để nằm giữa chiều rộng
-                        child: Icon(Icons.camera_alt, size: 30),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 16),
                 TextFormField(
-                  controller: _hoController,
-                  decoration: InputDecoration(labelText: 'Họ'),
+                  controller: _passController,
+                  decoration: InputDecoration(labelText: 'Mật khẩu cũ'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập họ';
+                      return 'Vui lòng nhập mật khẩu';
                     }
                     return null;
                   },
+                  obscureText: true,
                 ),
                 SizedBox(height: 16),
                 TextFormField(
-                  controller: _tenController,
-                  decoration: InputDecoration(labelText: 'Tên'),
+                  controller: _newPassController,
+                  decoration: InputDecoration(labelText: 'Mật khẩu mới'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập tên';
+                      return 'Vui lòng nhập mật khẩu';
                     }
                     return null;
                   },
+                  obscureText: true,
                 ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _sdtController,
-                  decoration: InputDecoration(labelText: 'Số điện thoại'),
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập số điện thoại';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập email';
-                    }
-                    return null;
-                  },
-                ),
+                // SizedBox(height: 16),
+                // TextFormField(
+                //   controller: _newPassConfirmController,
+                //   decoration: InputDecoration(labelText: 'Mật khẩu mới'),
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Vui lòng nhập mật khẩu';
+                //     }
+                //     return null;
+                //   },
+                // ),
                 SizedBox(height: 32),
                 // ElevatedButton(
                 //   onPressed: _isSubmitting ? null : _handleSubmit,
