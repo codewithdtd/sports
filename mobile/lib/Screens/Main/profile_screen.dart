@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/Screens/User/user_screen.dart';
 import 'package:mobile/stores/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -120,7 +121,14 @@ class _ProfileState extends State<Profile> {
                     Padding(
                       padding: EdgeInsets.all(16.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UpdateProfileScreen(),
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black, // Đổi màu chữ

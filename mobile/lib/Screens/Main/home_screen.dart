@@ -3,6 +3,7 @@ import 'package:mobile/Screens/Main/booking_screen.dart';
 import 'package:mobile/Screens/Main/history_screen.dart';
 import 'package:mobile/Screens/Main/notify_screen.dart';
 import 'package:mobile/Screens/Main/profile_screen.dart';
+import 'package:mobile/Screens/User/user_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

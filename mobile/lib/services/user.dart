@@ -1,8 +1,8 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:mobile/services/api.dart';
 import 'package:mobile/models/user.dart';
 import 'package:http/http.dart' as http;
-
 
 class UserService extends ApiService<User> {
   UserService({String? token})
@@ -32,8 +32,36 @@ class UserService extends ApiService<User> {
     return await createData('/', userData);
   }
 
-  Future<User> update(String id, Map<String, dynamic> userData) async {
-    return await updateData('/$id', userData);
+  Future<User> update(String id, FormData formData) async {
+    final url = '$baseUrl/$id';
+    var dio = Dio();
+
+    try {
+      var response = await dio.put(
+        url,
+        options: Options(headers: getHeaders(isFormData: true)),
+        data: formData,
+      );
+
+      // Xử lý phản hồi nếu token hết hạn
+      if (response.statusCode == 403) {
+        await refreshToken();
+        response = await dio.put(
+          url,
+          options: Options(headers: getHeaders(isFormData: true)),
+          data: formData,
+        );
+      }
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = response.data as Map<String, dynamic>;
+        return fromJson(responseData);
+      } else {
+        throw Exception('Failed to update data');
+      }
+    } catch (e) {
+      throw Exception('Failed to update data due to an error: $e');
+    }
   }
 
   Future<void> delete(String id) async {
@@ -90,11 +118,27 @@ class UserService extends ApiService<User> {
   }
 
   // Cập nhật getHeaders để thêm token nếu có
+  // @override
+  // Map<String, String> getHeaders() {
+  //   final headers = {'Content-Type': 'application/json'};
+  //   if (token != null && token!.isNotEmpty) {
+  //     headers['Authorization'] = 'Bearer $token';
+  //   }
+  //   return headers;
+  // }
   @override
-  Map<String, String> getHeaders() {
-    final headers = {'Content-Type': 'application/json'};
-    if (token != null && token!.isNotEmpty) {
-      headers['Authorization'] = 'Bearer $token';
+  Map<String, String> getHeaders({bool isFormData = false}) {
+    final headers = <String, String>{};
+    if (isFormData) {
+      // Nếu là FormData, không cần thiết lập Content-Type
+      if (token != null && token!.isNotEmpty) {
+        headers['token'] = 'Bearer $token';
+      }
+    } else {
+      headers['Content-Type'] = 'application/json';
+      if (token != null && token!.isNotEmpty) {
+        headers['token'] = 'Bearer $token';
+      }
     }
     return headers;
   }
