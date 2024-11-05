@@ -92,4 +92,8 @@ router.route("/payment-status/:app_trans_id")
 
 router.route("/refund")
     .post(user.refund)
+
+    // Gửi email
+router.route("/email").post(user.sendEmail);
+
 module.exports = router;

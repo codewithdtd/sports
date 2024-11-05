@@ -12,6 +12,7 @@ const axios = require('axios').default; // npm install axios
 const CryptoJS = require('crypto-js'); // npm install crypto-js
 const moment = require('moment'); // npm install moment
 
+const admin = require("../controllers/admin.controller");
 const ApiError = require("../api-error");
 const jwt = require("jsonwebtoken");
 const cron = require('node-cron');
@@ -21,6 +22,7 @@ const bodyParser = require('body-parser');
 const qs = require('qs');
 const fs = require('fs');
 const path = require('path');
+const nodemailer = require("nodemailer");
 const express = require('express');
 const app = express();
 app.use(bodyParser.json());
@@ -674,7 +676,7 @@ exports.payment = async (req, res, next) => {
         amount: thanhTien,
         description: `DSport - Payment for the order #${transID}`,
         bank_code: "",
-        callback_url: 'https://db02-14-241-183-210.ngrok-free.app/api/user/callback'
+        callback_url: 'https://f986-14-241-183-210.ngrok-free.app/api/user/callback'
     };
 
     // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -725,6 +727,7 @@ exports.callback = async (req, res, next) =>  {
       console.log(bookings.length);
       for(let item of bookings) {
         const update = await booking.update(item._id, {expireAt: null, trangThaiThanhToan: 'Đã thanh toán', order_url: '', zp_trans_id: dataJson["zp_trans_id"]});
+        const email = await axios.post("http://localhost:3000/api/user/email", update);
       }
       console.log('Đã update')
       result.return_code = 1;
@@ -820,3 +823,93 @@ cron.schedule('* * * * *', async () => {
         console.error('Lỗi khi cập nhật trạng thái booking:', error);
     }
 });
+
+
+exports.sendEmail = async (req, res, next) => {
+    try {
+        const booking = req.body;
+        console.log(req.body.thanhTien);
+        const email = booking.khachHang?.email_KH; 
+        if(email) {
+            const transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false, // true for port 465, false for other ports
+                auth: {
+                    user: process.env.EMAIL_USERNAME,
+                    pass: process.env.EMAIL_PASSWORD,
+                },
+            });
+            
+            const info = await transporter.sendMail({
+                from: '"DSport - Sân thể thao" <dsportfield@gmail.com>', // sender address
+                to: email, // list of receivers
+                subject: "Xác nhận đặt sân", // Subject line
+                text: "Hello world?", // plain text body
+                html: `
+                    <div style="font-family: Arial, sans-serif;">
+                        <div style="background-color: #bde4ff;text-align: center; padding: 30px;font-family: Arial, sans-serif;">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeFFowlHN27HxNRl7SeNWVDC3F3dLq02QyaQ&s" alt="" />
+                            <h1 class="title" style="font-size: 30px;color: #1782cc">Thank you!</h1>
+                        </div>  
+                        <div style="text-align:center; width: 70%; margin: auto;">
+                            <h2 style="text-align:center">Thông tin đặt sân của bạn</h2>
+                            <div style="display: flex; margin:auto ;justify-content:space-around;">
+                                <p style="padding: 8px; ">Mã đặt sân:</p>
+                                <p style="padding: 8px;font-style:italic;">${booking._id}</p>
+                            </div>    
+                            <div style="display: flex; margin:auto ;justify-content:space-around;">
+                                <p style="padding: 8px; ">Tên khách hàng:</p>
+                                <p style="padding: 8px;font-style:italic;">${booking.khachHang.ho_KH + ' ' + booking.khachHang.ten_KH}</p>
+                            </div>
+                            <div style="display: flex; margin:auto ;justify-content:space-around;">
+                                <p style="padding: 8px; ">Tổng giá tiền:</p>
+                                <p style="padding: 8px; font-style:italic; font-weight: bold;">${booking.thanhTien}</p>
+                            </div>
+                            <div style="display: flex; margin:auto ;justify-content:space-around;">
+                                <p style="padding: 8px; ">Thời gian đặt sân:</p>
+                                <p style="padding: 8px; font-style:italic;">${booking.ngayTao}</p>
+                            </div>
+                            <div style="display: flex; margin:auto ;justify-content:space-around;">
+                                <p style="padding: 8px;">Trạng thái thanh toán:</p>
+                                <p style="padding: 8px; font-weight: bold; font-style:italic;">${booking.trangThaiThanhToan}</p>
+                            </div>
+                            <table style="width: 100%;margin: auto;border-collapse: collapse; font-family: Arial, sans-serif;">
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid;">${booking.san.ten_San + ' - ' +booking.san.ma_San}</td>
+                                    <td style="padding: 8px; border: 1px solid;text-align: center;">
+                                        ${booking.ngayDat}
+                                        <br>
+                                        ${booking.thoiGianBatDau + ' - ' + booking.thoiGianKetThuc}
+                                    </td>
+                                    <td style="padding: 8px; border: 1px solid;">${booking.san.bangGiaMoiGio}</td>
+                                </tr>
+                                ${booking.dichVu?.map((item) => {
+                                    return `<tr>
+                                        <td style="padding: 8px; border: 1px solid;">${item.ten_DV}</td>
+                                        <td style="padding: 8px; border: 1px solid;text-align: center;">${item.soluong}</td>
+                                        <td style="padding: 8px; border: 1px solid;">${item.thanhTien}</td>
+                                    </tr>`
+                                    }
+                                )}
+                            </table>
+                            <p>
+                                Cảm ơn quý khách đã tin tưởng sử dụng dịch vụ của Dsport.
+                            </p>
+                            <p>
+                                Nếu có sai sót hay thắc mắc khi đặt sân vui lòng liên hệ tới hotline để được hổ trợ nhanh nhất.
+                            </p>
+                            <p>
+                                Dsport chúc quý khách có nhiều sức khỏe.
+                            </p>
+                        </div>
+                    </div>
+                `, // html body
+            });
+
+            res.status(200).json(info);
+        }
+    } catch (error) {
+        res.status(500).json(error);
+    }
+} 
