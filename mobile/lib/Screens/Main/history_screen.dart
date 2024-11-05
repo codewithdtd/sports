@@ -253,7 +253,7 @@ class _HistoryState extends State<History> {
                                       Text(
                                         '${item.san!.maSan} - ${item.san!.tenSan}',
                                         style: const TextStyle(
-                                            fontSize: 16.0,
+                                            fontSize: 17.0,
                                             fontWeight: FontWeight.w700),
                                       ),
                                       if (item.dichVu != null)
@@ -281,7 +281,7 @@ class _HistoryState extends State<History> {
                                       Text(
                                         '${item.trangThai}',
                                         style: TextStyle(
-                                          fontSize: 16.0,
+                                          fontSize: 17.0,
                                           fontWeight: FontWeight.w500,
                                           color: item.trangThai == "Đã hủy"
                                               ? Colors.red
@@ -298,7 +298,7 @@ class _HistoryState extends State<History> {
                                 '${item.trangThaiThanhToan} - ${formatCurrency(_calculateTotalPrice(item))}đ',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16.0),
+                                    fontSize: 17.0),
                               ),
                               const SizedBox(height: 8.0),
                               Row(

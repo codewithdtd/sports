@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import facilityService from '../services/facility.service'
 import sportTypeService from '../services/sportType.service'
 import Booking from '../services/booking.service'
+import Email from '../services/email.service'
 import UserService from '../services/user.service'
 import ServiceService from '../services/service.service'
 import { useDispatch, useSelector } from "react-redux";
@@ -29,7 +30,7 @@ const BookingDetail = () => {
   const [validateDate, setValidateDate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [trangThaiThanhToan, setTrangThaiThanhToan] = useState('Chưa thanh toán')
-
+  // const [interval, setInterval] = useState(1);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -39,11 +40,13 @@ const BookingDetail = () => {
   const { loai_san } = useParams();
   const startTime = 8; // 8:00
   const endTime = 22; // 22:00
-  const interval = loai_san == 'Bóng đá' ? 1.5 : 1; // 1 giờ 30 phút
+  const interval = field?.ten_loai == 'Bóng đá' ? 1.5 : 1; // 1 giờ 30 phút
+
 
   const bookingService = new Booking(user, dispatch);
   const serviceService = new ServiceService(user, dispatch);
   const userService = new UserService(user, dispatch);
+  const emailService = new Email(user, dispatch);
 
   const timeSlots = [];
 
@@ -88,6 +91,7 @@ const BookingDetail = () => {
   const getFacility = async () => {
     const fields = await sportTypeService.get(loai_san);
     setField(fields)
+    // if(fields.ten_loai == 'Bóng đá')
 
     const date = { ngayDat: currentDate };
     let list = await facilityService.getAllBooked(date);
@@ -157,17 +161,18 @@ const BookingDetail = () => {
       }
       for (const item of booking) {
         returnPayment ?
-         (item.maGiaoDich = returnPayment.app_trans_id,
-          item.expireAt = new Date(Date.now()),
-          item.order_url = returnPayment.order_url 
+          (item.maGiaoDich = returnPayment.app_trans_id,
+            item.expireAt = new Date(Date.now()),
+            item.order_url = returnPayment.order_url
           )
-        : '';
+          : '';
         item.khachHang = infoUser;
         await createBooking(item);
       }
-      if(returnPayment)
-        window.location.href = returnPayment.order_url 
+      if (returnPayment)
+        window.location.href = returnPayment.order_url
       else {
+        await emailService.create(result);
         toast.success("Đặt sân thành công !", {});
         setTimeout(() => {
           navigate('/');  // Chuyển hướng sau 2 giây

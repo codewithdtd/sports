@@ -98,7 +98,7 @@ class UserService extends ApiService<User> {
           if (token != null) {
             // Lưu token vào FlutterSecureStorage
             await setTokens(refreshToken);
-            print('Token đã được lưu thành công! $refreshToken');
+            print('Token đã được lưu thành công!');
           } else {
             print('Không tìm thấy token trong cookie');
           }

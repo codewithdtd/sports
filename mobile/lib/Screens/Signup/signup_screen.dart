@@ -35,6 +35,7 @@ class SignUpScreen extends StatelessWidget {
 
     try {
       User? result = await UserService().create(newUser);
+      // ignore: unnecessary_null_comparison
       return result != null ? "Thành công" : "Thất bại";
     } catch (e) {
       return "Thất bại: $e";

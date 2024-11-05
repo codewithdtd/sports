@@ -296,7 +296,7 @@ const History = () => {
                       </ul>
                     </div>
                     <div className="text-start">
-                      <p className='p-1 font-bold'>Tiền thanh toán: {formatNumber(item.thanhTien)}</p>
+                      <p className='p-1'>Tiền thanh toán: {formatNumber(item.thanhTien)}</p>
                       <p className='p-1'>
                         Trạng thái thanh toán:
                         <span className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-green-600 bg-green-200 border-green-500 shadow-md border-2' : ''} p-1 ml-2 px-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</span>
@@ -319,6 +319,9 @@ const History = () => {
                         {item.trangThai}
                       </p>
                     </div>
+                    <div className="text-start">
+                      <p className='p-1'>Tiền thanh toán: <b>{formatNumber(item.thanhTien)}</b></p>
+                    </div>
                     <div className="flex pt-4 w-full justify-between">
                       {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
                         <span className='hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg'><i
@@ -338,7 +341,7 @@ const History = () => {
                         : ''}
 
 
-                      {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4) ?
+                      {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4 && !reviews[item._id]) ?
                         <button className='text-white bg-green-500 hover:bg-green-700 p-1 rounded-md mx-2' onClick={e => { setReview(true), setReviewed(item) }}>Đánh giá</button>
                         : ''}
                     </div>
