@@ -8,6 +8,7 @@ import Pagination from '../components/Pagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ServiceService from '../services/service.service';
+import ViewBookingTime from '../components/ViewBookingTime';
 const Booking = () => {
   // const dispatch = useDispatch();
   const user = useSelector((state) => state.user.login.user)
@@ -29,6 +30,7 @@ const Booking = () => {
   const [sort, setSort] = useState({ thanhTien: false, ngayDat: false, ngayTao: false });
   const [edit, setEdit] = useState(false);
   const [list, setList] = useState([]);
+  const [viewListTime, setViewListTime] = useState(false);
   const [listSportType, setListSportType] = useState([]);
   const [fac, setFac] = useState({
     khachHang: {
@@ -182,7 +184,7 @@ const Booking = () => {
       });
       setList(sortedList);
     }
-    if(key == 'ngayTao') {
+    if (key == 'ngayTao') {
       const parseDateTime = (dateTimeString) => {
         const [datePart, timePart] = dateTimeString.split(' ');
         const [day, month, year] = datePart.split('/').map(Number);
@@ -288,6 +290,9 @@ const Booking = () => {
             Lọc
           </div>
         </div>
+        <div className="bg-blue-500 cursor-pointer hover:bg-blue-700 ml-2 max-w-50% shadow-gray-700 shadow-sm text-white overflow-hidden rounded-lg p-2" onClick={e => setViewListTime(!viewListTime)}>
+          Xem sân trống
+        </div>
         <button className="bg-blue-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-blue-700 w-10 h-10 m-auto rounded-xl"
           onClick={e => handleData()}
         >
@@ -335,6 +340,7 @@ const Booking = () => {
           <button className='bg-blue-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-blue-700 m-auto rounded-md' onClick={handleFilter}>Xác nhận</button>
         </div>
         : ''}
+
 
       <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-md shadow-gray-400 border border-gray-300">
         {/* Header bảngg */}
@@ -400,7 +406,7 @@ const Booking = () => {
               <div className="w-1/6">{facility.ngayTao}</div>
               <div className="w-1/6">
                 <p className={`m-auto p-1 
-                ${facility.trangThai == 'Hoàn thành' ? 'text-white rounded-lg bg-green-500 w-full lg:w-3/4 shadow-md '
+                  ${facility.trangThai == 'Hoàn thành' ? 'text-white rounded-lg bg-green-500 w-full lg:w-3/4 shadow-md '
                     : facility.trangThai == 'Đã hủy' ? 'text-white rounded-lg bg-red-500 w-full lg:w-3/4 shadow-md '
                       : facility.trangThai == 'Đã duyệt' ? 'text-white rounded-lg bg-blue-500 w-full md:w-3/4 shadow-md '
                         : facility.trangThai == 'Nhận sân' ? 'text-white rounded-lg bg-yellow-500 w-full md:w-3/4 shadow-md ' : 'text-white rounded-lg bg-gray-400 w-full md:w-3/4 shadow-md '}`}>{facility.trangThai}</p>
@@ -413,11 +419,15 @@ const Booking = () => {
             : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
         }
       </div>
+
+
       <Pagination
         totalPages={totalPages}
         currentPage={currentPage}
         onPageChange={handlePageChange}
       />
+
+      {viewListTime ? <ViewBookingTime toggle={setViewListTime}></ViewBookingTime> : ''}
       {/* from nhập dữ liệu */}
       {edit ? <FormBooking bookingList={list} toggle={setEdit} handleData={handleData} data={fac} /> : ''}
     </div>

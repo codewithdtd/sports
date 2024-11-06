@@ -167,12 +167,14 @@ const BookingDetail = () => {
           )
           : '';
         item.khachHang = infoUser;
+        if(returnPayment) {
+          await emailService.create(item);
+        }
         await createBooking(item);
       }
       if (returnPayment)
         window.location.href = returnPayment.order_url
       else {
-        await emailService.create(result);
         toast.success("Đặt sân thành công !", {});
         setTimeout(() => {
           navigate('/');  // Chuyển hướng sau 2 giây
@@ -297,7 +299,7 @@ const BookingDetail = () => {
   useEffect(() => {
     // Gọi getFacility sau khi checkedSlots được cập nhật
     getFacility();
-  }, []);
+  }, [currentDate]);
 
 
   const buttonStyle = {

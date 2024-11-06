@@ -32,9 +32,9 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <h2 className='text-center font-bold pt-16 text-4xl'>Đa dạng các bộ môn thể thao</h2>
+      <h2 className='text-center font-bold pt-20 text-4xl'>Đa dạng các bộ môn thể thao</h2>
       <p className='px-4 text-center text-lg'>Ở đây có đa dạng các bộ môn thể thao cho các bạn thử sức từ bóng đá, bóng chuyền đến cầu lông bóng rổ, cầu lông...</p>
-      <div className='p-7 pb-16 h-fit grid grid-cols-2 md:grid-cols-4 gap-7'>
+      <div className='p-7 pb-20 h-fit grid grid-cols-2 md:grid-cols-4 gap-7'>
         <div className='text-center bg-blue-300 overflow-hidden flex-1 relative rounded-lg'>
           <img src="./src/assets/home1.jpg" alt="" className='w-full border-white shadow-gray-500 h-48 rounded-lg object-cover' />
           <div className='flex justify-between p-2 items-center'>

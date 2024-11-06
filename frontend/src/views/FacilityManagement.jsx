@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import FormFacilityManagement from '../components/FormFacilityManagement';
 import FacilityService from '../services/facility.service';
 import BookingService from '../services/booking.service';
-import Pagination from'../components/Pagination';
+import Pagination from '../components/Pagination';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function FacilityManagement() {
-  const user = useSelector((state)=> state.user.login.user)
+  const user = useSelector((state) => state.user.login.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -56,18 +56,22 @@ function FacilityManagement() {
     //       bangGiaMoiGio: 0,
     //     })
     //   : setFac(data) 
-    if(data.phuongThuc == 'edit') {
+    if (data.phuongThuc == 'edit') {
       console.log('edit')
-      if(await editFacility(data))
+      if (data.tinhTrang == 'Đã đặt' || data.tinhTrang == 'Đang sử dụng') {
+        toast.error('Không thể cập nhật');
+        return
+      }
+      if (await editFacility(data))
         console.log('Đã cập nhật');
       // setFac(fac)
     }
-    if(data.phuongThuc == 'create') {
+    if (data.phuongThuc == 'create') {
       console.log('create')
-      if(await createFacility(data))
+      if (await createFacility(data))
         console.log('Đã thêm mới');
     }
-    setEdit(!edit);  
+    setEdit(!edit);
   };
   // định dạng số
   function formatNumber(num) {
@@ -82,7 +86,7 @@ function FacilityManagement() {
   }
   // Lọc dữ liệu
   const filterFacility = () => {
-    if(search == '') 
+    if (search == '')
       return facilities;
 
 
@@ -107,11 +111,11 @@ function FacilityManagement() {
   }
   const createFacility = async (data) => {
     const newFac = await facilityService.create(data);
-    return newFac;  
+    return newFac;
   }
   const editFacility = async (data) => {
-    const today = await bookingService.getToday({sanId: data._id});
-    if(today && today.length > 0) {
+    const today = await bookingService.getToday({ sanId: data._id });
+    if (today && today.length > 0) {
       for (const element of today) {
         element.san = data;
         await bookingService.update(element._id, element); // Use await with the update function here
@@ -122,13 +126,13 @@ function FacilityManagement() {
     return editFac;
   }
   const deleteFacility = async (data) => {
-    const today = await bookingService.getToday({sanId: data._id});
-    if(today && today.length > 0) {
+    const today = await bookingService.getToday({ sanId: data._id });
+    if (today && today.length > 0) {
       toast.error('Không thể xóa !!!')
       return;
     }
     const confirm = window.confirm('Xác nhận xóa!!!');
-    if(confirm) {
+    if (confirm) {
       const deleteFac = await facilityService.delete(data._id);
       return deleteFac;
     }
@@ -138,7 +142,7 @@ function FacilityManagement() {
     getFacility();
   }, [fac]);
   useEffect(() => {
-    if(!user) {
+    if (!user) {
       navigate('/login');
     }
   })
@@ -152,10 +156,10 @@ function FacilityManagement() {
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-       
-        </div> 
+
+        </div>
         <button className="bg-blue-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-blue-700 w-10 h-10 m-auto rounded-xl"
-                onClick={e => handleFacility()}
+          onClick={e => handleFacility()}
         >
           +
         </button>
@@ -174,9 +178,9 @@ function FacilityManagement() {
         </div> */}
       </div>
       {/* Lọc dữ liệu */}
-      
+
       {/* Phân chia xem hiển thị dạng grid hay bảng */}
-      
+
       <div className={`bg-white rounded-lg overflow-hidden shadow-md shadow-gray-600 border border-gray-300`}>
         {/* Header bảngg */}
         <div className="flex text-white p-4 bg-blue-500 justify-between pb-2 border-b border-gray-300 text-center">
@@ -198,46 +202,46 @@ function FacilityManagement() {
 
 
         {/* Nội dung bảng */}
-        {facilities ? filterFacility().map((facility, index) => 
-        ((currentPage-1)*4 <= index && index < currentPage*4) ?
-            <div key={facility._id} className={` p-4 text-sm md:text-base flex flex-grow justify-between py-2 border-b border-gray-300 text-center items-center ${index % 2 != 0 && 'bg-blue-100'}`}> 
-            <div className="w-1/12">{ index+1 }</div>
-            {/* <div className="w-1/6 md:w-[10%] hidden sm:block">
+        {facilities ? filterFacility().map((facility, index) =>
+          ((currentPage - 1) * 4 <= index && index < currentPage * 4) ?
+            <div key={facility._id} className={` p-4 text-sm md:text-base flex flex-grow justify-between py-2 border-b border-gray-300 text-center items-center ${index % 2 != 0 && 'bg-blue-100'}`}>
+              <div className="w-1/12">{index + 1}</div>
+              {/* <div className="w-1/6 md:w-[10%] hidden sm:block">
               {
               facility.hinhAnh_San 
               ? <img src={facility.hinhAnh_San} alt="" />
               : <img src="https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg" alt="" />
               }
               </div> */}
-            <div className="w-1/6">
-              { facility.ten_San }
-              <p className='lg:block'>Loại sân: {facility.loai_San.ten_loai}</p>
-              <p className='md:block'>{facility.khuVuc}</p>
+              <div className="w-1/6">
+                {facility.ten_San}
+                <p className='lg:block'>Loại sân: {facility.loai_San.ten_loai}</p>
+                <p className='md:block'>{facility.khuVuc}</p>
+              </div>
+              <div className="w-1/6">{formatNumber(parseInt(facility.bangGiaMoiGio))}</div>
+              <div className="w-1/6 flex">
+                <p className={`m-auto p-1 ${facility.tinhTrang == 'Đang sử dụng'
+                  ? 'text-white rounded-lg bg-green-500 w-full lg:w-1/2 shadow-md shadow-slate-500'
+                  : facility.tinhTrang == 'Đã đặt'
+                    ? 'text-white rounded-lg bg-blue-500 w-full md:w-1/2 shadow-md shadow-slate-500'
+                    : facility.tinhTrang == 'Bảo trì' ? 'text-white rounded-lg bg-yellow-500 w-full lg:w-1/2 shadow-md shadow-slate-500' : ''}`}>
+                  {facility.tinhTrang}
+                </p>
+              </div>
+              <div className="w-1/6 text-xl">
+                <i className="ri-edit-box-line p-2 mr-2 bg-gray-300 rounded-md" onClick={e => handleFacility(facility)}></i>
+                <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteFacility(facility)} ></i>
+              </div>
             </div>
-            <div className="w-1/6">{ formatNumber(parseInt(facility.bangGiaMoiGio))}</div>
-            <div className="w-1/6 flex">
-              <p className={`m-auto p-1 ${facility.tinhTrang == 'Đang sử dụng' 
-                                          ? 'text-white rounded-lg bg-green-500 w-full lg:w-1/2 shadow-md shadow-slate-500' 
-                                          : facility.tinhTrang == 'Đã đặt' 
-                                          ? 'text-white rounded-lg bg-blue-500 w-full md:w-1/2 shadow-md shadow-slate-500' 
-                                          : facility.tinhTrang == 'Bảo trì' ? 'text-white rounded-lg bg-yellow-500 w-full lg:w-1/2 shadow-md shadow-slate-500' : ''}`}>
-                { facility.tinhTrang }
-              </p>
-            </div>
-            <div className="w-1/6 text-xl">
-              <i className="ri-edit-box-line p-2 mr-2 bg-gray-300 rounded-md" onClick={e => handleFacility(facility)}></i>
-              <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteFacility(facility)} ></i>
-            </div>
-          </div> 
-        :'') : ''}
-        </div>
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-        {/* from nhập dữ liệu */}
-      {edit ? <FormFacilityManagement toggle={setEdit} handleData={handleFacility} data={fac} /> : '' }
+            : '') : ''}
+      </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
+      {/* from nhập dữ liệu */}
+      {edit ? <FormFacilityManagement toggle={setEdit} handleData={handleFacility} data={fac} /> : ''}
     </div>
   )
 }
