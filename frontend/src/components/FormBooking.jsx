@@ -13,7 +13,7 @@ function FromBooking(props) {
   const [data, setData] = useState(props.data);
   const [list, setList] = useState([]);
   const [listBooked, setListBooked] = useState(null);
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState(props.data._id ? props.data.san.loai_San.ten_loai : 'Bóng đá');
   const [listSelected, setListSelected] = useState([]);
   const [listService, setListService] = useState(null)
   const [listServiceSelected, setListServiceSelected] = useState([])
@@ -86,7 +86,7 @@ function FromBooking(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
-    if (props.data.trangThai === 'Hoàn thành' || props.data.trangThai === 'Đã hủy') {
+    if (props.data.trangThai === 'Hoàn thành') {
       toast.warning('Không được phép chỉnh sửa!')
       setBooking([])
       setListSelected([]);
@@ -733,7 +733,7 @@ function FromBooking(props) {
           </div>
         </div>
 
-        {(data?.trangThai !== 'Hoàn thành' && data?.trangThai !== 'Đã hủy') ?
+        {(data?.trangThai !== 'Hoàn thành') ?
           <button className='bg-blue-600 m-4 py-1 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
           : ''}
       </form>
