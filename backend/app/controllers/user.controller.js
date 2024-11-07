@@ -254,6 +254,9 @@ exports.createBooking = async (req, res, next) => {
             const r = await service.update(newService._id, { tonKho: temp._doc.tonKho - newService.soluong });
         }
         const result = await booking.create(newBooking);
+        if(!result.maGiaoDich) {
+            const email = await axios.post("http://localhost:3000/api/user/email", result);
+        }
         res.status(201).json(result);
     } catch (err) {
         console.log(err.message);
@@ -853,11 +856,7 @@ exports.sendEmail = async (req, res, next) => {
                             <h1 class="title" style="font-size: 30px;color: #1782cc">Thank you!</h1>
                         </div>  
                         <div style="text-align:center; width: 70%; margin: auto;">
-                            <h2 style="text-align:center">Thông tin đặt sân của bạn</h2>
-                            <div style="display: flex; margin:auto ;justify-content:space-around;">
-                                <p style="padding: 8px; ">Mã đặt sân:</p>
-                                <p style="padding: 8px;font-style:italic;">${booking._id}</p>
-                            </div>    
+                            <h2 style="text-align:center">Thông tin đặt sân của bạn</h2>  
                             <div style="display: flex; margin:auto ;justify-content:space-around;">
                                 <p style="padding: 8px; ">Tên khách hàng:</p>
                                 <p style="padding: 8px;font-style:italic;">${booking.khachHang.ho_KH + ' ' + booking.khachHang.ten_KH}</p>

@@ -54,6 +54,8 @@ bookingSchema.pre('save', function (next) {
   }
   if (!this.trangThaiThanhToan || this.trangThaiThanhToan === '') {
       this.trangThaiThanhToan = 'Chưa thanh toán';
+  }if (this.trangThaiThanhToan === 'Đã thanh toán') {
+      this.expireAt =  new Date(Date.now());
   }
   next();
 });

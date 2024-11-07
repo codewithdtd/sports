@@ -167,9 +167,6 @@ const BookingDetail = () => {
           )
           : '';
         item.khachHang = infoUser;
-        if(returnPayment) {
-          await emailService.create(item);
-        }
         await createBooking(item);
       }
       if (returnPayment)
