@@ -135,6 +135,26 @@ class UserService extends ApiService<User> {
     }
   }
 
+  Future<Map<String, dynamic>?> payment(Map<String, dynamic> data) async {
+    final url = Uri.parse('$baseUrl/payment');
+    try {
+      final response = await http.post(
+        url,
+        headers: getHeaders(),
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final payment = json.decode(response.body);
+        return payment;
+      } else {
+        print('Failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception during logout: $e');
+    }
+  }
+
   // Cập nhật getHeaders để thêm token nếu có
   // @override
   // Map<String, String> getHeaders() {

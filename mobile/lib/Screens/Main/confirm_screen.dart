@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:mobile/Screens/Main/home_screen.dart';
 import 'package:mobile/models/booked_model.dart';
 import 'package:mobile/services/booking.dart';
+import 'package:mobile/services/user.dart';
 import 'package:mobile/stores/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CornfirmScreen extends StatefulWidget {
   final List<DatSan> list;
@@ -24,6 +26,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
   late TextEditingController _noteController;
+  bool methodPayment = true;
 
   @override
   void initState() {
@@ -97,8 +100,23 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
       return newTotal;
     }
 
+    Future<Map<String, dynamic>?> payment(Map<String, dynamic> data) async {
+      print('gọi hàm');
+      final response = await UserService(token: token).payment(data);
+      return response;
+    }
+
     Future<void> _createBooking() async {
       try {
+        Map<String, dynamic>? returnPayment;
+        if (!methodPayment) {
+          final infoPayment = {
+            "userId": user!.id,
+            "thanhTien": _calculateTotal()
+          };
+          returnPayment = await payment(infoPayment);
+        }
+
         for (var booking in widget.list) {
           booking.khachHang = KhachHang(
             id: user?.id,
@@ -109,19 +127,38 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
           );
           booking.ghiChu = _noteController.text;
           booking.ngayDat = booking.ngayDat?.split(' ')[0];
+
+          if (returnPayment?['order_url'] != null &&
+              returnPayment?['order_url'].isNotEmpty) {
+            booking.app_trans_id = returnPayment?['app_trans_id'];
+            booking.order_url = returnPayment?['order_url'];
+          }
           final newBooking = {
             ...booking
                 .toJson(), // Sử dụng toJson() để chuyển đổi đối tượng booking thành Map
           };
           // print(newBooking);
 
-          final response =
-              await BookingService(token: token).createBooking(newBooking);
+          // final response =
+          //     await BookingService(token: token).createBooking(newBooking);
+          if (returnPayment?['order_url'] != null &&
+              returnPayment?['order_url'].isNotEmpty) {
+            final Uri uri = Uri.parse(returnPayment?['order_url']);
+
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(
+                uri,
+                mode: LaunchMode.externalApplication,
+              );
+            } else {
+              print("Could not launch URL: ${returnPayment?['order_url']}");
+            }
+          }
 
           // ignore: unnecessary_null_comparison
-          if (response == null) {
-            throw Exception("Booking creation failed");
-          }
+          // if (response == null) {
+          //   throw Exception("Booking creation failed");
+          // }
         }
 
         // ignore: use_build_context_synchronously
@@ -186,6 +223,36 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
             TextField(
               controller: _noteController,
               decoration: InputDecoration(labelText: 'Ghi chú'),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: RadioListTile<bool>(
+                    title: const Text("Trực tiếp"),
+                    value: true,
+                    groupValue: methodPayment,
+                    activeColor: Colors.green,
+                    onChanged: (value) {
+                      setState(() {
+                        methodPayment = value!;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: RadioListTile<bool>(
+                    title: const Text("Chuyển khoản"),
+                    value: false,
+                    groupValue: methodPayment,
+                    activeColor: Colors.green,
+                    onChanged: (value) {
+                      setState(() {
+                        methodPayment = value!;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
             Center(

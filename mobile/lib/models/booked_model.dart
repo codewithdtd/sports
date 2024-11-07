@@ -165,6 +165,10 @@ class DatSan {
   List<DichVu>? dichVu;
   int? thanhTien;
   String? ngayDat;
+  // ignore: non_constant_identifier_names
+  String? app_trans_id;
+  // ignore: non_constant_identifier_names
+  String? order_url;
   String? expireAt; // Có thể có hoặc không
   bool? daXoa;
   String? ngayTao;
@@ -184,6 +188,10 @@ class DatSan {
     this.ghiChu,
     this.thanhTien,
     this.ngayDat,
+    // ignore: non_constant_identifier_names
+    this.app_trans_id,
+    // ignore: non_constant_identifier_names
+    this.order_url,
     this.expireAt,
     this.daXoa,
     this.ngayTao,
@@ -206,6 +214,10 @@ class DatSan {
       dichVu: List<DichVu>.from(json['dichVu'].map((x) => DichVu.fromJson(x))),
       thanhTien: json['thanhTien'],
       ngayDat: json['ngayDat'],
+      // ignore: unnecessary_null_in_if_null_operators
+      order_url: json['order_url'],
+      // ignore: prefer_if_null_operators
+      app_trans_id: json['app_trans_id'],
       expireAt: json['expireAt'],
       daXoa: json['da_xoa'],
       ngayTao: json['ngayTao'],
@@ -228,6 +240,8 @@ class DatSan {
       'dichVu': dichVu?.map((x) => x.toJson()).toList(),
       'thanhTien': thanhTien,
       'ngayDat': ngayDat,
+      'app_trans_id': app_trans_id,
+      'order_url': order_url,
       'expireAt': expireAt,
       'da_xoa': daXoa ?? false,
       'ngayTao': ngayTao,
