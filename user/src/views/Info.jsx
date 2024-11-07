@@ -59,15 +59,15 @@ const Info = () => {
     }
   })
   return (
-    <div className='flex h-[85vh] py-5 flex-col'>
-      <div className='info relative flex flex-1 items-center overflow-hidden justify-center w-[90%] border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-[90%] m-auto'>
+    <div className='flex h-[85vh] py-5 flex-col bg-gray-200'>
+      <div className='info relative flex flex-1 items-center overflow-hidden justify-center w-[90%] rounded-lg h-[90%] m-auto'>
         <ToastContainer autoClose='2000' />
-        <div className='w-1/3 h-full flex flex-col justify-center items-center text-center bg-blue-500'>
+        <div className='w-1/3 flex flex-col justify-center items-center text-center border shadow-gray-500 bg-white m-3 rounded-lg h-[90%] shadow-lg'>
           { user.user.hinhAnh_KH && !avatarPre ? 
-            <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_KH}`} className="border-[7px] border-white rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
+            <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_KH}`} className="border-[7px] border-gray-400 rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
             : <img src={`${avatarPre ? avatarPre : './src/assets/user-profile.png'}`} className="rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
           }
-          <p className='mt-3 font-medium text-lg text-white'>
+          <p className='mt-3 font-medium text-lg'>
             ẢNH ĐẠI DIỆN
             <label htmlFor="avatar" className='hover:bg-gray-300 hover:text-gray-700 rounded-full p-2 py-1 cursor-pointer'>
               <i className="ri-image-edit-fill"></i>
@@ -75,7 +75,7 @@ const Info = () => {
           </p>
           <input type="file" id='avatar' className='hidden' onChange={handleFileUploadAvatar}/>
         </div>
-        <form className='flex-1 md:w-1/2 flex flex-col rounded-lg p-4' onSubmit={e => handleSubmit(e)}>
+        <form className='flex-1 md:w-1/2 flex flex-col rounded-lg p-4 border h-[90%] mr-3 bg-white shadow-gray-500 shadow-lg' onSubmit={e => handleSubmit(e)}>
           <h1 className='text-center text-2xl md:text-3xl text-blue-600 font-bold py-3'>CẬP NHẬT THÔNG TIN CỦA BẠN</h1>
           <div className='w-full md:text-lg'>
             <div className='flex items-center py-1'>

@@ -75,7 +75,7 @@ const Review = () => {
             ((currentPage - 1) * 5 <= index && index < currentPage * 5) ? (
               <div key={review._id} className='shadow-gray-600 bg-white rounded-md shadow-md border text-lg border-gray-400 mb-5'>
                 <div className="rounded-xl flex p-4 text-lg">
-                  <img src="./src/assets/user-profile.png" className='hidden sm:block w-14 h-14 mr-5' alt="" />
+                  <img src="./src/assets/avatar.jpg" className='hidden sm:block w-14 h-14 mr-5 rounded-full' alt="" />
                   <div>
                     <div className='font-medium flex items-center'>
                       <img src="./src/assets/user-profile.png" className='sm:hidden w-20 h-20 mr-5' alt="" />

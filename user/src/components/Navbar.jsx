@@ -86,8 +86,8 @@ const Navbar = () => {
 
   return (
     <div
-      className={`flex sticky transition-all top-0 z-[2] bg-white border-b-2 border-gray-500 justify-between w-full px-10 items-center h-fit py-3 backdrop-blur-sm 
-        ${scrolled ? 'shadow-gray-500 shadow-sm' : ''}`}
+      className={`flex sticky transition-all top-0 z-[2] bg-white border-b-2 justify-between w-full px-10 items-center h-fit py-3 backdrop-blur-sm 
+        ${scrolled ? 'shadow-gray-300' : ''}`}
     >
       <div className='block md:hidden text-blue-600 absolute mx-2 w-[30px] left-0  text-center rounded-lg' onClick={toggleMenu}>
           <i className="ri-menu-line text-xl font-bold"></i>

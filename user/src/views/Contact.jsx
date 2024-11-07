@@ -37,13 +37,13 @@ const Contact = () => {
   }
 
   return (
-    <div className='flex bg-sky-200 h-[88vh]'>
+    <div className='flex h-[88vh]'>
       <ToastContainer autoClose='2000' />
       <div className='flex-1 m-auto hidden sm:block'>
         <img src="./src/assets/phone-call.png" alt="" className='w-1/2 m-auto'/>
       </div>
       <div className="flex-1 m-auto p-3">
-        <form action="" className='bg-white m-auto p-4 rounded-xl shadow-lg shadow-gray-600 md:w-2/30' onSubmit={e => create(e)}>
+        <form action="" className='bg-white m-auto p-4 rounded-xl shadow-lg shadow-gray-600 border border-gray-400 md:w-2/30' onSubmit={e => create(e)}>
           <h1 className='text-3xl pb-5 font-bold text-sky-600'>Liên hệ với chúng tôi</h1> 
           <div className='m-2 my-4 flex items-center'>
             <label htmlFor=""><i className="mr-3 text-sky-600 ri-user-fill"></i></label>

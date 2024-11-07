@@ -52,10 +52,10 @@ const ChangePass = () => {
     // getUser();
   })
   return (
-    <div className='flex h-[85vh] py-5 flex-col'>
-      <div className='info relative flex flex-1 overflow-hidden justify-center w-[90%] border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-[85vh] m-auto'>
+    <div className='flex h-[85vh] py-5 flex-col bg-gray-200'>
+      <div className='info relative flex flex-1 gap-4 overflow-hidden justify-center w-[90%] rounded-lg h-[85vh] m-auto'>
         <ToastContainer autoClose='2000' />
-        <div className='w-1/3 h-full flex flex-col justify-center items-center text-center bg-blue-500 text-white'>
+        <div className='w-1/3 flex flex-col justify-center items-center text-center h-[90%] bg-white shadow-lg shadow-gray-500 rounded-lg'>
           { user.user.hinhAnh_KH ? 
             <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_KH}`} className="border-[7px] border-white rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
             : <img src={`./src/assets/user-profile.png`} className="rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
@@ -71,7 +71,7 @@ const ChangePass = () => {
           </p>
           
         </div>
-        <form className='flex flex-col flex-1 w-full md:w-1/2 items-center rounded-lg p-4 h-fit my-10' onSubmit={e => handleSubmit(e)}>
+        <form className='flex flex-col flex-1 w-full md:w-1/2 items-center rounded-lg p-4 h-[90%] bg-white shadow-lg shadow-gray-500 mr-3' onSubmit={e => handleSubmit(e)}>
           <h1 className='text-center text-3xl text-blue-600 font-bold py-3'>ĐỔI MẬT KHẨU</h1>
           <div className='w-full md:text-lg'>
             <div className='flex items-center py-1'>

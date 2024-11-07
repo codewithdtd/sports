@@ -277,7 +277,7 @@ const History = () => {
 
           {filterFacility()?.map((item, index) =>
             ((currentPage - 1) * 6 <= index && index < currentPage * 6) ?
-              <div key={index} className='flex flex-col shadow-md bg-gray-100 shadow-gray-400 rounded-lg border-2 border-gray-400 mb-3 p-2 text-lg'>
+              <div key={index} className='flex flex-col shadow-lg bg-gray-100 shadow-gray-400 rounded-lg border border-gray-300 mb-3 p-2 text-lg'>
                 <div className='flex'>
                   <div className='flex w-1/2 md:w-1/2 p-5'>
                     <img src={`http://localhost:3000/uploads/${listSportType.find(element => element._id === item.san.loai_San._id).hinhAnhDaiDien}`} className='m-auto object-contain bg-blue-200 rounded-xl' alt="" />
