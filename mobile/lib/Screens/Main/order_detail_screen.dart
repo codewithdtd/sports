@@ -52,165 +52,196 @@ class _OrderScreenState extends State<OrderScreen> {
 
           return SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Khách hàng: ${invoice.khachHang?.hoKh} ${invoice.khachHang?.tenKh}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Số điện thoại: ${invoice.khachHang?.sdtKh}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Email: ${invoice.khachHang?.emailKh}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Nhân viên: ${invoice.nhanVien?.hoNv} ${invoice.nhanVien?.tenNv}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Số điện thoại: ${invoice.nhanVien?.sdtNv}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Email: ${invoice.nhanVien?.emailNv}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Ngày tạo hóa đơn: ${invoice.ngayTaoHd}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Phương thức thanh toán: ${invoice.phuongThucThanhToan}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Check in: ${invoice.datSan?.thoiGianCheckIn}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Check out: ${invoice.datSan?.thoiGianCheckOut}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Tổng tiền: ${invoice.tongTien}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          'Ghi chú: ${invoice.ghiChu}',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        SizedBox(height: 6.0),
-                      ],
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  // border: Border.all(color: Colors.black87),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey
+                          .withOpacity(1.0), // Màu bóng với độ trong suốt
+                      spreadRadius: 5, // Mức độ lan rộng của bóng
+                      blurRadius: 7, // Độ mờ của bóng
+                      offset: Offset(0, 3), // Độ lệch của bóng theo trục x và y
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: Table(
-                      border: TableBorder.all(),
-                      columnWidths: const {
-                        0: FlexColumnWidth(2),
-                        1: FlexColumnWidth(3),
-                        2: FlexColumnWidth(2),
-                      },
-                      children: [
-                        TableRow(
-                          decoration: BoxDecoration(color: Colors.green[300]),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Tên', textAlign: TextAlign.center),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Text('Số lượng', textAlign: TextAlign.center),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Giá', textAlign: TextAlign.center),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${invoice.datSan?.san?.maSan}',
-                                  textAlign: TextAlign.center),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
+                            Center(
                               child: Text(
-                                '${invoice.datSan?.thoiGianBatDau}-${invoice.datSan?.thoiGianKetThuc}',
-                                textAlign: TextAlign.center,
+                                "HÓA ĐƠN",
+                                style: TextStyle(
+                                    color: Colors.greenAccent[700],
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                  '${invoice.datSan?.san?.bangGiaMoiGio}',
-                                  textAlign: TextAlign.center),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Khách hàng: ${invoice.khachHang?.hoKh} ${invoice.khachHang?.tenKh}',
+                              style: TextStyle(fontSize: 16.0),
                             ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Số điện thoại: ${invoice.khachHang?.sdtKh}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Email: ${invoice.khachHang?.emailKh}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Nhân viên: ${invoice.nhanVien?.hoNv} ${invoice.nhanVien?.tenNv}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Số điện thoại: ${invoice.nhanVien?.sdtNv}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Email: ${invoice.nhanVien?.emailNv}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Ngày tạo hóa đơn: ${invoice.ngayTaoHd}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Phương thức thanh toán: ${invoice.phuongThucThanhToan}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Check in: ${invoice.datSan?.thoiGianCheckIn}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Check out: ${invoice.datSan?.thoiGianCheckOut}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Tổng tiền: ${invoice.tongTien}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
+                            Text(
+                              'Ghi chú: ${invoice.ghiChu}',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            SizedBox(height: 6.0),
                           ],
                         ),
-                        if (invoice.datSan?.dichVu != null)
-                          ...invoice.datSan!.dichVu!
-                              .map(
-                                (dichVu) => TableRow(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('${dichVu.tenDv}',
-                                          textAlign: TextAlign.center),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('${dichVu.soluong}',
-                                          textAlign: TextAlign.center),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('${dichVu.thanhTien}',
-                                          textAlign: TextAlign.center),
-                                    ),
-                                  ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 16),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Table(
+                          border: TableBorder.all(),
+                          columnWidths: const {
+                            0: FlexColumnWidth(2),
+                            1: FlexColumnWidth(3),
+                            2: FlexColumnWidth(2),
+                          },
+                          children: [
+                            TableRow(
+                              decoration:
+                                  BoxDecoration(color: Colors.green[300]),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:
+                                      Text('Tên', textAlign: TextAlign.center),
                                 ),
-                              )
-                              .toList(),
-                      ],
-                    ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('Số lượng',
+                                      textAlign: TextAlign.center),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:
+                                      Text('Giá', textAlign: TextAlign.center),
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('${invoice.datSan?.san?.maSan}',
+                                      textAlign: TextAlign.center),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '${invoice.datSan?.thoiGianBatDau}-${invoice.datSan?.thoiGianKetThuc}',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                      '${invoice.datSan?.san?.bangGiaMoiGio}',
+                                      textAlign: TextAlign.center),
+                                ),
+                              ],
+                            ),
+                            if (invoice.datSan?.dichVu != null)
+                              ...invoice.datSan!.dichVu!
+                                  .map(
+                                    (dichVu) => TableRow(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text('${dichVu.tenDv}',
+                                              textAlign: TextAlign.center),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text('${dichVu.soluong}',
+                                              textAlign: TextAlign.center),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text('${dichVu.thanhTien}',
+                                              textAlign: TextAlign.center),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      Center(
+                        child: Text('Dsport cảm ơn quý khách'),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Center(
-                    child: Text('Dsport cảm ơn quý khách'),
-                  ),
-                ],
+                ),
               ),
             ),
           );
