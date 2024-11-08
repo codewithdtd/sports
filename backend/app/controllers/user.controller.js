@@ -544,6 +544,17 @@ exports.findAllInvoiceUser = async (req, res, next) => {
     }
 }
 
+exports.findOneInvoiceUser = async (req, res, next) => {
+    const invoice = new Invoices();
+    try {
+        const result = await invoice.findOne({"datSan._id": req.params.id})
+        res.status(201).json(result);
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({ error: err.message });
+    }
+}
+
 // Liên hệ
 // Đánh giá
 exports.createContact = async (req, res, next) => {

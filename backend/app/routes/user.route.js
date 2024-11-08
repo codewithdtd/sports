@@ -48,7 +48,8 @@ router.route("/cart/:id")
 // Hóa đơn
 router.route("/invoice/:id")
     .get(user.findAllInvoiceUser)
-
+router.route("/invoice/findOne/:id")
+    .get(user.findOneInvoiceUser)
 // Đặt Sân 
 router.route("/booking")
     .get(middleware.verifyToken ,user.findAllBookingUser)

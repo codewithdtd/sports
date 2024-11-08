@@ -139,8 +139,8 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
           };
           // print(newBooking);
 
-          // final response =
-          //     await BookingService(token: token).createBooking(newBooking);
+          final response =
+              await BookingService(token: token).createBooking(newBooking);
           if (returnPayment?['order_url'] != null &&
               returnPayment?['order_url'].isNotEmpty) {
             final Uri uri = Uri.parse(returnPayment?['order_url']);
@@ -156,9 +156,9 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
           }
 
           // ignore: unnecessary_null_comparison
-          // if (response == null) {
-          //   throw Exception("Booking creation failed");
-          // }
+          if (response == null) {
+            throw Exception("Booking creation failed");
+          }
         }
 
         // ignore: use_build_context_synchronously

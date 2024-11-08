@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/Screens/Main/add_review_screen.dart';
+import 'package:mobile/Screens/Main/order_detail_screen.dart';
 import 'package:mobile/models/booked_model.dart';
 import 'package:mobile/models/rating_model.dart';
 import 'package:mobile/services/booking.dart';
 import 'package:mobile/services/review.dart';
 import 'package:mobile/stores/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class History extends StatefulWidget {
   static const routeName = '/history';
@@ -132,9 +134,39 @@ class _HistoryState extends State<History> {
     }
   }
 
+  Future<void> _openUrl(String? orderUrl) async {
+    final Uri uri = Uri.parse(orderUrl.toString());
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      print("Could not launch URL: ${orderUrl}");
+    }
+  }
+
   String formatCurrency(int? number) {
     final formatter = NumberFormat('#,##0', 'vi_VN');
     return formatter.format(number);
+  }
+
+  String timeEnd(String? time) {
+    // Giả sử item.expireAt là chuỗi dạng "yyyy-MM-dd hh:mm"
+    String originalTime = time!.substring(11, 16); // Lấy chuỗi "hh:mm"
+
+    // Chuyển đổi chuỗi "hh:mm" thành DateTime
+    DateTime expireTime = DateTime.parse("1970-01-01 $originalTime:00");
+
+    // Thêm 5 phút
+    DateTime newExpireTime = expireTime.add(Duration(minutes: 5));
+
+    // Định dạng lại thời gian thành chuỗi "hh:mm"
+    String displayTime =
+        "${newExpireTime.hour.toString().padLeft(2, '0')}:${newExpireTime.minute.toString().padLeft(2, '0')}";
+
+    // Hiển thị kết quả
+    return displayTime;
   }
 
   int _calculateTotalPrice(DatSan item) {
@@ -287,7 +319,10 @@ class _HistoryState extends State<History> {
                                               ? Colors.red
                                               : item.trangThai == "Đã duyệt"
                                                   ? Colors.blue[700]
-                                                  : Colors.black,
+                                                  : item.trangThai ==
+                                                          "Hoàn thành"
+                                                      ? Colors.greenAccent[700]
+                                                      : Colors.black,
                                         ),
                                       ),
                                     ],
@@ -383,6 +418,70 @@ class _HistoryState extends State<History> {
                                       ),
                                     ),
                                   const SizedBox(width: 8.0),
+                                  if (item.trangThai == "Hoàn thành")
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                OrderScreen(datSan: item),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 35.0,
+                                        width: 100.0,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: Colors.green, width: 2.0),
+                                          borderRadius:
+                                              BorderRadius.circular(6.0),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            'Xem chi tiết',
+                                            style: TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  const SizedBox(width: 8.0),
+                                  if (item.order_url != null &&
+                                      item.order_url != '' &&
+                                      item.trangThai != 'Đã hủy')
+                                    GestureDetector(
+                                      onTap: () => _openUrl(item.order_url),
+                                      child: Container(
+                                        height: 35.0,
+                                        width: 100.0,
+                                        decoration: BoxDecoration(
+                                          // color: Colors.red[300],
+                                          borderRadius:
+                                              BorderRadius.circular(6.0),
+                                          border: Border.all(
+                                            color: Colors.green,
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            'Thanh toán',
+                                            style: TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  const SizedBox(width: 8.0),
                                   if (item.trangThai == 'Chưa duyệt')
                                     GestureDetector(
                                       onTap: () => _confirmCancelBooking(item),
@@ -406,7 +505,13 @@ class _HistoryState extends State<History> {
                                       ),
                                     ),
                                 ],
-                              )
+                              ),
+                              if (item.order_url != null &&
+                                  item.order_url != '' &&
+                                  item.trangThai != 'Đã hủy')
+                                Text(
+                                  'Đơn hàng sẽ hủy vào lúc ${timeEnd(item.expireAt)}',
+                                ),
                             ],
                           ),
                         );
