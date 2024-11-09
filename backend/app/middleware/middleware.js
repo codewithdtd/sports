@@ -45,7 +45,7 @@ exports.verifyAdmin = async (req, res, next) => {
         );
     }
 
-    if(req.user.id === req.params?.id || req.user.role === 'admin' || req.user.id === req.query?.id) 
+    if(req.user.id === req.params?.id || req.user.role === 'admin' || req.user.role === 'Nhân viên' || req.user.id === req.query?.id) 
         next();
     else {
         return next(

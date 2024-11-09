@@ -26,7 +26,7 @@ function Facility() {
   const serviceService = new ServiceService(user, dispatch);
 
   useEffect(() => {
-    if (!user || user.user.chuc_vu != 'admin') {
+    if (!user) {
       navigate('/login');
     }
   })

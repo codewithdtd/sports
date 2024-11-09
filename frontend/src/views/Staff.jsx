@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -15,12 +15,12 @@ const Staff = () => {
   const [edit, setEdit] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const user = useSelector((state)=> state.user.login.user)
+  const user = useSelector((state) => state.user.login.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const accessToken = user.accessToken;
 
-const staffService = new StaffService(user, dispatch);
+  const staffService = new StaffService(user, dispatch);
 
   const [fac, setFac] = useState({});
   // Định dạng số
@@ -30,12 +30,12 @@ const staffService = new StaffService(user, dispatch);
   // Chuyển đổi thành dạng chuỗi
   const convertString = () => {
     return list.map((item) => {
-      return [ item.ho_NV, item.sdt_NV, item.ten_NV, item.email_NV, item.chuc_vu ].join(" ").toLowerCase();
+      return [item.ho_NV, item.sdt_NV, item.ten_NV, item.email_NV, item.chuc_vu].join(" ").toLowerCase();
     });
   }
   // Lọc dữ liệu
   const filterFacility = () => {
-    if(search == '') 
+    if (search == '')
       return list;
 
 
@@ -60,18 +60,18 @@ const staffService = new StaffService(user, dispatch);
 
   const handleData = async (data = {}) => {
     setFac(data)
-    if(data.phuongThuc == 'edit') {
+    if (data.phuongThuc == 'edit') {
       console.log('edit')
-      if(await editData(data))
+      if (await editData(data))
         console.log('Đã cập nhật');
     }
-    if(data.phuongThuc == 'create') {
+    if (data.phuongThuc == 'create') {
       console.log('create')
-      if(await createData(data))
+      if (await createData(data))
         console.log('Đã thêm mới');
     }
     // setFac(fac);
-    setEdit(!edit);  
+    setEdit(!edit);
   };
 
   // Lấy dữ liệu từ server
@@ -81,18 +81,21 @@ const staffService = new StaffService(user, dispatch);
   }
   const createData = async (data) => {
     const newFac = await staffService.create(data);
-    return newFac;  
+    setFac(fac);
+    return newFac;
   }
   const editData = async (data) => {
     const editFac = await staffService.update(data._id, data, accessToken);
+    setFac(fac);
     return editFac;
   }
   const deleteData = async (data) => {
     const deleteFac = await staffService.delete(data._id);
+    setFac(fac);
     return deleteFac;
   }
   useEffect(() => {
-    if(!user) {
+    if (!user) {
       navigate('/login');
     }
   })
@@ -109,103 +112,65 @@ const staffService = new StaffService(user, dispatch);
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <div className="bg-green-500 cursor-pointer hover:bg-green-700 ml-2 max-w-50% shadow-gray-700 shadow-sm text-white overflow-hidden rounded-lg p-2" onClick={e => setFilter(!filter)}>
-            <i className="ri-arrow-down-double-line"></i>
-            Lọc
-          </div>
-          {filter ? 
-          <div className='bg-white shadow-black shadow-sm rounded-md p-2 h-fit flex flex-col top-full right-0 absolute justify-around'>
-            <select className='p-1 rounded-md bg-green-100 m-1' name="" id="">
-              <option value="">Loại sân</option>
-              <option value="">Bóng đá</option>
-              <option value="">Bóng chuyền</option>
-              <option value="">Cầu lông</option>
-            </select>
-            <select className='p-1 rounded-md bg-green-100 m-1' name="" id="">
-              <option value="">Tình trạng</option>
-              <option value="">Trống</option>
-              <option value="">Đã đặt trước</option>
-              <option value="">Đang sử dụng</option>
-              <option value="">Bảo trì</option>
-              <option value="">Quá hạn</option>
-            </select>
-            <select className='p-1 rounded-md bg-green-100 m-1' name="" id="">
-              <option value="">Giá</option>
-              <option value="">{'<'} 100.000</option>
-              <option value="">100.000 - 200.000</option>
-              <option value="">200.000 - 400.000</option>
-              <option value="">{'>'} 400.000</option>
-            </select>
-            <button className='bg-green-500 text-white px-2 py-1 text-sm cursor-pointer hover:bg-green-700 m-auto rounded-md' onClick={e => setFilter(!filter)}>Xác nhận</button>
-          </div>
-        : '' }
-        </div> 
-        
+        </div>
+
       </div>
       {/* Bảng dữ liệu */}
-      <div className="bg-white text-[10px] sm:text-sm md:text-base p-4 rounded-lg shadow-sm border border-gray-300">
+      <div className="bg-white text-[10px] sm:text-sm md:text-base rounded-md overflow-hidden shadow-md shadow-gray-400 border border-gray-300">
         {/* Header bảngg */}
-        <div className="flex justify-between py-2 border-b border-gray-300 text-center">
+        <div className="flex justify-between py-3 border-b border-gray-300 text-center bg-blue-500 text-white">
           <div className="w-1/12 font-semibold">STT</div>
           <div className="w-1/6 font-semibold">TÊN</div>
-          
+
           <div className="w-1/6 font-semibold flex justify-center">
             SỐ ĐIỆN THOẠI
-            
+
           </div>
           <div className="w-1/6 font-semibold flex justify-center">
             EMAIL
-            <div className="">
-              <i className="ri-arrow-up-fill"></i>
-              {/* <i className="ri-arrow-down-fill"></i> */}
-            </div>
           </div>
           <div className="w-1/6 font-semibold flex justify-center">
             CHỨC VỤ
-            <div className="">
-              <i className="ri-arrow-up-fill"></i>
-              {/* <i className="ri-arrow-down-fill"></i> */}
-            </div>
           </div>
           <div className="w-1/6 font-semibold flex justify-center">
           </div>
         </div>
         {list.length > 0 ? filterFacility()?.map((item, index) =>
-        ((currentPage-1)*7 <= index && index < currentPage*7) ?
-        <div key={index} className="flex justify-between items-center min-h-14 max-h-16 py-2 border-b border-gray-300 text-center">
-          <div className="w-1/12">{index+1}</div>
-          <div className="w-1/6">{item.ho_NV} {item.ten_NV}</div>
-          <div className="w-1/6 flex justify-center">
-            {item.sdt_NV}
-          </div>
-          <div className="w-1/6 flex justify-center">
-            {item.email_NV}
-          </div>
-          <div className="w-1/6 flex justify-center">
-            {item.chuc_vu}
-          </div>
-          {/* <div className="w-1/6 flex justify-center">
+          ((currentPage - 1) * 7 <= index && index < currentPage * 7) ?
+            <div key={index} className={`flex justify-between items-center min-h-14 max-h-16 py-2 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
+              <div className="w-1/12">{index + 1}</div>
+              <div className="w-1/6">{item.ho_NV} {item.ten_NV}</div>
+              <div className="w-1/6 flex justify-center">
+                {item.sdt_NV}
+              </div>
+              <div className="w-1/6 flex justify-center">
+                {item.email_NV}
+              </div>
+              <div className="w-1/6 flex justify-center">
+                {item.chuc_vu}
+              </div>
+              {/* <div className="w-1/6 flex justify-center">
             {item.choMuon || 0}
           </div> */}
-          <div className="w-1/6">
-            <i className="ri-edit-box-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(item)}></i>
-            <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteData(item)} ></i>
-          </div>
-        </div>
-        : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
+              <div className="w-1/6">
+                <i className="ri-edit-box-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(item)}></i>
+                <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteData(item)} ></i>
+              </div>
+            </div>
+            : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
         }
       </div>
 
 
       {/* Phân trang */}
       <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
 
-    
-      {edit ? <FormStaff toggle={setEdit} data={fac} handleData={handleData}/> : '' }
+
+      {edit ? <FormStaff toggle={setEdit} data={fac} handleData={handleData} /> : ''}
     </div>
   )
 }
