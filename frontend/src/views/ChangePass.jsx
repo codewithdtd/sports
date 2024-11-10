@@ -55,9 +55,9 @@ const ChangePass = () => {
   return (
     <div>
       <Header name={'Đổi mật khẩu'} />
-      <div className='info relative flex flex-1 overflow-hidden justify-center w-full border border-gray-400 shadow-lg shadow-gray-500 bg-white rounded-lg h-[85vh]'>
+      <div className='info relative flex gap-4 flex-1 overflow-hidden justify-center items-center w-full shadow-lg shadow-gray-500 bg-white rounded-lg h-[85vh]'>
         <ToastContainer autoClose='2000' />
-        <div className='w-1/3 z-[2] h-full flex flex-col justify-center items-center text-center bg-blue-600 text-white'>
+        <div className='w-1/3 z-[2] h-[90%] flex flex-col justify-center items-center text-center bg-white border-2 shadow-md shadow-gray-500 rounded-lg '>
           <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_NV}`} className="border-[3px] border-white rounded-full w-1/2 md:w-[50%] aspect-square object-cover" alt="" />
           <p className='mt-3 font-bold text-lg'>
             {user.user.ho_NV + ' ' + user.user.ten_NV}
@@ -70,7 +70,7 @@ const ChangePass = () => {
           </p>
           
         </div>
-        <form className='flex flex-col flex-1 w-full md:w-1/2 items-center rounded-lg p-4 h-fit my-10' onSubmit={e => handleSubmit(e)}>
+        <form className='flex flex-col flex-1 w-full md:w-1/2 items-center p-4 h-[90%] mr-4 my-10 bg-white border-2 shadow-md shadow-gray-500 rounded-lg ' onSubmit={e => handleSubmit(e)}>
           <h1 className='text-center text-3xl text-blue-600 font-bold py-3'>ĐỔI MẬT KHẨU</h1>
           <div className='w-full md:text-lg'>
             <div className='flex items-center py-1'>

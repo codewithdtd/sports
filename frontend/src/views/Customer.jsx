@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ const Customer = () => {
   const [edit, setEdit] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const user = useSelector((state)=> state.user.login.user)
+  const user = useSelector((state) => state.user.login.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const accessToken = user?.accessToken;
@@ -26,12 +26,12 @@ const Customer = () => {
   // Chuyển đổi thành dạng chuỗi
   const convertString = () => {
     return list.map((item) => {
-      return [ item.ho_KH, item.sdt_KH, item.ten_KH, item.email_KH ].join(" ").toLowerCase();
+      return [item.ho_KH, item.sdt_KH, item.ten_KH, item.email_KH].join(" ").toLowerCase();
     });
   }
   // Lọc dữ liệu
   const filterFacility = () => {
-    if(search == '') 
+    if (search == '')
       return list;
 
 
@@ -56,19 +56,19 @@ const Customer = () => {
 
   const handleData = async (data = {}) => {
     setFac(data)
-    if(data.phuongThuc == 'edit') {
+    if (data.phuongThuc == 'edit') {
       console.log('edit')
       console.log(data)
-      if(await editData(data))
+      if (await editData(data))
         console.log('Đã cập nhật');
     }
-    if(data.phuongThuc == 'create') {
+    if (data.phuongThuc == 'create') {
       console.log('create')
-      if(await createData(data))
+      if (await createData(data))
         console.log('Đã thêm mới');
     }
     // setFac(fac);
-    setEdit(!edit);  
+    setEdit(!edit);
   };
 
   // Lấy dữ liệu từ server
@@ -78,18 +78,21 @@ const Customer = () => {
   }
   const createData = async (data) => {
     const newFac = await userService.create(data);
-    return newFac;  
+    return newFac;
   }
   const editData = async (data) => {
     const editFac = await userService.update(data._id, data, accessToken);
     return editFac;
   }
   const deleteData = async (data) => {
-    const deleteFac = await userService.delete(data._id);
-    return deleteFac;
+    const confirm = window.confirm('Xác nhận xóa!!!');
+    if (confirm) {
+      const deleteFac = await userService.delete(data._id);
+      return deleteFac;
+    }
   }
   useEffect(() => {
-    if(!user) {
+    if (!user) {
       navigate('/login');
     }
   })
@@ -107,9 +110,15 @@ const Customer = () => {
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          
-        </div> 
-        
+          <div>
+            <button className="bg-blue-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-blue-700 w-10 h-10 m-auto rounded-xl"
+              onClick={e => handleData()}
+            >
+              +
+            </button>
+          </div>
+        </div>
+
       </div>
       {/* Bảng dữ liệu */}
       <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-300">
@@ -117,52 +126,52 @@ const Customer = () => {
         <div className="flex justify-between p-4 pb-2 bg-blue-500 text-white border-b border-gray-300 text-center">
           <div className="w-1/12 font-semibold">STT</div>
           <div className="w-1/6 font-semibold">TÊN</div>
-          
+
           <div className="w-1/6 font-semibold flex justify-center">
             SỐ ĐIỆN THOẠI
-            
+
           </div>
           <div className="w-1/6 font-semibold flex justify-center">
             EMAIL
-           
+
           </div>
-          
+
           <div className="w-1/6 font-semibold flex justify-center">
           </div>
         </div>
         {list.length > 0 ? filterFacility()?.map((item, index) =>
-        ((currentPage-1)*7 <= index && index < currentPage*7) ?
-        <div key={index} className={`flex justify-between items-center p-4 min-h-14 max-h-16 py-2 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
-          <div className="w-1/12">{index+1}</div>
-          <div className="w-1/6">{item.ho_KH} {item.ten_KH}</div>
-          <div className="w-1/6 flex justify-center">
-            {item.sdt_KH}
-          </div>
-          <div className="w-1/6 flex justify-center">
-            {item.email_KH}
-          </div>
-          {/* <div className="w-1/6 flex justify-center">
+          ((currentPage - 1) * 7 <= index && index < currentPage * 7) ?
+            <div key={index} className={`flex justify-between items-center p-4 min-h-14 max-h-16 py-2 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
+              <div className="w-1/12">{index + 1}</div>
+              <div className="w-1/6">{item.ho_KH} {item.ten_KH}</div>
+              <div className="w-1/6 flex justify-center">
+                {item.sdt_KH}
+              </div>
+              <div className="w-1/6 flex justify-center">
+                {item.email_KH}
+              </div>
+              {/* <div className="w-1/6 flex justify-center">
             {item.choMuon || 0}
           </div> */}
-          <div className="w-1/6">
-            <i className="ri-edit-box-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(item)}></i>
-            {/* <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteData(item)} ></i> */}
-          </div>
-        </div>
-        : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
+              <div className="w-1/6">
+                <i className="ri-edit-box-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(item)}></i>
+                <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteData(item)} ></i>
+              </div>
+            </div>
+            : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
         }
       </div>
 
 
       {/* Phân trang */}
       <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
 
-    
-      {edit ? <FormCustomer toggle={setEdit} data={fac} handleData={handleData}/> : '' }
+
+      {edit ? <FormCustomer toggle={setEdit} data={fac} handleData={handleData} /> : ''}
     </div>
   )
 }

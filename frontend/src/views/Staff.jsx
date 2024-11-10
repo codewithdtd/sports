@@ -90,9 +90,12 @@ const Staff = () => {
     return editFac;
   }
   const deleteData = async (data) => {
-    const deleteFac = await staffService.delete(data._id);
-    setFac(fac);
-    return deleteFac;
+    const confirm = window.confirm('Xác nhận xóa!!!');
+      if (confirm) {
+      const deleteFac = await staffService.delete(data._id);
+      setFac(fac);
+      return deleteFac;
+    }
   }
   useEffect(() => {
     if (!user) {
@@ -111,6 +114,13 @@ const Staff = () => {
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
+          </div>
+          <div>
+            <button className="bg-blue-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-blue-700 w-10 h-10 m-auto rounded-xl"
+              onClick={e => handleData()}
+            >
+              +
+            </button>
           </div>
         </div>
 

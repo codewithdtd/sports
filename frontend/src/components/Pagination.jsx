@@ -53,14 +53,14 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
 
           {/* Hiển thị các số trang */}
           {pages.map((page, index) => (
-            <li key={index} className="leading-tight text-gray-500 bg-white border border-gray-400">
+            <li key={index} className={`leading-tight text-gray-500 bg-white border border-gray-400 ${page === currentPage && 'shadow-md shadow-gray-500'}`}>
               {page === "..." ? (
                 <p className="px-3 py-2">...</p>
               ) : (
                 <button
                   onClick={() => onPageChange(page)}
                   className={`px-3 py-2
-                    ${page === currentPage ? "bg-blue-500 text-white" : "text-gray-500 bg-white"}`}
+                    ${page === currentPage ? "bg-blue-600 text-white" : "text-gray-500 bg-white"}`}
                 >
                   {page}
                 </button>
