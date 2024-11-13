@@ -11,6 +11,7 @@ const Services = require("../services/service.service");
 const SportTypes = require("../services/sportType.service");
 const Customers = require("../services/user.service");
 const Contacts = require("../services/contact.service");
+const Notifies = require("../services/notify.service");
 
 
 const ApiError = require("../api-error");
@@ -131,7 +132,7 @@ exports.login = async (req, res, next) => {
                     role: result.chuc_vu
                 },  
                 process.env.JWT_ACCESS_TOKEN,
-                { expiresIn: "30m" }
+                { expiresIn: "30s" }
             );
             // refresh
             const refreshToken = jwt.sign(
@@ -169,7 +170,6 @@ exports.refreshToken = async (req, res, next) => {
         );
     }
     jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN, (err, user) => {
-        console.log('refresh');
         if(err) {
             return next(
                 new ApiError(403, "Token is not valid!")
@@ -181,7 +181,7 @@ exports.refreshToken = async (req, res, next) => {
                 role: user.role
             },  
             process.env.JWT_ACCESS_TOKEN,
-            { expiresIn: "30m" }
+            { expiresIn: "30s" }
         );
         // refresh
         const newRefreshToken = jwt.sign(
@@ -1314,7 +1314,7 @@ exports.deleteOneSportType = async (req, res, next) => {
 
 // Liên hệ
 exports.createContact = async (req, res, next) => {
-    const contact = new Reviews();
+    const contact = new Contacts();
     const newReview = req.body;
     try {
         const result = await contact.create(newReview);
@@ -1362,6 +1362,68 @@ exports.deleteOneContact = async (req, res, next) => {
     const contact = new Contacts();
     try {
         const result = await contact.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Thông báo 
+exports.createNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    const newReview = req.body;
+    try {
+        const result = await notify.create(newReview);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    try {
+        const result = await notify.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    try {
+        if(req.user.role && (req.user.role == 'admin' || req.user.role == 'Nhân viên')) {
+            const result = await notify.find({nguoiDung: 'Nhân viên'});
+            return res.status(201).json(result);
+        }
+        else {
+            const result = await notify.find({nguoiDung: req.params.id});
+            res.status(201).json(result);
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await notify.findOne(req.body)
+        else 
+            result = await notify.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    try {
+        const result = await notify.delete(req.params.id);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });

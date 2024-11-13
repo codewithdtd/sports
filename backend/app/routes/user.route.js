@@ -97,4 +97,13 @@ router.route("/refund")
     // Gửi email
 router.route("/email").post(user.sendEmail);
 
+// thông báo
+router.route("/notify")
+    .get(user.findAllNotify)
+    .post(middleware.verifyToken, user.createNotify)
+router.route("/notify/:id")
+    .delete(middleware.verifyToken, user.deleteOneNotify)
+    .get(middleware.verifyToken, user.findAllNotify)
+    .put(middleware.verifyToken, user.updateNotify)
+
 module.exports = router;

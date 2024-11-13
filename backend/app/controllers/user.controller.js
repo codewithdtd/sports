@@ -8,6 +8,8 @@ const Reviews = require("../services/review.service");
 const Carts = require("../services/cart.service"); 
 const Contacts = require("../services/contact.service"); 
 // const axios = require("axios");
+const Notifies = require("../services/notify.service");
+
 const axios = require('axios').default; // npm install axios
 const CryptoJS = require('crypto-js'); // npm install crypto-js
 const moment = require('moment'); // npm install moment
@@ -923,3 +925,60 @@ exports.sendEmail = async (req, res, next) => {
         res.status(500).json(error);
     }
 } 
+
+// Thông báo 
+exports.createNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    const newReview = req.body;
+    try {
+        const result = await notify.create(newReview);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    try {
+        const result = await notify.update(req.params.id, req.body);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findAllNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    try {
+        const result = await notify.find({nguoiDung: req.params.id});
+        res.status(201).json(result);
+   
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.findOneNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    try {
+        let result;
+        if(!req.params.id) 
+            result = await notify.findOne(req.body)
+        else 
+            result = await notify.findById(req.params.id) 
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteOneNotify = async (req, res, next) => {
+    const notify = new Notifies();
+    try {
+        const result = await notify.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

@@ -114,3 +114,29 @@ input {
     /* Đặt khoảng cách giữa các dòng */
     max-height: calc(1.5em * 3);
 }
+
+/* Toàn bộ thanh cuộn */
+::-webkit-scrollbar {
+    width: 8px; /* Giảm chiều ngang */
+}
+
+/* Phần background của thanh cuộn */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Màu nền cho track */
+    border-radius: 10px; /* Bo tròn thanh cuộn */
+}
+
+/* Phần di chuyển (thumb) của thanh cuộn */
+::-webkit-scrollbar-thumb {
+    background-color: #3498db; /* Màu thanh di chuyển */
+    border-radius: 10px; /* Bo tròn thumb */
+}
+
+/* Đổi màu thanh cuộn khi hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #2980b9; /* Màu khi hover */
+}
+
+.notify::-webkit-scrollbar {
+    width: 4px; /* Giảm chiều ngang */
+}

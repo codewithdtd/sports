@@ -314,7 +314,7 @@ function FromBooking(props) {
     if (props.data._id) {
       setBooking([])
       // setFieldChange(data)
-      setData({ ...props.data, san: data.san, thoiGianBatDau: data.thoiGianBatDau, thoiGianKetThuc: data.thoiGianKetThuc, ngayDat: data.ngayDat })
+      setData({ ...props.data, san: data.san, thoiGianBatDau: data.thoiGianBatDau, thoiGianKetThuc: data.thoiGianKetThuc, ngayDat: data.ngayDat, hanhDong: 'Đổi sân' })
     }
     // setBooking([...booking, data]);
     // setCheckedSlots([...checkedSlots, key]);

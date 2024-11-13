@@ -1,5 +1,5 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 // Hàm kiểm tra xem dữ liệu có chứa file không
 // const getContentType = (data) => {
 //     // Kiểm tra nếu data là đối tượng FormData và có file
@@ -24,7 +24,7 @@ const commonConfig = {
 // Hàm refresh token khi accessToken hết hạn
 const refreshToken = async () => {
     try {
-        const res = await axios.post("/api/admin/staff/refresh", {
+        const res = await axios.post("/api/admin/staff/refresh",{}, {
             withCredentials: true,
         });
         return res.data;
@@ -45,6 +45,7 @@ export const createAxiosInstance = (baseUrl, user, dispatch, stateSuccess) => {
             // const accessToken = config.headers["token"] || ''; // Lấy token từ headers nếu có
             const accessToken = user?.accessToken || '';
             if (accessToken) {
+                console.log('check token');
                 let date = new Date();
                 const decodedToken = jwtDecode(accessToken);
 

@@ -182,4 +182,13 @@ router.route("/contact/:id")
     .get(admin.findOneContact)
     .put(middleware.verifyAdmin, admin.updateContact)
 
+// thông báo
+router.route("/notify")
+    .get(admin.findAllNotify)
+    .post(middleware.verifyAdmin, admin.createNotify)
+router.route("/notify/:id")
+    .delete(middleware.verifyAdmin, admin.deleteOneNotify)
+    .get(middleware.verifyAdmin, admin.findAllNotify)
+    .put(middleware.verifyAdmin, admin.updateNotify)
+
 module.exports = router;

@@ -8,6 +8,7 @@ import Pagination from '../components/Pagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ServiceService from '../services/service.service';
+import NotifyService from '../services/notify.service';
 import ViewBookingTime from '../components/ViewBookingTime';
 const Booking = () => {
   // const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const Booking = () => {
   const facilityService = new FacilityService(user, dispatch);
   const serviceService = new ServiceService(user, dispatch);
   const sportTypeService = new SportTypeService(user, dispatch);
+  const notifyService = new NotifyService(user, dispatch);
 
   useEffect(() => {
     if (!user) {
@@ -111,6 +113,15 @@ const Booking = () => {
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       const timeNow = `${hours}:${minutes}`
+      if (data.hanhDong == 'Đổi sân') {
+        const newNotify = {
+          tieuDe: 'Đổi sân',
+          noiDung: 'Sân ' + fac.san?.ma_San + ' đã đổi thành sân ' + data.san?.ma_San,
+          nguoiDung: data.khachHang._id,
+          daXem: false
+        }
+        await notifyService.create(newNotify);
+      }
       if (data.trangThai === 'Nhận sân') {
         data.san.tinhTrang = "Đang sử dụng"
         data.thoiGianCheckIn = timeNow;
