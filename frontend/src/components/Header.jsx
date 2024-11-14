@@ -38,10 +38,10 @@ function Header(props) {
         <p className='text-slate-800 pl-2'>Quản lý / {props.name}</p>
       </div>
       <div className="header__right flex items-center">
-        <div className='hover:bg-gray-200 z-[2] relative group mr-2 p-1 px-2 aspect-square rounded-full'>
+        <div className='hover:bg-gray-200 relative group mr-2 p-1 px-2 aspect-square rounded-full'>
           <i className="ri-notification-2-fill text-gray-700 text-2xl"></i>
           <div className='w-4 h-4 mt-1 absolute top-0 right-1 rounded-full bg-red-500 text-center text-white text-sm leading-4'>{countUnRead()}</div>
-          <div className='absolute notify hidden group-hover:block px-2 top-[95%] right-0 min-w-56 sm:w-full bg-white shadow-lg shadow-gray-400 rounded-md overflow-y-scroll max-h-64'>
+          <div className='absolute notify hidden group-hover:block px-2 top-[95%] right-0 min-w-56 sm:w-full bg-white shadow-lg shadow-gray-400 rounded-md overflow-y-scroll max-h-64 z-[1]'>
             <p className='font-semibold text-sm border-b border-gray-400 text-blue-600'>Thông báo</p>
             {notification.length > 0 ? notification?.map((item) =>
               <div className='hover:bg-gray-200' key={item._id} onClick={e => isRead(item._id)}>

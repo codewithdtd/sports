@@ -9,12 +9,14 @@ import FacilityService from '../services/facility.service';
 import SportTypeService from '../services/sportType.service';
 import ServiceService from '../services/service.service';
 import Pagination from '../components/Pagination';
+import ChangeTime from '../components/ChangeTime';
 
 function Facility() {
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [facilities, setFacilities] = useState([]);
   const [sportType, setSportType] = useState([]);
+  const [modalTime, setModalTime] = useState(false);
   const user = useSelector((state) => state.user.login.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -225,6 +227,7 @@ function Facility() {
     const newEditBooking = await bookingService.update(data.datSan._id, data.datSan);
     return newEditBooking;
   }
+
   const deleteFacility = async (data) => {
     const deleteFac = await facilityService.delete(data._id);
     return deleteFac;
@@ -248,13 +251,16 @@ function Facility() {
   return (
     <div className='facility'>
       <Header name="Sân thể thao" />
-      <div className="flex justify-between mb-3">
+      <div className="flex justify-between items-center mb-3">
         <div className='flex-1 flex relative justify-between'>
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div>
+        {user.user.chuc_vu == 'admin' &&
+          <div className='bg-blue-200 border border-blue-700 p-2 text-blue-700 rounded-sm hover:bg-blue-300 cursor-pointer' onClick={e => setModalTime(true)}>Thời gian hoạt động</div>
+        }
         {/* <button className="bg-green-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-green-700 w-10 h-10 m-auto rounded-xl"
                 onClick={e => handleFacility()}
         >
@@ -262,11 +268,9 @@ function Facility() {
         </button> */}
       </div>
       <div className='flex pb-2'>
-        <div className='flex items-center'>
-          <input name='' className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' type="date" value={currentDate} readOnly />
-        </div>
-        <div className='flex items-center'>
-          <input type="time" className='flex-1 border border-gray-400 rounded-xl p-1 pl-2' value={currentTime} readOnly />
+        <div className='flex items-center border border-gray-400 rounded-lg overflow-hidden'>
+          <input name='' className='flex-1 p-1 pl-2' type="date" value={currentDate} readOnly />
+          <input type="time" className='flex-1 p-1 pl-2' value={currentTime} readOnly />
         </div>
         {/* <div className='flex items-center'>
           Đến:
@@ -311,6 +315,7 @@ function Facility() {
       />
       {/* from nhập dữ liệu */}
       {edit ? <FormFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : ''}
+      {modalTime ? <ChangeTime toggle={setModalTime}  /> : ''}
     </div>
   )
 }

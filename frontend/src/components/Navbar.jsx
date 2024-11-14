@@ -54,6 +54,14 @@ function Navbar() {
               </NavLink>
             </li>
           }
+          {/* {user?.chuc_vu == 'admin' &&
+            <li className="navigation__link__items">
+              <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? " bg-blue-500 text-white" : ""} p-1 py-2 block m-2 rounded-md hover:text-white hover:bg-blue-500 mx-3 font-medium`} to="/home">
+                <i className="ml-5 ri-settings-3-line mr-2"></i>
+                <span>Cài đặt chung</span>
+              </NavLink>
+            </li>
+          } */}
           <li className="navigation__link__items">
             <NavLink onClick={toggleMenu} className={({ isActive }) => `${isActive ? "bg-blue-500 text-white" : ""} p-1 py-2 block m-2 rounded-md hover:text-white hover:bg-blue-500 mx-3 font-medium`} to="/facility" end>
               <i className="ml-5 ri-football-line mr-2"></i>

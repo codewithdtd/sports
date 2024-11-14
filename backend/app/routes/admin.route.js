@@ -191,4 +191,10 @@ router.route("/notify/:id")
     .get(middleware.verifyAdmin, admin.findAllNotify)
     .put(middleware.verifyAdmin, admin.updateNotify)
 
+// thời gian
+router.route("/time")
+    .get(admin.findTime)
+router.route("/time/:id")
+    .put(middleware.verifyAdmin, admin.updateTime)
+
 module.exports = router;

@@ -23,6 +23,7 @@ import FacilityManagement from '../views/FacilityManagement';
 import SportType from '../views/SportType';
 // import UserMembership from '../views/UserMembership';
 import Contact from '../views/Contact';
+// import Home from '../views/Home';
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -101,6 +102,10 @@ export const router = createBrowserRouter([
         path: "contact",
         element: <Contact />,
       },
+      // {
+      //   path: "home",
+      //   element: <Home />,
+      // },
     ],
   },
 ]);

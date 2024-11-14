@@ -112,21 +112,22 @@ const Invoice = () => {
   }
   const handleMerge = (data, checked) => {
     if (checked) {
-      const isMatch = listMerge.some(item =>
-        item.khachHang.sdt_KH === data.khachHang.sdt_KH &&
-        item.datSan.ngayDat === data.datSan.ngayDat ||
-        item.datSan.ngayTao === data.datSan.ngayTao
-        // item.datSan.thoiGianBatDau === data.datSan.thoiGianBatDau &&
-        // item.datSan.thoiGianKetThuc === data.datSan.thoiGianKetThuc
-      );
-      if (listMerge.length === 0 || isMatch) {
-        setListMerge([...listMerge, data]);
-        setIsChecked(prevState => ({ ...prevState, [data._id]: true }));
-      } else {
-        console.log(isMatch)
-        console.log("Lỗi: Không thêm được.");
-        setIsChecked(prevState => ({ ...prevState, [data._id]: false }));
-      }
+      // const isMatch = listMerge.some(item =>
+      //   item.khachHang.sdt_KH === data.khachHang.sdt_KH &&
+      //   item.datSan.ngayDat === data.datSan.ngayDat ||
+      //   item.datSan.ngayTao === data.datSan.ngayTao
+      //   // item.datSan.thoiGianBatDau === data.datSan.thoiGianBatDau &&
+      //   // item.datSan.thoiGianKetThuc === data.datSan.thoiGianKetThuc
+      // );
+      // if (listMerge.length === 0) {
+      setListMerge([...listMerge, data]);
+      setIsChecked(prevState => ({ ...prevState, [data._id]: true }));
+      // } 
+      // else {
+      //   // console.log(isMatch)
+      //   console.log("Lỗi: Không thêm được.");
+      //   setIsChecked(prevState => ({ ...prevState, [data._id]: false }));
+      // }
     }
     else {
       setListMerge(listMerge.filter(item => item._id != data._id))

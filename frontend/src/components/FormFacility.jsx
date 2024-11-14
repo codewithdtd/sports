@@ -12,24 +12,26 @@ function FromFacility(props) {
   const [timeStart, setTimeStart] = useState('--:--')
   const [timeEnd, setTimeEnd] = useState('--:--')
   const [paymentModal, setPaymentModal] = useState(false)
-  const user = useSelector((state)=> state.user.login.user)
+  const user = useSelector((state) => state.user.login.user)
   const dispatch = useDispatch();
   const serviceService = new ServiceService(user, dispatch)
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
     // console.log('click')
-    if(!data.datSan) {
+    if (!data.datSan) {
       console.log('Trống')
       return;
     }
-    (data.datSan.thoiGianCheckOut == '--:--' || !data.datSan.thoiGianCheckOut) 
-      ? data.phuongThuc = 'edit' 
+    (data.datSan.thoiGianCheckOut == '--:--' || !data.datSan.thoiGianCheckOut)
+      ? data.phuongThuc = 'edit'
       : (data.phuongThuc = 'thanhToan');
-
-    if(data.phuongThuc == 'thanhToan' && !data.phuongThucThanhToan) {
+    if (data.datSan.thoiGianCheckIn != '--:--') {
+      data.datSan.trangThai = 'Nhận sân';
+    }
+    if (data.phuongThuc == 'thanhToan' && !data.phuongThucThanhToan) {
       setPaymentModal(true)
       return;
-    } 
+    }
     setPaymentModal(false);
     props.handleData(data); // Xử lý dữ liệu biểu mẫu
   };
@@ -75,7 +77,7 @@ function FromFacility(props) {
     const diffInMs = endDate - startDate;
 
     // Chuyển đổi chênh lệch thời gian từ milliseconds sang phút
-    const diffInMinutes = Math.floor(diffInMs / (1000 * 60*60)); // Chia 1000 để ra giây, chia 60 để ra phút
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60 * 60)); // Chia 1000 để ra giây, chia 60 để ra phút
 
     return diffInMinutes;
   };
@@ -94,8 +96,8 @@ function FromFacility(props) {
 
       if (existingItem) {
         // Nếu đối tượng đã tồn tại, tăng số lượng lên 1
-        return prevList.map(item => 
-          item._id === data._id 
+        return prevList.map(item =>
+          item._id === data._id
             ? { ...item, soluong: item.soluong + 1 }
             : item
         );
@@ -114,7 +116,7 @@ function FromFacility(props) {
       )
     );
   }
-  const removeSelected = (data) =>{
+  const removeSelected = (data) => {
     setListService((prevList = []) =>
       prevList.map(item =>
         item._id === data._id
@@ -126,21 +128,21 @@ function FromFacility(props) {
   }
 
   const saveServiceSelected = () => {
-    const thanhTien = calculateTimeDifference(data.datSan.thoiGianBatDau, data.datSan.thoiGianKetThuc)*data.bangGiaMoiGio + listServiceSelected.reduce((a, c) => a + c.thanhTien, 0)
+    const thanhTien = calculateTimeDifference(data.datSan.thoiGianBatDau, data.datSan.thoiGianKetThuc) * data.bangGiaMoiGio + listServiceSelected.reduce((a, c) => a + c.thanhTien, 0)
     // console.log(thanhTien);
-    setData({...data, datSan: {...data.datSan, dichVu: listServiceSelected, thanhTien: thanhTien}})
+    setData({ ...data, datSan: { ...data.datSan, dichVu: listServiceSelected, thanhTien: thanhTien } })
     setModalService(!modalService)
   }
 
   // Mở modal
   const openModalService = () => {
     const serviceFromData = data.datSan?.dichVu;
-    if(serviceFromData) {
+    if (serviceFromData) {
       setListServiceSelected(serviceFromData);
       setModalService(!modalService);
     }
   }
-// Hàm xử lý khi thay đổi số lượng
+  // Hàm xử lý khi thay đổi số lượng
   const handleQuantityChange = (id, newQuantity) => {
     const existingItem = listService.find(item => item._id === id);
     const existingItemSelected = listServiceSelected.find(item => item._id === id);
@@ -153,8 +155,8 @@ function FromFacility(props) {
             : item
         )
       );
-      setListServiceSelected(prevList => 
-        prevList.map(item => 
+      setListServiceSelected(prevList =>
+        prevList.map(item =>
           item._id === id ? { ...item, soluong: newQuantity } : item
         )
       );
@@ -171,147 +173,164 @@ function FromFacility(props) {
   }, [props.data]);
 
   return (
-     <div className='absolute py-4 z-10 bg-opacity-30 bg-black flex top-0 right-0 w-full h-full' onClick={e => props.toggle(false)}>
-        <form action="" className={`relative shadow-gray-400 shadow-lg overflow-hidden transition flex flex-col lg:flex-row bg-white p-2 px-6 w-5/6 lg:w-1/2 lg:min-w-fit rounded-md m-auto ${show ? 'scale-100' : 'scale-0'}`} onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
-          <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
-          <div className='flex-1'>
+    <div className='absolute py-4 z-10 bg-opacity-30 bg-black flex top-0 right-0 w-full h-full' onClick={e => props.toggle(false)}>
+      <form action="" className={`relative shadow-gray-400 shadow-lg overflow-hidden transition flex flex-col lg:flex-row bg-white p-2 px-6 w-5/6 lg:w-1/2 lg:min-w-fit rounded-md m-auto ${show ? 'scale-100' : 'scale-0'}`} onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
+        <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
+        <div className='flex-1'>
           <h1 className='text-center text-2xl font-bold pt-5 pb-2'>SÂN BD5S1</h1>
-            <div className='flex justify-between text-sm border-b border-gray-400 mb-3 italic'>
-              <p>Nhân viên: {user?.user.ho_NV +' '+ user?.user.ten_NV }</p>
-              <p>{getDate()} {getTime()}</p>
-              <p>Chức vụ: {user?.user.chuc_vu}</p>
-            </div>
-            <div className="flex">
-              <div className='flex-1 text-sm sm:text-base'>
-                <div className='flex'>
-                  <p className='w-2/5'>Khách hàng:</p>
-                  <span className=''>{data.datSan ? data.datSan.khachHang.ho_KH+' '+data.datSan.khachHang.ten_KH : ''}</span>
-                </div>
-                <div className='flex'>
-                  <p className='w-2/5'>Số điện thoại:</p>
-                  <span className=''>{data.datSan?.khachHang.sdt_KH}</span>
-                </div>
-                <div className='flex'>
-                  <p className='w-2/5'>Trạng thái:</p>
-                  <span className=''>{data.datSan?.trangThaiThanhToan}</span>
-                </div>
-                <div className='flex'>
-                  <p className='w-2/5'>Ghi chú:</p>
-                  <span className=''>{data.datSan?.ghiChu}</span>
-                </div>
+          <div className='flex justify-between text-sm border-b border-gray-400 mb-3 italic'>
+            <p>Nhân viên: {user?.user.ho_NV + ' ' + user?.user.ten_NV}</p>
+            <p>{getDate()} {getTime()}</p>
+            <p>Chức vụ: {user?.user.chuc_vu}</p>
+          </div>
+          <div className="flex">
+            <div className='flex-1 text-sm sm:text-base'>
+              <div className='flex'>
+                <p className='w-2/5'>Khách hàng:</p>
+                <span className=''>{data.datSan ? data.datSan.khachHang.ho_KH + ' ' + data.datSan.khachHang.ten_KH : ''}</span>
               </div>
-              <div className='flex-1 text-sm sm:text-base'>
-                <div className='flex'>
-                  <p className='w-2/5'>Thời gian:</p>
-                  <div className='flex flex-col'>
-                    <span className=''>{data.datSan ? data.datSan.thoiGianBatDau+' - '+data.datSan.thoiGianKetThuc :''}</span> 
-                  </div>
-                </div>
-                <div className='flex'>
-                  <p className='w-2/5'>Ngày đặt:</p>
-                  <span className=''>{data.datSan ? data.datSan.ngayTao : ''}</span>
-                </div>
-                <div className='text-sm sm:text-base'>
-                  <div className='flex'>
-                    <p className='w-3/5'>Thời gian nhận sân:</p>
-                    <span>{data.datSan?.thoiGianCheckIn}</span>
-                  </div>
-                  <div className='flex'>
-                    <p className='w-3/5'>Thời gian trả sân:</p>
-                    <span>{data.datSan?.thoiGianCheckOut}</span>
-                  </div>
-                </div>
+              <div className='flex'>
+                <p className='w-2/5'>Số điện thoại:</p>
+                <span className=''>{data.datSan?.khachHang.sdt_KH}</span>
+              </div>
+              <div className='flex'>
+                <p className='w-2/5'>Trạng thái:</p>
+                <span className=''>{data.datSan?.trangThaiThanhToan}</span>
+              </div>
+              <div className='flex'>
+                <p className='w-2/5'>Ghi chú:</p>
+                <span className=''>{data.datSan?.ghiChu}</span>
               </div>
             </div>
-
-
-
-            {/* Bảng dịch vụ */}
-            <div className='flex-1 text-end'>
-              <div className='flex text-center font-bold bg-blue-400'>
-                  <div className="flex-1 border border-gray-300">Tên</div>
-                  <div className="flex-1 border border-gray-300">Số lượng</div>
-                  <div className="flex-1 border border-gray-300">Giá</div> 
+            <div className='flex-1 text-sm sm:text-base'>
+              <div className='flex'>
+                <p className='w-2/5'>Thời gian:</p>
+                <div className='flex flex-col'>
+                  <span className=''>{data.datSan ? data.datSan.thoiGianBatDau + ' - ' + data.datSan.thoiGianKetThuc : ''}</span>
+                </div>
               </div>
-              {data.datSan?.dichVu?.map((item, index) =>
-              <div key={item._id} className={`flex text-center ${index % 2 != 0 && 'bg-blue-200'}`}>
-                  <div className="flex-1 border-b border-gray-400">{item.ten_DV}</div>
-                  <div className="flex-1 border border-t-0 border-gray-400">{item.soluong}</div>
-                  <div className="flex-1 border-b border-gray-400">{formatNumber(item.thanhTien)}</div> 
+              <div className='flex'>
+                <p className='w-2/5'>Ngày đặt:</p>
+                <span className=''>{data.datSan ? data.datSan.ngayTao : ''}</span>
               </div>
-              ) || <div className='text-center border-b border-gray-400'>Trống</div>
-              }
-
-
-              <button type='button'
-                className='border-blue-600 border flex-1 my-2 rounded-lg 
-                text-blue-600 p-2 py-1 hover:bg-blue-500 hover:text-white'
-                onClick={e => openModalService()}
-              >+ Thêm
-              </button>
-              <p className='pb-1'>Tổng tiền: <b>{formatNumber(data.datSan?.thanhTien || 0)}</b></p> 
-              {/* <p className='pb-1'>Giảm giá: <b>0</b></p> 
-              <p className='pb-1'>Thành tiền: <b>0</b></p>  */}
-            </div>
-            <div className='flex items-center'>
-              Phương thức thanh toán:
-              <select 
-                required = {paymentModal}
-                className='border border-gray-500 ml-2 '
-                onChange={e => setData({...data, phuongThucThanhToan: e.target.value})}
-              >
-                <option value="">Chọn</option>
-                <option value="Momo">Chuyển khoản</option>
-                <option value="Tiền mặt">Tiền mặt</option>
-              </select>
-            </div>
-            {/* <div className='flex items-center my-2'>
-              Phụ thu: 
-              <input className='border px-2 ml-2 border-gray-500' type="number" min={0} value={data?.phuThu} onChange={e => setData({...data, phuthu: e.target.value})} />
-            </div> */}
-            <div className='flex mt-4'>
-                {/* <button type='button' className='border-blue-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-blue-600 hover:bg-blue-500 hover:text-white' 
-                  onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckIn: getTime()}})}}>
-                    Nhận sân
-                </button> */}
-                <button type='button' className='border-gray-600 flex-1 mx-2 bg-gray-200 border px-3 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white'
-                  onClick={e => {
-                    if(data.datSan) {
-                      setData({...data, datSan: {...data.datSan, thoiGianCheckOut: getTime()}})
-                      setPaymentModal(true)
-                    }}}>
-                  Trả sân
-                </button>
-                <button className='bg-blue-600 flex-1 py-1 mx-2 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
+              <div className='text-sm sm:text-base'>
+                <div className='flex'>
+                  <p className='w-3/5'>Thời gian nhận sân:</p>
+                  <span>{data.datSan?.thoiGianCheckIn}</span>
+                </div>
+                <div className='flex'>
+                  <p className='w-3/5'>Thời gian trả sân:</p>
+                  <span>{data.datSan?.thoiGianCheckOut}</span>
+                </div>
+              </div>
             </div>
           </div>
 
 
-          {/* thêm dịch vụ */}
-          {modalService ?
+
+          {/* Bảng dịch vụ */}
+          <div className='flex-1 text-end'>
+            <div className='flex text-center font-bold bg-blue-400'>
+              <div className="flex-1 border border-gray-300">Tên</div>
+              <div className="flex-1 border border-gray-300">Số lượng</div>
+              <div className="flex-1 border border-gray-300">Giá</div>
+            </div>
+            {data.datSan?.dichVu?.map((item, index) =>
+              <div key={item._id} className={`flex text-center ${index % 2 != 0 && 'bg-blue-200'}`}>
+                <div className="flex-1 border-b border-gray-400">{item.ten_DV}</div>
+                <div className="flex-1 border border-t-0 border-gray-400">{item.soluong}</div>
+                <div className="flex-1 border-b border-gray-400">{formatNumber(item.thanhTien)}</div>
+              </div>
+            ) || <div className='text-center border-b border-gray-400'>Trống</div>
+            }
+
+
+            <button type='button'
+              className='border-blue-600 border flex-1 my-2 rounded-lg 
+                text-blue-600 p-2 py-1 hover:bg-blue-500 hover:text-white'
+              onClick={e => openModalService()}
+            >+ Thêm
+            </button>
+            <p className='pb-1'>Tổng tiền: <b>{formatNumber(data.datSan?.thanhTien || 0)}</b></p>
+            {/* <p className='pb-1'>Giảm giá: <b>0</b></p> 
+              <p className='pb-1'>Thành tiền: <b>0</b></p>  */}
+          </div>
+          <div className='flex items-center'>
+            Phương thức thanh toán:
+            <select
+              required={paymentModal}
+              className='border border-gray-500 ml-2 '
+              onChange={e => setData({ ...data, phuongThucThanhToan: e.target.value })}
+            >
+              <option value="">Chọn</option>
+              <option value="Momo">Chuyển khoản</option>
+              <option value="Tiền mặt">Tiền mặt</option>
+            </select>
+          </div>
+          {/* <div className='flex items-center my-2'>
+              Phụ thu: 
+              <input className='border px-2 ml-2 border-gray-500' type="number" min={0} value={data?.phuThu} onChange={e => setData({...data, phuthu: e.target.value})} />
+            </div> */}
+          <div className='flex mt-4'>
+            {/* <button type='button' className='border-blue-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-blue-600 hover:bg-blue-500 hover:text-white' 
+                  onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckIn: getTime()}})}}>
+                    Nhận sân
+                </button> */}
+            {data?.datSan?._id && (data.datSan.thoiGianBatDau == '--:--') &&
+              <button type='button' className='border-blue-600 flex-1 mx-2 bg-gray-200 border px-3 py-1 rounded-lg font-bold text-blue-600 hover:bg-blue-500 hover:text-white'
+                onClick={e => {
+                  if (data.datSan) {
+                    setData({ ...data, datSan: { ...data.datSan, thoiGianCheckIn: getTime() } })
+                    setPaymentModal(true)
+                  }
+                }}>
+                Nhận sân
+              </button>
+            }
+            {data?.datSan?._id && (data.datSan.thoiGianBatDau != '--:--')
+              &&
+              <>
+                <button type='button' className='border-gray-600 flex-1 mx-2 bg-gray-200 border px-3 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white'
+                  onClick={e => {
+                    if (data.datSan) {
+                      setData({ ...data, datSan: { ...data.datSan, thoiGianCheckOut: getTime() } })
+                      setPaymentModal(true)
+                    }
+                  }}>
+                  Trả sân
+                </button>
+                <button className='bg-blue-600 flex-1 py-1 mx-2 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
+              </>
+            }
+          </div>
+        </div>
+
+
+        {/* thêm dịch vụ */}
+        {modalService ?
           <div className='flex-1 m-2 lg:w-96 border-2 rounded-lg border-gray-400'>
             <h1 className='text-center font-bold'>DỊCH VỤ</h1>
             <div className='m-4 mt-0 text lg:text-base flex-1 flex flex-col'>
-              <div className='flex-1'>     
-                <input type="text" className='border border-gray-400 mb-2 rounded-md pl-2 w-full' placeholder='Tìm kiếm'/>
+              <div className='flex-1'>
+                <input type="text" className='border border-gray-400 mb-2 rounded-md pl-2 w-full' placeholder='Tìm kiếm' />
                 <div className="border border-gray-500 rounded-lg h-32 lg:h-40 px-2 overflow-x-hidden overflow-y-scroll">
                   <div className='flex text-center font-bold border-b border-gray-400 '>
                     <div className="w-1/3">Tên</div>
-                    <div className="w-1/4">Giá</div> 
+                    <div className="w-1/4">Giá</div>
                     <div className='w-1/4'>Số lượng</div>
                   </div>
-                  
-                  {listService ? listService?.map(item => 
-                  <div key={item._id} className='flex border-b border-gray-300 items-center text-center hover:bg-gray-200'>
-                    <div className="w-1/3">{item.ten_DV}</div>
-                    <div className="w-1/4">{formatNumber(item.gia)}</div>
-                    <div className="w-1/4">{item.tonKho}</div>
-                    {item.tonKho > 0 ?
-                    <i className="w-1/6 ri-add-circle-fill text-lg text-blue-600 cursor-pointer hover:scale-125" onClick={e => addSelected(item)}></i>
-                    : <i className="w-1/6 ri-add-circle-fill text-lg text-gray-700 cursor-not-allowed"></i>
-                    }
-                  </div> ) 
-                  : '' }
+
+                  {listService ? listService?.map(item =>
+                    <div key={item._id} className='flex border-b border-gray-300 items-center text-center hover:bg-gray-200'>
+                      <div className="w-1/3">{item.ten_DV}</div>
+                      <div className="w-1/4">{formatNumber(item.gia)}</div>
+                      <div className="w-1/4">{item.tonKho}</div>
+                      {item.tonKho > 0 ?
+                        <i className="w-1/6 ri-add-circle-fill text-lg text-blue-600 cursor-pointer hover:scale-125" onClick={e => addSelected(item)}></i>
+                        : <i className="w-1/6 ri-add-circle-fill text-lg text-gray-700 cursor-not-allowed"></i>
+                      }
+                    </div>)
+                    : ''}
 
 
                 </div>
@@ -321,36 +340,37 @@ function FromFacility(props) {
                 <div className="border mt-2 lg:mt-0 border-gray-500 rounded-lg h-32 lg:h-40 overflow-x-hidden overflow-y-scroll px-2">
                   <div className='flex text-center font-bold border-b border-gray-400'>
                     <div className="w-1/3">Tên</div>
-                    <div className="w-1/6">Số lượng</div> 
-                    <div className="w-1/3">Giá</div> 
+                    <div className="w-1/6">Số lượng</div>
+                    <div className="w-1/3">Giá</div>
                   </div>
 
                   {listServiceSelected?.map(item => {
-                  item.thanhTien = item.soluong*item.gia;
-                  return <div key={item._id} className='flex border-b border-gray-300 items-center text-center mt-1 hover:bg-gray-200'>
-                    <div className="w-1/3">{item.ten_DV}</div>
-                    <div className='w-1/6'>
-                      <input type="number" 
-                        className='border border-gray-500 w-1/2' 
-                        value={item.soluong}
-                        min={1}
-                        onChange={(e) => handleQuantityChange(item._id, parseInt(e.target.value, 10))}
-                      />
+                    item.thanhTien = item.soluong * item.gia;
+                    return <div key={item._id} className='flex border-b border-gray-300 items-center text-center mt-1 hover:bg-gray-200'>
+                      <div className="w-1/3">{item.ten_DV}</div>
+                      <div className='w-1/6'>
+                        <input type="number"
+                          className='border border-gray-500 w-1/2'
+                          value={item.soluong}
+                          min={1}
+                          onChange={(e) => handleQuantityChange(item._id, parseInt(e.target.value, 10))}
+                        />
 
-                    </div>
-                    <div className="w-1/3">{formatNumber(item.thanhTien)}</div>
-                    <i className="w-[40px] ri-close-circle-fill text-lg text-red-600 cursor-pointer hover:scale-125" 
+                      </div>
+                      <div className="w-1/3">{formatNumber(item.thanhTien)}</div>
+                      <i className="w-[40px] ri-close-circle-fill text-lg text-red-600 cursor-pointer hover:scale-125"
                         onClick={e => removeSelected(item)}></i>
-                  </div>})
+                    </div>
+                  })
                   }
 
-                  
+
                 </div>
-                
+
                 <div className='flex'>
                   <button type='button' className='border-gray-600 flex-1 mb-0 bg-gray-200 border px-3 m-4 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white' onClick={e => setModalService(!modalService)}>Đóng</button>
-                  <button 
-                    type='button' 
+                  <button
+                    type='button'
                     className='bg-blue-600 m-4 flex-1 mb-0 py-1 
                                   rounded-lg text-white hover:bg-blue-500'
                     onClick={e => saveServiceSelected()}
@@ -362,9 +382,9 @@ function FromFacility(props) {
             </div>
           </div>
           : ''}
-          
-          {/* {paymentModal ? <ConfirmCheckOut setData={setData} toggle={setPaymentModal} /> : ''} */}
-        </form>
+
+        {/* {paymentModal ? <ConfirmCheckOut setData={setData} toggle={setPaymentModal} /> : ''} */}
+      </form>
     </div>
   )
 }

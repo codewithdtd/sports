@@ -21,6 +21,7 @@ const bcrypt = require("bcrypt");
 
 const fs = require('fs');
 const path = require('path');
+const Times = require("../services/time.service");
 
 
 const convertToDate = (dateStr) => {
@@ -132,7 +133,7 @@ exports.login = async (req, res, next) => {
                     role: result.chuc_vu
                 },  
                 process.env.JWT_ACCESS_TOKEN,
-                { expiresIn: "30s" }
+                { expiresIn: "30m" }
             );
             // refresh
             const refreshToken = jwt.sign(
@@ -181,7 +182,7 @@ exports.refreshToken = async (req, res, next) => {
                 role: user.role
             },  
             process.env.JWT_ACCESS_TOKEN,
-            { expiresIn: "30s" }
+            { expiresIn: "30m" }
         );
         // refresh
         const newRefreshToken = jwt.sign(
@@ -1424,6 +1425,27 @@ exports.deleteOneNotify = async (req, res, next) => {
     const notify = new Notifies();
     try {
         const result = await notify.delete(req.params.id);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Thời gian
+exports.findTime = async (req, res, next) => {
+    const notify = new Times();
+    try {
+        const result = await notify.findAll();
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateTime = async (req, res, next) => {
+    const notify = new Times();
+    try {
+        const result = await notify.update(req.params.id, req.body);
         res.status(201).json(result);
     } catch (err) {
         res.status(500).json({ error: err.message });

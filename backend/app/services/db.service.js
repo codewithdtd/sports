@@ -97,6 +97,9 @@ class DBHandler {
                 {
                   "tinhTrang": "Đang sử dụng",
                   "datSan.trangThai": "Nhận sân"
+                },
+                {
+                  "datSan.trangThai": "Nhận sân"
                 }
               ]
             }   

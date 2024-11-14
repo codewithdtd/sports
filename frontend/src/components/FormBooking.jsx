@@ -3,6 +3,7 @@ import FacilityService from '../services/facility.service';
 import ServiceService from '../services/service.service';
 import UserService from '../services/user.service';
 import SportTypeService from '../services/sportType.service';
+import TimeService from '../services/time.service';
 import FormService from './FormService';
 import { useSelector, useDispatch } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
@@ -27,6 +28,8 @@ function FromBooking(props) {
   const [modalService, setModalService] = useState(null)
   const [listSportType, setListSportType] = useState(null)
   const [fieldChange, setFieldChange] = useState(null)
+  const [startTime, setStartTime] = useState(8)
+  const [endTime, setEndTime] = useState(22)
   const [validateDate, setValidateDate] = useState(false)
   const [currentDate, setCurrentDate] = useState(getCurrentDate());
   const dispatch = useDispatch();
@@ -36,9 +39,10 @@ function FromBooking(props) {
   const serviceService = new ServiceService(user, dispatch);
   const sportTypeService = new SportTypeService(user, dispatch);
   const userService = new UserService(user, dispatch);
+  const timeService = new TimeService(user, dispatch);
 
-  const startTime = 8; // 8:00
-  const endTime = 22; // 22:00
+  // const startTime = 8; // 8:00
+  // const endTime = 22; // 22:00
   const interval = filter == 'Bóng đá' ? 1.5 : 1; // 1 giờ 30 phút
 
   const timeSlots = [];
@@ -331,6 +335,16 @@ function FromBooking(props) {
       )
     );
   }
+  const getTime = async () => {
+    const fetchTime = await timeService.getAll();
+    const convertTimeToDecimal = (time) => {
+      const [hour, minute] = time.split(":").map(Number);
+      return hour + minute / 60;
+    };
+    setStartTime(convertTimeToDecimal(fetchTime[0].thoiGianMoCua));
+    setEndTime(convertTimeToDecimal(fetchTime[0].thoiGianDongCua));
+  }
+
 
   const checkValidateDate = (date) => {
     if (date >= getCurrentDate()) {
@@ -358,6 +372,7 @@ function FromBooking(props) {
       // }))
       console.log(checkedSlots)
     }
+    getTime();
     // getService();
   }, [props.data]);
 
