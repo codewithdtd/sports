@@ -127,7 +127,8 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
           );
           booking.ghiChu = _noteController.text;
           booking.ngayDat = booking.ngayDat?.split(' ')[0];
-
+          booking.thoiGianCheckIn = '--:--';
+          booking.thoiGianCheckOut = '--:--';
           if (returnPayment?['order_url'] != null &&
               returnPayment?['order_url'].isNotEmpty) {
             booking.app_trans_id = returnPayment?['app_trans_id'];

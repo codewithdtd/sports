@@ -1,4 +1,6 @@
-import 'package:mobile/models/booking_models.dart';
+// import 'package:mobile/models/booking_models.dart';
+
+import 'package:mobile/models/booked_model.dart';
 
 class SportField {
   SportField({
@@ -27,7 +29,7 @@ class SportField {
   final String? ngayTaoSan;
   final int? v;
   final String? hinhAnhSan;
-  final Booking? datSan;
+  final DatSan? datSan;
 
   factory SportField.fromJson(Map<String, dynamic> json) {
     return SportField(
@@ -43,7 +45,7 @@ class SportField {
       ngayTaoSan: json["ngayTao_San"],
       v: json["__v"],
       hinhAnhSan: json["hinhAnh_San"],
-      datSan: json["datSan"] == null ? null : Booking.fromJson(json["datSan"]),
+      datSan: json["datSan"] == null ? null : DatSan.fromJson(json["datSan"]),
     );
   }
 }
