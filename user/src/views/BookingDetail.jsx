@@ -6,6 +6,7 @@ import Booking from '../services/booking.service'
 import Email from '../services/email.service'
 import UserService from '../services/user.service'
 import ServiceService from '../services/service.service'
+import TimeService from '../services/time.service'
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -31,15 +32,16 @@ const BookingDetail = () => {
   const [submit, setSubmit] = useState(false);
   const [trangThaiThanhToan, setTrangThaiThanhToan] = useState('Chưa thanh toán')
   // const [interval, setInterval] = useState(1);
-
+  const [startTime, setStartTime] = useState(8);
+  const [endTime, setEndTime] = useState(22);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user.login.user);
   const accessToken = user?.accessToken;
   const { loai_san } = useParams();
-  const startTime = 8; // 8:00
-  const endTime = 22; // 22:00
+  // const startTime = 8; // 8:00
+  // const endTime = 22; // 22:00
   const interval = field?.ten_loai == 'Bóng đá' ? 1.5 : 1; // 1 giờ 30 phút
 
 
@@ -47,6 +49,7 @@ const BookingDetail = () => {
   const serviceService = new ServiceService(user, dispatch);
   const userService = new UserService(user, dispatch);
   const emailService = new Email(user, dispatch);
+  const timeService = new TimeService('', dispatch);
 
   const timeSlots = [];
 
@@ -77,6 +80,18 @@ const BookingDetail = () => {
   // định dạng số
   function formatNumber(num) {
     return new Intl.NumberFormat('vi-VN').format(num);
+  }
+
+  const getTime = async () => {
+    const fetchTime = await timeService.getAll();
+    const convertTimeToDecimal = (time) => {
+      const [hour, minute] = time.split(":").map(Number);
+      return hour + minute / 60;
+    };
+    console.log('time: ');
+    console.log(fetchTime);
+    setStartTime(convertTimeToDecimal(fetchTime[0].thoiGianMoCua));
+    setEndTime(convertTimeToDecimal(fetchTime[0].thoiGianDongCua));
   }
 
   const totalPrice = () => {
@@ -296,6 +311,7 @@ const BookingDetail = () => {
   useEffect(() => {
     // Gọi getFacility sau khi checkedSlots được cập nhật
     getFacility();
+    getTime();
   }, [currentDate]);
 
 
