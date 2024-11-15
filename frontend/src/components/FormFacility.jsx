@@ -312,7 +312,7 @@ function FromFacility(props) {
             <h1 className='text-center font-bold'>DỊCH VỤ</h1>
             <div className='m-4 mt-0 text lg:text-base flex-1 flex flex-col'>
               <div className='flex-1'>
-                <input type="text" className='border border-gray-400 mb-2 rounded-md pl-2 w-full' placeholder='Tìm kiếm' />
+                {/* <input type="text" className='border border-gray-400 mb-2 rounded-md pl-2 w-full' placeholder='Tìm kiếm' /> */}
                 <div className="border border-gray-500 rounded-lg h-32 lg:h-40 px-2 overflow-x-hidden overflow-y-scroll">
                   <div className='flex text-center font-bold border-b border-gray-400 '>
                     <div className="w-1/3">Tên</div>

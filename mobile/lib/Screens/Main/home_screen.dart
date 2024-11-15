@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/Main/booking_screen.dart';
 import 'package:mobile/Screens/Main/history_screen.dart';
+import 'package:mobile/Screens/Main/notification_screen.dart';
 import 'package:mobile/Screens/Main/review_screen.dart';
 import 'package:mobile/Screens/Main/profile_screen.dart';
+import 'package:mobile/models/notification_model.dart';
+import 'package:mobile/services/notification.dart';
+import 'package:mobile/stores/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,7 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> screens = [
     BookingScreen(),
     ReviewScreen(), // Màn hình thông báo
-    History(), // Màn hình lịch sử
+    History(),
+    NotificationScreen(), // Màn hình lịch sử
     Profile(), // Màn hình hồ sơ
   ];
 
@@ -25,6 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  Future<int> _getAllData() async {
+    final String? token =
+        Provider.of<UserProvider>(context, listen: false).token;
+    final String? userId =
+        Provider.of<UserProvider>(context, listen: false).user?.id;
+    final response =
+        await NotifyService(token: token).getAll(userId.toString());
+    final filteredResponse =
+        response.where((notification) => notification.daXem == false);
+    return filteredResponse.length;
   }
 
   @override
@@ -49,7 +67,39 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Đơn hàng',
           ),
           BottomNavigationBarItem(
-            icon: _buildIcon(Icons.account_circle_outlined, 3),
+            icon: FutureBuilder<int>(
+              future: _getAllData(),
+              builder: (context, snapshot) {
+                // if (snapshot.connectionState == ConnectionState.waiting) {
+                //   return Stack(
+                //     children: [
+                //       _buildIcon(Icons.notifications_none_rounded, 3),
+                //       Positioned(
+                //         right: 0,
+                //         // child: _loadingBadge(),
+                //         child: Container(),
+                //       ),
+                //     ],
+                //   );
+                // } else
+                if (snapshot.hasData && snapshot.data! > 0) {
+                  return Stack(
+                    children: [
+                      _buildIcon(Icons.notifications_none_rounded, 3),
+                      Positioned(
+                        right: 0,
+                        child: _notificationBadge(snapshot.data!),
+                      ),
+                    ],
+                  );
+                }
+                return _buildIcon(Icons.notifications_none_rounded, 3);
+              },
+            ),
+            label: 'Thông báo',
+          ),
+          BottomNavigationBarItem(
+            icon: _buildIcon(Icons.account_circle_outlined, 4),
             label: 'Tài khoản',
           ),
         ],
@@ -82,4 +132,40 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+Widget _notificationBadge(int count) {
+  return Container(
+    padding: const EdgeInsets.all(4.0),
+    decoration: BoxDecoration(
+      color: Colors.red,
+      shape: BoxShape.circle,
+    ),
+    child: Text(
+      '$count',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 12.0,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
+}
+
+Widget _loadingBadge() {
+  return Container(
+    padding: const EdgeInsets.all(4.0),
+    decoration: BoxDecoration(
+      color: Colors.grey,
+      shape: BoxShape.circle,
+    ),
+    child: SizedBox(
+      width: 10.0,
+      height: 10.0,
+      child: CircularProgressIndicator(
+        strokeWidth: 2.0,
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      ),
+    ),
+  );
 }
