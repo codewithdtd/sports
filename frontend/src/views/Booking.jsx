@@ -116,7 +116,7 @@ const Booking = () => {
       if (data.hanhDong == 'Đổi sân') {
         const newNotify = {
           tieuDe: 'Đổi sân',
-          noiDung: 'Sân ' + fac.san?.ma_San + ' đã đổi thành sân ' + data.san?.ma_San,
+          noiDung: 'Sân ' + fac.san?.ma_San + ' ' + fac.thoiGianBatDau + ' - ' + fac.thoiGianKetThuc + ' đã đổi thành sân ' + data.san?.ma_San + fac.thoiGianBatDau + ' - ' + fac.thoiGianKetThuc,
           nguoiDung: data.khachHang._id,
           daXem: false
         }
@@ -126,6 +126,20 @@ const Booking = () => {
         data.san.tinhTrang = "Đang sử dụng"
         data.thoiGianCheckIn = timeNow;
         await editFacility(data.san)
+      }
+      if (data.trangThai === 'Đã hủy') {
+        if (data.datSan?.dichVu?.length > 0) {
+          for (let dichVu of data.datSan?.dichVu) {
+            const updateService = await editService(dichVu);
+          }
+        }
+        const newNotify = {
+          tieuDe: 'Hủy sân',
+          noiDung: 'Sân ' + fac.san?.ma_San + ' được đặt vào ngày ' + fac.ngayDat + ' đã bị hủy.',
+          nguoiDung: data.khachHang._id,
+          daXem: false
+        }
+        await notifyService.create(newNotify);
       }
       if (await editBooking(data)) {
         console.log('Đã cập nhật');
@@ -274,6 +288,12 @@ const Booking = () => {
   const editBooking = async (data) => {
     const editFac = await bookingService.update(data._id, data);
     return editFac;
+  }
+  const editService = async (data) => {
+    const find = await serviceService.get(data._id)
+    const editFac = await serviceService.update(data._id, { tonKho: find.tonKho + data.soluong });
+    console.log(editFac)
+    // return editFac;
   }
   const editFacility = async (data) => {
     const editFac = await facilityService.update(data._id, data);

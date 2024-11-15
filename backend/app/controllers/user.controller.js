@@ -252,8 +252,13 @@ exports.createBooking = async (req, res, next) => {
         newBooking.ngayDat = convertToDateReverse(newBooking.ngayDat)
         for(let newService of newDichVu) {
             let temp = await service.findById(newService._id)
-
-            const r = await service.update(newService._id, { tonKho: temp._doc.tonKho - newService.soluong });
+            if(temp._doc.tonKho - newService.soluong >= 0) {
+                const r = await service.update(newService._id, { tonKho: temp._doc.tonKho - newService.soluong });
+            }
+            else {
+                res.status(500).json({message: 'Dịch vụ hết số lượng'});
+                return;
+            }
         }
         const result = await booking.create(newBooking);
         if(!result.maGiaoDich) {

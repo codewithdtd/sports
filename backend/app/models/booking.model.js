@@ -25,6 +25,7 @@ const bookingSchema = new mongoose.Schema({
   hoiVien: { type: String, },
   ghiChu: { type: String },
   dichVu: { type: Array, },
+  yeuCauHuy: { type: Boolean, default: false},
   maGiaoDich: { type: String, },
   zp_trans_id: { type: String, },
   phuThu: { type: Number },

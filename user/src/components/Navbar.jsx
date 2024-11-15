@@ -128,7 +128,7 @@ const Navbar = () => {
           <div className='flex group relative sm:min-w-[200px] items-center'>
             <div className="header__item header__user flex w-[50px] h-[50px] rounded-full overflow-hidden">
               {/* <img src="./src/assets/avatar.png" alt="" className="object-contain"/> */}
-              <img src={`${user?.user.hinhAnh_KH ? 'http://localhost:3000/uploads/' + user.user.hinhAnh_KH : "./src/assets/user-profile.png"}`} alt="" className="object-cover w-[50px] h-[50px]" />
+              <img src={`${user?.user.hinhAnh_KH ? 'http://localhost:3000/uploads/' + user.user.hinhAnh_KH : "./src/assets/avatar.jpg"}`} alt="" className="object-cover w-[50px] h-[50px]" />
             </div>
             <div className='ml-2 hidden sm:block'>
               {user?.user?.ho_KH + ' ' + user?.user?.ten_KH} <i className="ri-arrow-down-s-line"></i>

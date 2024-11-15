@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:mobile/Screens/Main/add_review_screen.dart';
 import 'package:mobile/Screens/Main/order_detail_screen.dart';
 import 'package:mobile/models/booked_model.dart';
+import 'package:mobile/models/notification_model.dart';
 import 'package:mobile/models/rating_model.dart';
 import 'package:mobile/services/booking.dart';
+import 'package:mobile/services/notification.dart';
 import 'package:mobile/services/review.dart';
 import 'package:mobile/stores/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -116,6 +118,76 @@ class _HistoryState extends State<History> {
           item.id.toString(),
           {"trangThai": "Đã hủy"},
         );
+        final notify = NotificationModel(
+            nguoiDung: 'Nhân viên',
+            tieuDe: 'Hủy đặt sân',
+            daXem: false,
+            noiDung:
+                'Người dùng ${item.khachHang?.sdtKh} hủy đặt sân ${item.id} mã sân ${item.san?.maSan} vào ${item.thoiGianBatDau}-${item.thoiGianKetThuc} ${item.ngayDat}');
+
+        final newNotify =
+            await NotifyService(token: token).createNotify(notify.toJson());
+        // ignore: unnecessary_null_comparison
+        if (response != null) {
+          setState(() {
+            futureList = _fetchData();
+          });
+        }
+      } catch (e) {
+        print('Error occurred while updating booking: $e');
+        // Bạn cũng có thể hiển thị SnackBar để báo lỗi
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('Không thể cập nhật trạng thái. Vui lòng thử lại sau.')),
+        );
+      }
+    }
+  }
+
+  Future<void> _confirmRequestCancelBooking(DatSan item) async {
+    final token = Provider.of<UserProvider>(context, listen: false).token;
+    final result = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Xác nhận hủy'),
+          content: Text(
+              'Bạn có chắc chắn muốn yêu cầu hủy đơn đặt sân ${item.san!.maSan} không?'),
+          actions: [
+            TextButton(
+              child: Text('Không'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result == true) {
+      // Tiến hành cập nhật trạng thái đơn đặt sân thành "Đã hủy"
+      try {
+        final response = await BookingService(token: token).updateBooking(
+          item.id.toString(),
+          {"yeuCauHuy": true},
+        );
+        final notify = NotificationModel(
+            nguoiDung: 'Nhân viên',
+            tieuDe: 'Yêu cầu hủy đặt sân',
+            daXem: false,
+            noiDung:
+                'Người dùng ${item.khachHang?.sdtKh} hủy đặt sân ${item.id} mã sân ${item.san?.maSan} vào ${item.thoiGianBatDau}-${item.thoiGianKetThuc} ${item.ngayDat}');
+
+        final newNotify =
+            await NotifyService(token: token).createNotify(notify.toJson());
         // ignore: unnecessary_null_comparison
         if (response != null) {
           setState(() {
@@ -213,10 +285,11 @@ class _HistoryState extends State<History> {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Color.fromARGB(255, 0, 216, 90),
+              color: Colors.white,
             ),
           ),
         ),
+        backgroundColor: Colors.greenAccent[700],
         automaticallyImplyLeading: false,
       ),
       body: Container(
@@ -386,22 +459,35 @@ class _HistoryState extends State<History> {
                                       !reviewed.any((review) =>
                                           review.datSan?.id == item.id))
                                     GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
+                                      onTap: () async {
+                                        final result = await Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 AddRatingScreen(datSan: item),
                                           ),
                                         );
+                                        if (result == true) {
+                                          // Gọi setState để làm mới dữ liệu nếu `pop` trả về `true`
+                                          setState(() {
+                                            futureList = _fetchData();
+                                          });
+                                        }
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //     builder: (context) =>
+                                        //         AddRatingScreen(datSan: item),
+                                        //   ),
+                                        // );
                                       },
                                       child: Container(
                                         height: 35.0,
                                         width: 80.0,
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                              color: Colors.green, width: 2.0),
+                                          color: Colors.greenAccent[700],
+                                          // border: Border.all(
+                                          //     color: Colors.green, width: 2.0),
                                           borderRadius:
                                               BorderRadius.circular(6.0),
                                         ),
@@ -409,7 +495,7 @@ class _HistoryState extends State<History> {
                                           child: Text(
                                             'Đánh giá',
                                             style: TextStyle(
-                                              color: Colors.green,
+                                              color: Colors.white,
                                               fontSize: 16.0,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -451,7 +537,45 @@ class _HistoryState extends State<History> {
                                         ),
                                       ),
                                     ),
-                                  const SizedBox(width: 8.0),
+                                  if (item.trangThai == "Đã duyệt" &&
+                                      item.yeuCauHuy == false)
+                                    GestureDetector(
+                                      onTap: () =>
+                                          _confirmRequestCancelBooking(item),
+                                      child: Container(
+                                        height: 35.0,
+                                        width: 100.0,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: Colors.red, width: 2.0),
+                                          borderRadius:
+                                              BorderRadius.circular(6.0),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            'Yêu cầu hủy',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  if (item.trangThai == "Đã duyệt" &&
+                                      item.yeuCauHuy == true)
+                                    const Text(
+                                      'Đã gửi yêu cầu hủy',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w500,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  // const SizedBox(width: 8.0),
                                   if (item.order_url != null &&
                                       item.order_url != '' &&
                                       item.trangThai != 'Đã hủy')

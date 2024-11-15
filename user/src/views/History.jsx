@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Booking from '../services/booking.service';
 import UserService from '../services/user.service';
 import invoiceService from '../services/invoice.service';
+import NotifyService from '../services/notify.service';
 import reviewService from '../services/review.service';
 import Pagination from '../components/Pagination';
 import Invoice from '../components/Invoice';
@@ -17,6 +18,7 @@ const History = () => {
   const dispatch = useDispatch();
   const bookingService = new Booking(user, dispatch);
   const userService = new UserService(user, dispatch);
+  const notifyService = new NotifyService(user, dispatch);
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -186,6 +188,13 @@ const History = () => {
   const editBooking = async (data) => {
     const isConfirmed = window.confirm("Bạn có chắc chắn muốn hủy sân?");
     if (isConfirmed) {
+      const newNotify = {
+        tieuDe: 'Hủy đặt sân',
+        noiDung: `Người dùng ${data?.khachHang.sdt_KH} hủy đặt sân ${data?._id} mã sân ${data?.san?.ma_San} vào ${data.thoiGianBatDau} - ${data.thoiGianKetThuc} ${data.ngayDat}`,
+        nguoiDung: 'Nhân viên',
+        daXem: false
+      }
+      await notifyService.create(newNotify);
       if (data.trangThaiThanhToan == 'Đã thanh toán') {
         const refund = await userService.refund(data, accessToken)
         if (refund) {
@@ -202,7 +211,22 @@ const History = () => {
       return editFac;
     }
   }
-
+  const editRequestBooking = async (data) => {
+    const isConfirmed = window.confirm("Bạn có chắc chắn muốn hủy sân?");
+    if (isConfirmed) {
+      data.yeuCauHuy = true;
+      const editFac = await bookingService.update(data._id, data);
+      const newNotify = {
+        tieuDe: 'Yêu cầu hủy đặt sân',
+        noiDung: `Người dùng ${data?.khachHang?.sdt_KH} hủy đặt sân ${data._id} mã sân ${data?.san?.ma_San} vào ${data.thoiGianBatDau} - ${data.thoiGianKetThuc} ${data.ngayDat}`,
+        nguoiDung: 'Nhân viên',
+        daXem: false
+      }
+      await notifyService.create(newNotify);
+      setFac(edit)
+      return editFac;
+    }
+  }
   const getReview = async (id) => {
     try {
       const datSan = { 'datSan._id': id }
@@ -277,17 +301,17 @@ const History = () => {
 
           {filterFacility()?.map((item, index) =>
             ((currentPage - 1) * 6 <= index && index < currentPage * 6) ?
-              <div key={index} className='flex flex-col shadow-lg bg-gray-100 shadow-gray-400 rounded-lg border border-gray-300 mb-3 p-2 text-lg'>
+              <div key={index} className='flex flex-col shadow-md  bg-gray-100 shadow-gray-400 rounded-lg border border-gray-400 mb-3 p-2 text-base'>
                 <div className='flex'>
                   <div className='flex w-1/2 md:w-1/2 p-5'>
                     <img src={`http://localhost:3000/uploads/${listSportType.find(element => element._id === item.san.loai_San._id).hinhAnhDaiDien}`} className='m-auto object-contain bg-blue-200 rounded-xl' alt="" />
                   </div>
                   <div className={`flex flex-col items-start text-center min-h-32 p-5`}>
                     {/* <div className="w-1/12"></div> */}
-                    <div className="p-1">
+                    <div className="my-auto">
                       Khách hàng: {item.khachHang.ho_KH + ' ' + item.khachHang.ten_KH}
                     </div>
-                    <div className="p-1 text-start">
+                    <div className="my-auto text-start">
                       <p>Tên sân: {item.san.ten_San + ' - ' + item.san.ma_San}</p>
                       <ul className='list-disc'>
                         {item.dichVu?.map((dichVu) =>
@@ -295,32 +319,32 @@ const History = () => {
                         )}
                       </ul>
                     </div>
-                    <div className="text-start">
-                      <p className='p-1'>Tiền thanh toán: {formatNumber(item.thanhTien)}</p>
-                      <p className='p-1'>
+                    <div className="my-auto text-start">
+                      <p className='my-[4px]'>Tiền thanh toán: {formatNumber(item.thanhTien)}</p>
+                      <p className='my-auto'>
                         Trạng thái thanh toán:
-                        <span className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-green-600 bg-green-200 border-green-500 shadow-md border-2' : ''} p-1 ml-2 px-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</span>
+                        <span className={`${item.trangThaiThanhToan == 'Đã thanh toán' ? 'text-blue-700' : ''} my-auto ml-2 px-2 w-fit mx-auto shadow-gray-500 rounded-xl font-medium`}>{item.trangThaiThanhToan}</span>
                       </p>
                     </div>
-                    <div className="">
-                      <p className='p-1'>Giờ đặt: {item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
-                      <p className='p-1'>Ngày đặt: {item.ngayDat}</p>
+                    <div className="my-auto">
+                      <p className=''>Giờ đặt: {item.thoiGianBatDau} - {item.thoiGianKetThuc}</p>
+                      <p className='my-[4px]'>Ngày đặt: {item.ngayDat}</p>
                     </div>
-                    <div className="p-1 flex justify-center">
+                    <div className="my-auto flex justify-center">
                       Ngày tạo: {item.ngayTao}
                     </div>
-                    <div className="p-1 flex justify-center items-center h-fit">
+                    <div className="my-auto flex justify-center items-center h-fit">
                       Trạng thái:
                       <p className={`${item.trangThai == 'Hoàn thành' ? 'text-green-700 rounded-lg bg-green-200 border-green-500 border-2 shadow-md '
                         : item.trangThai == 'Đã hủy' ? 'text-red-700 rounded-lg bg-red-300 border-red-500 border-2 shadow-md '
-                          : item.trangThai == 'Đã duyệt' ? 'text-blue-700 rounded-lg bg-blue-300 border-blue-500 border-2 shadow-md '
+                          : item.trangThai == 'Đã duyệt' ? 'text-blue-600 rounded-lg bg-blue-200 border-blue-500 border-2 shadow-md px-3'
                             : item.trangThai == 'Nhận sân' ? 'text-yellow-700 rounded-lg bg-yellow-300 border-yellow-600 border-2 shadow-md '
-                              : 'rounded-lg'} w-fit font-medium p-1 ml-3 shadow-gray-500`}>
+                              : 'rounded-md'} px-3 w-fit font-medium my-auto ml-3`}>
                         {item.trangThai}
                       </p>
                     </div>
                     <div className="text-start">
-                      <p className='p-1'>Tiền thanh toán: <b>{formatNumber(item.thanhTien)}</b></p>
+                      <p className='my-auto'>Tiền thanh toán: <b>{formatNumber(item.thanhTien)}</b></p>
                     </div>
                     <div className="flex pt-4 w-full justify-between">
                       {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
@@ -332,16 +356,22 @@ const History = () => {
                         : ''}
 
                       {item.trangThai === 'Chưa duyệt' ?
-                        <button className='bg-red-500 shadow-md shadow-gray-500 text-white px-2 hover:bg-red-700 p-1 rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
+                        <button className='bg-red-500 p-1 shadow-md shadow-gray-500 text-white px-2 hover:bg-red-700 my-auto rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
+                        : ''}
+                      {(item.trangThai === 'Đã duyệt' && !item.yeuCauHuy) ?
+                        <button className='text-red-500 border-red-500 border hover:bg-red-200 my-auto rounded-md mx-2 p-1' onClick={e => editRequestBooking(item)}>Yêu cầu hủy</button>
+                        : ''}
+                      {(item.trangThai === 'Đã duyệt' && item.yeuCauHuy) ?
+                        <button className='text-red-500 italic my-auto rounded-md mx-2 p-1'>Đã gửi yêu cầu hủy</button>
                         : ''}
                       {/* Hiển thị kết quả của getReview() */}
                       {reviews[item._id] ?
-                        <button className='border-gray-500 text-gray-600 border hover:bg-gray-300 p-1 rounded-md mx-2' onClick={e => { setReview(true), setReviewed(item) }}>Xem đánh giá</button>
+                        <button className='border-gray-500 text-gray-600 border hover:bg-gray-300 my-auto rounded-md mx-2 p-1' onClick={e => { setReview(true), setReviewed(item) }}>Xem đánh giá</button>
                         : ''}
 
 
                       {(item.trangThai === 'Hoàn thành' && tinhChenhLechNgay(item.ngayDat) < 4 && !reviews[item._id]) ?
-                        <button className='text-white bg-green-500 hover:bg-green-700 p-1 rounded-md mx-2' onClick={e => { setReview(true), setReviewed(item) }}>Đánh giá</button>
+                        <button className='text-white bg-green-500 hover:bg-green-700 my-auto rounded-md mx-2 p-1' onClick={e => { setReview(true), setReviewed(item) }}>Đánh giá</button>
                         : ''}
                     </div>
                   </div>

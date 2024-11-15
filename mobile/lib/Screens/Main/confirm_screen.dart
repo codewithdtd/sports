@@ -185,7 +185,7 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
           const SnackBar(
             backgroundColor: Colors.red,
             content: Text(
-              "Thất bại",
+              "Thất bại: Hết số lượng dịch vụ hoặc lỗi kết nối",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -197,78 +197,84 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
       appBar: AppBar(
         title: Text('Xác nhận'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Hiển thị và chỉnh sửa thông tin người dùng
-            TextField(
-              controller: _firstNameController,
-              decoration: InputDecoration(labelText: 'Họ'),
-            ),
-            TextField(
-              controller: _lastNameController,
-              decoration: InputDecoration(labelText: 'Tên'),
-            ),
-            TextField(
-              controller: _phoneController,
-              decoration: InputDecoration(labelText: 'Số điện thoại'),
-              keyboardType: TextInputType.phone,
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextField(
-              controller: _noteController,
-              decoration: InputDecoration(labelText: 'Ghi chú'),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: RadioListTile<bool>(
-                    title: const Text("Trực tiếp"),
-                    value: true,
-                    groupValue: methodPayment,
-                    activeColor: Colors.green,
-                    onChanged: (value) {
-                      setState(() {
-                        methodPayment = value!;
-                      });
-                    },
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Hiển thị và chỉnh sửa thông tin người dùng
+              TextField(
+                controller: _firstNameController,
+                decoration: InputDecoration(labelText: 'Họ'),
+              ),
+              TextField(
+                controller: _lastNameController,
+                decoration: InputDecoration(labelText: 'Tên'),
+              ),
+              TextField(
+                controller: _phoneController,
+                decoration: InputDecoration(labelText: 'Số điện thoại'),
+                keyboardType: TextInputType.phone,
+              ),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              TextField(
+                controller: _noteController,
+                decoration: InputDecoration(labelText: 'Ghi chú'),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              Text('Phương thức thanh toán'),
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<bool>(
+                      title: const Text("Trực tiếp"),
+                      value: true,
+                      groupValue: methodPayment,
+                      activeColor: Colors.green,
+                      onChanged: (value) {
+                        setState(() {
+                          methodPayment = value!;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: RadioListTile<bool>(
-                    title: const Text("Chuyển khoản"),
-                    value: false,
-                    groupValue: methodPayment,
-                    activeColor: Colors.green,
-                    onChanged: (value) {
-                      setState(() {
-                        methodPayment = value!;
-                      });
-                    },
+                  Expanded(
+                    child: RadioListTile<bool>(
+                      title: const Text("Chuyển khoản"),
+                      value: false,
+                      groupValue: methodPayment,
+                      activeColor: Colors.green,
+                      onChanged: (value) {
+                        setState(() {
+                          methodPayment = value!;
+                        });
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Center(
-              child: Text(
-                'Danh sách sân',
-                style: TextStyle(
-                  color: Colors.greenAccent[700],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
+                ],
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: Text(
+                  'Danh sách sân',
+                  style: TextStyle(
+                    color: Colors.greenAccent[700],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
                 ),
               ),
-            ),
-            // Hiển thị danh sách `list`
-            Expanded(
-              child: ListView.builder(
+              // Hiển thị danh sách `list`
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: widget.list.length,
                 itemBuilder: (context, index) {
                   final item = widget.list[index];
@@ -338,8 +344,8 @@ class _CornfirmScreenState extends State<CornfirmScreen> {
                   );
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(

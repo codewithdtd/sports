@@ -161,6 +161,7 @@ class DatSan {
   String? thoiGianKetThuc;
   String? thoiGianCheckIn;
   String? thoiGianCheckOut;
+  bool? yeuCauHuy;
   String? ghiChu;
   List<DichVu>? dichVu;
   int? thanhTien;
@@ -188,6 +189,7 @@ class DatSan {
     this.ghiChu,
     this.thanhTien,
     this.ngayDat,
+    this.yeuCauHuy,
     // ignore: non_constant_identifier_names
     this.app_trans_id,
     // ignore: non_constant_identifier_names
@@ -210,6 +212,7 @@ class DatSan {
       thoiGianKetThuc: json['thoiGianKetThuc'],
       thoiGianCheckIn: json['thoiGianCheckIn'],
       thoiGianCheckOut: json['thoiGianCheckOut'],
+      yeuCauHuy: json['yeuCauHuy'],
       ghiChu: json["ghiChu"],
       dichVu: List<DichVu>.from(json['dichVu'].map((x) => DichVu.fromJson(x))),
       thanhTien: json['thanhTien'],
@@ -236,6 +239,7 @@ class DatSan {
       'thoiGianKetThuc': thoiGianKetThuc,
       'thoiGianCheckIn': thoiGianCheckIn,
       'thoiGianCheckOut': thoiGianCheckOut,
+      'yeuCauHuy': yeuCauHuy,
       'ghiChu': ghiChu,
       'dichVu': dichVu?.map((x) => x.toJson()).toList(),
       'thanhTien': thanhTien,

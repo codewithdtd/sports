@@ -4,7 +4,7 @@ class NotificationModel {
   String? tieuDe;
   String? noiDung;
   bool? daXem;
-  bool? daXoa;
+  bool? daXoa = false;
   String? ngayTao;
   int? iV;
 
@@ -36,7 +36,7 @@ class NotificationModel {
     data['tieuDe'] = this.tieuDe;
     data['noiDung'] = this.noiDung;
     data['daXem'] = this.daXem;
-    data['da_xoa'] = this.daXoa;
+    data['da_xoa'] = false;
     data['ngayTao'] = this.ngayTao;
     data['__v'] = this.iV;
     return data;

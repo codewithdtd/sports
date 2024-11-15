@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/Screens/Main/booking_screen.dart';
+import 'package:mobile/Screens/Main/home_screen.dart';
 import 'package:mobile/Screens/Welcome/welcome_screen.dart';
 import 'package:mobile/contants.dart';
 import 'package:mobile/stores/user_provider.dart';
@@ -39,6 +40,6 @@ class AuthCheckScreen extends StatelessWidget {
     final userProvider = Provider.of<UserProvider>(context);
     final isLoggedIn = userProvider.user != null;
 
-    return isLoggedIn ? BookingScreen() : WelcomeScreen();
+    return isLoggedIn ? HomeScreen() : WelcomeScreen();
   }
 }

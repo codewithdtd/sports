@@ -27,7 +27,7 @@ class _ProfileState extends State<Profile> {
         final logout = await UserService(token: token).logout();
         userProvider.clearUser();
         // ignore: use_build_context_synchronously
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const WelcomeScreen(),
@@ -53,8 +53,8 @@ class _ProfileState extends State<Profile> {
                         //   color: Colors.greenAccent[700],
                         //   height: MediaQuery.of(context).size.height * 0.25,
                         // ),
-                        Image.network(
-                          'https://www.shutterstock.com/image-vector/abstract-sport-background-green-blue-260nw-2488533059.jpg',
+                        Image.asset(
+                          'assets/images/bg-info.jpg',
                           height: MediaQuery.of(context).size.height * 0.25,
                           width: double.infinity,
                           fit: BoxFit.cover,

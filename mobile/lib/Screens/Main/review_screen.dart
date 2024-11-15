@@ -41,12 +41,13 @@ class _ReviewScreenState extends State<ReviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
+        title: const Center(
           child: Text(
             'Đánh giá của khách hàng',
-            style: TextStyle(fontWeight: FontWeight.w500),
+            style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
           ),
         ),
+        backgroundColor: Colors.greenAccent[700],
         automaticallyImplyLeading: false,
       ),
       body: Container(

@@ -476,7 +476,7 @@ function FromBooking(props) {
                 </div> */}
             <div className="flex">
               <i className="mr-1 ri-sticky-note-line"></i>
-              <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ghiChu} onChange={e => setData({ ...data, ghiChu: e.target.value })} placeholder='Ghi chú' />
+              <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ghiChu || ''} onChange={e => setData({ ...data, ghiChu: e.target.value })} placeholder='Ghi chú' />
             </div>
             {/* <div className="flex">
                   <i className="mr-1 ri-money-dollar-circle-fill text-lg"></i>

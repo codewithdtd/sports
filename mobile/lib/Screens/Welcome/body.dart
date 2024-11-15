@@ -38,8 +38,8 @@ class Body extends StatelessWidget {
               height: 15.0,
             ),
             Image.asset(
-              "assets/images/login.jpg",
-              width: size.width * 0.8,
+              "assets/images/sports.png",
+              width: size.width * 0.6,
             ),
             RoundedButton(
               text: 'Đăng nhập',

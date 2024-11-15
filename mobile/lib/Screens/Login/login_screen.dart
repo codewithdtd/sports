@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
         final userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(user["user"], user["token"]);
         // ignore: use_build_context_synchronously
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) {
             return HomeScreen();

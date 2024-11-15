@@ -193,8 +193,11 @@ const BookingDetail = () => {
         }, 2500);
       }
     } catch (error) {
-      toast.error("Đặt sân thất bại!", {
+      toast.error("Đặt sân thất bại! Hết số lượng dịch vụ hoặc lỗi kết nối!!!", {
       });
+      setTimeout(() => {
+        navigate('/');  // Chuyển hướng sau 2 giây
+      }, 2500);
       console.error("Có lỗi xảy ra khi đặt sân:", error);
       // Xử lý lỗi nếu cần, chẳng hạn hiển thị thông báo
     }

@@ -65,7 +65,7 @@ const Info = () => {
         <div className='w-1/3 flex flex-col justify-center items-center text-center border shadow-gray-500 bg-white m-3 rounded-lg h-[90%] shadow-lg'>
           { user.user.hinhAnh_KH && !avatarPre ? 
             <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_KH}`} className="border-[7px] border-gray-400 rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
-            : <img src={`${avatarPre ? avatarPre : './src/assets/user-profile.png'}`} className="rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
+            : <img src={`${avatarPre ? avatarPre : './src/assets/avatar.jpg'}`} className="rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
           }
           <p className='mt-3 font-medium text-lg'>
             ẢNH ĐẠI DIỆN
