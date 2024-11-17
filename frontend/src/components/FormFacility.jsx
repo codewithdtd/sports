@@ -263,7 +263,7 @@ function FromFacility(props) {
               onChange={e => setData({ ...data, phuongThucThanhToan: e.target.value })}
             >
               <option value="">Chọn</option>
-              <option value="Momo">Chuyển khoản</option>
+              <option value="Chuyển khoản">Chuyển khoản</option>
               <option value="Tiền mặt">Tiền mặt</option>
             </select>
           </div>

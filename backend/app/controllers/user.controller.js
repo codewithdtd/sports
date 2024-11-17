@@ -261,7 +261,7 @@ exports.createBooking = async (req, res, next) => {
             }
         }
         const result = await booking.create(newBooking);
-        if(!result.maGiaoDich) {
+        if(!result.maGiaoDich && result.khachHang.email != '') {
             const email = await axios.post("http://localhost:3000/api/user/email", result);
         }
         res.status(201).json(result);
@@ -697,7 +697,7 @@ exports.payment = async (req, res, next) => {
         amount: thanhTien,
         description: `DSport - Payment for the order #${transID}`,
         bank_code: "",
-        callback_url: 'https://f986-14-241-183-210.ngrok-free.app/api/user/callback'
+        callback_url: 'https://fba1-115-75-103-11.ngrok-free.app/api/user/callback'
     };
 
     // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -748,7 +748,9 @@ exports.callback = async (req, res, next) =>  {
       console.log(bookings.length);
       for(let item of bookings) {
         const update = await booking.update(item._id, {expireAt: null, trangThaiThanhToan: 'Đã thanh toán', order_url: '', zp_trans_id: dataJson["zp_trans_id"]});
-        const email = await axios.post("http://localhost:3000/api/user/email", update);
+        if(item.khachHang.email != '') {
+            const email = await axios.post("http://localhost:3000/api/user/email", update);
+        }
       }
       console.log('Đã update')
       result.return_code = 1;

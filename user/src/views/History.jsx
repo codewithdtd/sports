@@ -5,7 +5,7 @@ import Booking from '../services/booking.service';
 import UserService from '../services/user.service';
 import invoiceService from '../services/invoice.service';
 import NotifyService from '../services/notify.service';
-import reviewService from '../services/review.service';
+import ReviewService from '../services/review.service';
 import Pagination from '../components/Pagination';
 import Invoice from '../components/Invoice';
 import Feedback from '../components/Feedback';
@@ -19,6 +19,7 @@ const History = () => {
   const bookingService = new Booking(user, dispatch);
   const userService = new UserService(user, dispatch);
   const notifyService = new NotifyService(user, dispatch);
+  const reviewService = new ReviewService(user, dispatch);
   useEffect(() => {
     if (!user) {
       navigate('/login');

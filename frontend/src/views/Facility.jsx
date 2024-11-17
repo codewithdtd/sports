@@ -181,7 +181,7 @@ function Facility() {
       if (field && facilities.length > 0) {
         facilities.forEach(async (facility) => {
           // Kiểm tra xem id của facility có trong field không
-          if (facility.datSan && facility.tinhTrang == "Trống") {
+          if (facility.datSan && facility.datSan.trangThai != 'Nhận sân' && facility.tinhTrang == "Trống") {
             facility.tinhTrang = 'Đã đặt';
             await editFacility(facility);
           }

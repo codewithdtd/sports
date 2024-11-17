@@ -156,7 +156,7 @@ const BookingDetail = () => {
   }
 
 
-  const handleSubmit = async (infoUser) => {
+  const handleSubmit = async (infoUser, ghiChu = '') => {
     // e.preventDefault();
     if (!user) {
       // toast.error("Vui lòng đăng nhập để đặt sân", {
@@ -182,6 +182,7 @@ const BookingDetail = () => {
           )
           : '';
         item.khachHang = infoUser;
+        item.ghiChu = ghiChu;
         await createBooking(item);
       }
       if (returnPayment)

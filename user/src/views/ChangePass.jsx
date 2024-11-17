@@ -58,7 +58,7 @@ const ChangePass = () => {
         <div className='w-1/3 flex flex-col justify-center items-center text-center h-[90%] bg-white shadow-lg shadow-gray-500 rounded-lg'>
           { user.user.hinhAnh_KH ? 
             <img src={`http://localhost:3000/uploads/${user.user.hinhAnh_KH}`} className="border-[7px] border-white rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
-            : <img src={`./src/assets/user-profile.png`} className="rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
+            : <img src={`./src/assets/avatar.jpg`} className="rounded-full w-1/2 h-fit md:w-[50%] aspect-square object-cover" alt="" />
           }
           <p className='mt-3 font-bold text-lg'>
             {user.user.ho_KH + ' ' + user.user.ten_KH}

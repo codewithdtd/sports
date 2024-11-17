@@ -24,7 +24,7 @@ function FromBooking(props) {
   const [checkedSlots, setCheckedSlots] = useState([]);
   const [bookingsByDate, setBookingsByDate] = useState({});
   const [booking, setBooking] = useState([]);
-  const [customer, setCustomer] = useState(null);
+  const [customer, setCustomer] = useState(data.khachHang);
   const [modalService, setModalService] = useState(null)
   const [listSportType, setListSportType] = useState(null)
   const [fieldChange, setFieldChange] = useState(null)
@@ -432,20 +432,20 @@ function FromBooking(props) {
                 <div className='flex justify-between'>
                   <div className="flex flex-1">
                     <i className="mr-1 ri-user-3-fill"></i>
-                    <input required name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.ho_KH} placeholder='Họ' onChange={e => setData({ ...data, khachHang: { ...data.khachHang, ho_KH: e.target.value } })} />
+                    <input required name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={customer?.ho_KH} placeholder='Họ' onChange={e => setCustomer({ ...customer, ho_KH: e.target.value } )} />
                   </div>
                   <div className="flex flex-1">
                     <i className="mr-1 ri-user-3-fill"></i>
-                    <input required name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.ten_KH} onChange={e => setData({ ...data, khachHang: { ...data.khachHang, ten_KH: e.target.value } })} placeholder='Tên' />
+                    <input required name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={customer?.ten_KH} onChange={e => setCustomer({ ...customer, ten_KH: e.target.value })} placeholder='Tên' />
                   </div>
                 </div>
                 <div className="flex">
                   <i className="mr-1 ri-mail-line"></i>
-                  <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="email" value={data.khachHang.email_KH} onChange={e => setData({ ...data, khachHang: { ...data.khachHang, email_KH: e.target.value } })} placeholder='Email (nếu có)' />
+                  <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="email" value={customer?.email_KH} onChange={e => setCustomer({ ...customer, email_KH: e.target.value })} placeholder='Email (nếu có)' />
                 </div>
                 <div className="flex">
                   <i className="mr-1 ri-phone-line"></i>
-                  <input required name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.khachHang.sdt_KH} onChange={e => setData({ ...data, khachHang: { ...data.khachHang, sdt_KH: e.target.value } })} placeholder='Số điện thoại' />
+                  <input required name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={customer?.sdt_KH} onChange={e => setCustomer({ ...customer, sdt_KH: e.target.value })} placeholder='Số điện thoại' />
                 </div>
               </div>
               :
@@ -490,6 +490,7 @@ function FromBooking(props) {
               <i className={data.trangThai == 'Đã hủy' ? 'mr-1 ri-close-line' : 'mr-1 ri-check-double-line'}></i>
               <select name="" id="" className='flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' onChange={e => setData({ ...data, trangThai: e.target.value })}>
                 <option value={data.trangThai ? data.trangThai : ''}>{data.trangThai ? data.trangThai : 'Chọn'}</option>
+                <option value='Chưa duyệt'>Chưa duyệt</option>
                 <option value='Đã duyệt'>Đã duyệt</option>
                 <option value='Nhận sân'>Nhận sân</option>
                 <option value='Hoàn thành'>Hoàn thành</option>

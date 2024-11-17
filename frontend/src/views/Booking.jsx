@@ -120,7 +120,20 @@ const Booking = () => {
           nguoiDung: data.khachHang._id,
           daXem: false
         }
-        await notifyService.create(newNotify);
+        if (data.khachHang._id && data.khachHang.email_KH) {
+          await notifyService.create(newNotify);
+        }
+      }
+      if (data.trangThai === 'Đã duyệt') {
+        const newNotify = {
+          tieuDe: 'Đặt sân',
+          noiDung: 'Sân ' + fac.san?.ma_San + ' ' + fac.thoiGianBatDau + ' - ' + fac.thoiGianKetThuc + ' đã duyệt',
+          nguoiDung: data.khachHang._id,
+          daXem: false
+        }
+        if (data.khachHang._id && data.khachHang.email_KH) {
+          await notifyService.create(newNotify);
+        }
       }
       if (data.trangThai === 'Nhận sân') {
         data.san.tinhTrang = "Đang sử dụng"
@@ -139,7 +152,9 @@ const Booking = () => {
           nguoiDung: data.khachHang._id,
           daXem: false
         }
-        await notifyService.create(newNotify);
+        if (data.khachHang._id && data.khachHang.email_KH) {
+          await notifyService.create(newNotify);
+        }
       }
       if (await editBooking(data)) {
         console.log('Đã cập nhật');

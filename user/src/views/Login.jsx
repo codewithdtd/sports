@@ -31,9 +31,9 @@ const Login = () => {
     }
   };
   return (
-    <div className='flex h-screen items-center bg-blue-300'>
+    <div className='flex h-screen items-center bg-blue-200'>
       <ToastContainer autoClose='2000' /> 
-      <div className='h-[90vh] w-[90vw] m-auto border border-gray-400 shadow-lg shadow-gray-800'>
+      <div className='h-[90vh] w-[90vw] m-auto rounded-md overflow-hidden border-4 border-white shadow-lg shadow-gray-800'>
         <Form sendData={handleData} />
       </div>
     </div>

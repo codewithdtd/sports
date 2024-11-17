@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import sportTypeService from '../services/sportType.service';
-import listReviewervice from '../services/review.service';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Reviewervice from '../services/review.service';
 import Pagination from '../components/Pagination';
 const Review = () => {
   const [listReview, setListReview] = useState([]);
   const [feedback, setFeedback] = useState('');// Đánh giá hiện tại của người dùng // Danh sách các đánh giá
   const [comment, setComment] = useState(''); // Bình luận của người dùng
+  const dispatch = useDispatch();
+
 
 
   const [currentPage, setCurrentPage] = useState(1)
 
   const user = useSelector((state) => state.user.login.user)
   // Xử lý khi người dùng chọn đánh giá "Tốt" hoặc "Tệ
-
+  const listReviewervice = new Reviewervice(user, dispatch);
 
   const convertString = () => {
     return listReview.map((item) => {
@@ -59,7 +61,7 @@ const Review = () => {
     getAll();
   }, [])
   return (
-    <div className='p-5 px-8'>
+    <div className='p-5 px-16'>
       <h1 className='text-3xl font-bold text-center pt-5'>Đánh giá</h1>
       <div className='px-6'>
         <button className={`p-2 mr-3 shadow-md shadow-gray-400 rounded-lg ${feedback == 'Tốt' ? 'bg-green-500 text-white' : 'bg-white'}`} onClick={e => { setFeedback('Tốt'), handlePageChange(1) }}>Tốt  <i className="pl-1 ri-thumb-up-fill"></i> </button>
@@ -75,10 +77,16 @@ const Review = () => {
             ((currentPage - 1) * 5 <= index && index < currentPage * 5) ? (
               <div key={review._id} className='shadow-gray-600 bg-white rounded-md shadow-md border text-lg border-gray-400 mb-5'>
                 <div className="rounded-xl flex p-4 text-lg">
-                  <img src="./src/assets/avatar.jpg" className='hidden sm:block w-14 h-14 mr-5 rounded-full' alt="" />
+                  {review.khachHang.hinhAnh_KH ?
+                    <img src={`http://localhost:3000/uploads/${review.khachHang.hinhAnh_KH}`} className='hidden sm:block w-14 h-14 mr-5 rounded-full object-cover' alt="" />
+                  :<img src="./src/assets/avatar.jpg" className='hidden sm:block w-14 h-14 mr-5 rounded-full' alt="" />
+                  }
                   <div>
                     <div className='font-medium flex items-center'>
-                      <img src="./src/assets/user-profile.png" className='sm:hidden w-20 h-20 mr-5' alt="" />
+                      {review.khachHang.hinhAnh_KH ?
+                        <img src={`http://localhost:3000/uploads/${review.khachHang.hinhAnh_KH}`} className='hidden sm:hidden w-14 h-14 mr-5 rounded-full object-cover' alt="" />
+                        : <img src="./src/assets/avatar.jpg" className='hidden sm:hidden w-14 h-14 mr-5 rounded-full' alt="" />
+                      }
                       <div>
                         <p>{review.khachHang.ho_KH + ' ' + review.khachHang.ten_KH}</p>
                         <p className='sm:hidden text-sm font-medium text-gray-700'>{review.ngayTao_DG}</p>

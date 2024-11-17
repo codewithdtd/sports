@@ -22,7 +22,7 @@ const bookingSchema = new mongoose.Schema({
   thoiGianCheckOut: { type: String, default: '--:--' },
   dichVu: { type: [Object], },
   thanhTien: { type: Number, required: true },
-  hoiVien: { type: String, },
+  // hoiVien: { type: String, },
   ghiChu: { type: String },
   dichVu: { type: Array, },
   yeuCauHuy: { type: Boolean, default: false},

@@ -5,7 +5,7 @@ const FormStaff = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định
     data._id ? data.phuongThuc = 'edit' : data.phuongThuc = 'create';
-    !data._id ? data.matKhau_NV = 'dsport2024' : '';
+    !data._id ? data.matKhau_NV = data.sdt_NV+'@dsport2024' : '';
     props.handleData(data); // Xử lý dữ liệu biểu mẫu
   };
 
@@ -40,7 +40,7 @@ const FormStaff = (props) => {
           </select>
           {/* <input name='ten_San' className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="text" value={data.chuc_vu } onChange={e => setData({...data, chuc_vu: e.target.value})}/> */}
         </div>
-        {!data._id && <p className='italic'>Mật khẩu mặc định của nhân viên là: dsport2024</p>}
+        {!data._id && <p className='italic'>Mật khẩu mặc định của nhân viên là: {'<số điện thoại>'}@dsport2024</p>}
         <button className='bg-blue-600 w-full py-1 px-2 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
       </form>
     </div>
