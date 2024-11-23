@@ -50,7 +50,7 @@ const Review = () => {
   const getAll = async () => {
     try {
       const review = await listReviewervice.getAll();
-      setListReview(review.reverse());
+      setListReview(review.reverse().filter(item => item.da_an == false));
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +79,7 @@ const Review = () => {
                 <div className="rounded-xl flex p-4 text-lg">
                   {review.khachHang.hinhAnh_KH ?
                     <img src={`http://localhost:3000/uploads/${review.khachHang.hinhAnh_KH}`} className='hidden sm:block w-14 h-14 mr-5 rounded-full object-cover' alt="" />
-                  :<img src="./src/assets/avatar.jpg" className='hidden sm:block w-14 h-14 mr-5 rounded-full' alt="" />
+                    : <img src="./src/assets/avatar.jpg" className='hidden sm:block w-14 h-14 mr-5 rounded-full' alt="" />
                   }
                   <div>
                     <div className='font-medium flex items-center'>

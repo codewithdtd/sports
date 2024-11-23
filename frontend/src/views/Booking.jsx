@@ -134,7 +134,7 @@ const Booking = () => {
           nguoiDung: data.khachHang._id,
           daXem: false
         }
-        if (data.khachHang._id && data.khachHang.email_KH) {
+        if (data.khachHang._id) {
           await notifyService.create(newNotify);
         }
       }
@@ -161,7 +161,7 @@ const Booking = () => {
       }
       if (await editBooking(data)) {
         console.log('Đã cập nhật');
-        setFac(fac);
+        // setFac(fac);
       }
     }
     if (data.phuongThuc == 'create') {
@@ -180,7 +180,7 @@ const Booking = () => {
       // if(await createBooking(data) && updatedServices)
       if (await createBooking(data)) {
         console.log('Đã thêm mới');
-        setFac(fac)
+        // setFac(fac)
       }
     }
     setEdit(!edit);
@@ -301,12 +301,14 @@ const Booking = () => {
   }
   const createBooking = async (data) => {
     const newFac = await bookingService.create(data);
+    setFac(fac)
     toast.success('Thành công');
     return newFac;
   }
   const editBooking = async (data) => {
     const editFac = await bookingService.update(data._id, data);
     toast.success('Đã cập nhật', { position: 'top-right' });
+    setFac(fac)
     return editFac;
   }
   const editService = async (data) => {

@@ -8,6 +8,7 @@ const reviewSchema = new mongoose.Schema({
   datSan: { type: Object, },
   phanHoi: { type: Object, },
   ngayTao_DG: { type: String },
+  da_an: {type: Boolean, default: false},
   da_xoa: { type: Boolean, default: false },
 });
 

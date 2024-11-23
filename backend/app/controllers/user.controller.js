@@ -261,7 +261,7 @@ exports.createBooking = async (req, res, next) => {
             }
         }
         const result = await booking.create(newBooking);
-        if(!result.maGiaoDich && result.khachHang.email != '') {
+        if(!result.maGiaoDich && result.khachHang.email != '' && result.khachHang.email) {
             const email = await axios.post("http://localhost:3000/api/user/email", result);
         }
         res.status(201).json(result);

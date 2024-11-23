@@ -82,6 +82,7 @@ class ApiService<T> {
         response = await http.get(url, headers: getHeaders());
       }
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.statusCode);
         return compute(parseResponse, response.body);
       } else {
         throw Exception(

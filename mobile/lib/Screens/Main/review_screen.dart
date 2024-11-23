@@ -22,7 +22,11 @@ class _ReviewScreenState extends State<ReviewScreen> {
   Future<List<Rating>> _fetchData() async {
     try {
       final response = await ReviewService().getAll();
-      return response.reversed.toList();
+      final filteredData =
+          response.where((rating) => rating.isHided == false).toList();
+
+      // Đảo ngược danh sách sau khi lọc
+      return filteredData.reversed.toList();
     } catch (error) {
       print('Lỗi khi lấy dữ liệu: $error');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -132,7 +136,37 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                           style: TextStyle(fontSize: 17.0),
                                           softWrap: true,
                                           overflow: TextOverflow.visible,
-                                        )
+                                        ),
+                                        if (item.feedback != null)
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Phản hồi',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.grey[700],
+                                                ),
+                                              ),
+                                              Text(
+                                                '${item.feedback?.employee?.firstName} ${item.feedback?.employee?.lastName}',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                '${item.feedback?.createdAt}',
+                                                style:
+                                                    TextStyle(fontSize: 13.0),
+                                              ),
+                                              Text(
+                                                '${item.feedback?.content}',
+                                                style:
+                                                    TextStyle(fontSize: 14.0),
+                                              ),
+                                            ],
+                                          )
                                       ],
                                     ),
                                     Positioned(

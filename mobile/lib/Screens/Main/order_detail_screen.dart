@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/models/booked_model.dart';
 import 'package:mobile/models/invoice_model.dart';
 import 'package:mobile/services/invoice.dart';
@@ -29,6 +30,11 @@ class _OrderScreenState extends State<OrderScreen> {
     final String? token =
         Provider.of<UserProvider>(context, listen: false).token;
     return await InvoiceService(token: token).getOne('${widget.datSan.id}');
+  }
+
+  String formatCurrency(int? number) {
+    final formatter = NumberFormat('#,##0', 'vi_VN');
+    return formatter.format(number);
   }
 
   @override
@@ -79,7 +85,7 @@ class _OrderScreenState extends State<OrderScreen> {
                           children: [
                             Center(
                               child: Text(
-                                "HÓA ĐƠN",
+                                "CHI TIẾT ĐẶT SÂN",
                                 style: TextStyle(
                                     color: Colors.greenAccent[700],
                                     fontSize: 24.0,
@@ -87,64 +93,212 @@ class _OrderScreenState extends State<OrderScreen> {
                               ),
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Khách hàng: ${invoice.khachHang?.hoKh} ${invoice.khachHang?.tenKh}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Khách hàng: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${invoice.khachHang?.hoKh} ${invoice.khachHang?.tenKh}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Số điện thoại: ${invoice.khachHang?.sdtKh}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Số điện thoại: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${invoice.khachHang?.sdtKh}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Email: ${invoice.khachHang?.emailKh}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Email: ',
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  '${invoice.khachHang?.emailKh}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Nhân viên: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  '${invoice.nhanVien?.hoNv} ${invoice.nhanVien?.tenNv}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Nhân viên: ${invoice.nhanVien?.hoNv} ${invoice.nhanVien?.tenNv}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Số điện thoại: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${invoice.nhanVien?.sdtNv}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Số điện thoại: ${invoice.nhanVien?.sdtNv}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Email: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${invoice.nhanVien?.emailNv}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Email: ${invoice.nhanVien?.emailNv}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Ngày tạo hóa đơn: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${invoice.ngayTaoHd}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Ngày tạo hóa đơn: ${invoice.ngayTaoHd}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Phương thức thanh toán: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${invoice.phuongThucThanhToan}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Phương thức thanh toán: ${invoice.phuongThucThanhToan}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Check in: ',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${invoice.datSan?.thoiGianCheckIn}',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Check out: ',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${invoice.datSan?.thoiGianCheckOut}',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Check in: ${invoice.datSan?.thoiGianCheckIn}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Tổng tiền: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${formatCurrency(invoice.tongTien)}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
-                            Text(
-                              'Check out: ${invoice.datSan?.thoiGianCheckOut}',
-                              style: TextStyle(fontSize: 16.0),
-                            ),
-                            SizedBox(height: 6.0),
-                            Text(
-                              'Tổng tiền: ${invoice.tongTien}',
-                              style: TextStyle(fontSize: 16.0),
-                            ),
-                            SizedBox(height: 6.0),
-                            Text(
-                              'Ghi chú: ${invoice.ghiChu}',
-                              style: TextStyle(fontSize: 16.0),
+                            Row(
+                              children: [
+                                Text(
+                                  'Ghi chú: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${invoice.ghiChu}',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 6.0),
                           ],
@@ -169,18 +323,30 @@ class _OrderScreenState extends State<OrderScreen> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child:
-                                      Text('Tên', textAlign: TextAlign.center),
+                                  child: Text(
+                                    'Tên',
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text('Số lượng',
-                                      textAlign: TextAlign.center),
+                                  child: Text(
+                                    'Số lượng',
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child:
-                                      Text('Giá', textAlign: TextAlign.center),
+                                  child: Text(
+                                    'Giá',
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               ],
                             ),
@@ -201,7 +367,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                      '${invoice.datSan?.san?.bangGiaMoiGio}',
+                                      '${formatCurrency(invoice.datSan?.san?.bangGiaMoiGio)}',
                                       textAlign: TextAlign.center),
                                 ),
                               ],
@@ -223,7 +389,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text('${dichVu.thanhTien}',
+                                          child: Text(
+                                              '${formatCurrency(dichVu.thanhTien)}',
                                               textAlign: TextAlign.center),
                                         ),
                                       ],

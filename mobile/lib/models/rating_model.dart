@@ -8,6 +8,7 @@ class Rating {
   final String? content;
   final String? createdAt;
   final int? version;
+  final bool? isHided;
   final Feedback? feedback;
   final DatSan? datSan;
 
@@ -16,6 +17,7 @@ class Rating {
     this.customer,
     this.rating,
     this.content,
+    this.isHided,
     this.createdAt,
     this.version,
     this.feedback,
@@ -31,6 +33,7 @@ class Rating {
       datSan: DatSan.fromJson(json['datSan']),
       createdAt: json['ngayTao_DG'],
       version: json['__v'],
+      isHided: json['da_an'],
       feedback:
           json['phanHoi'] != null ? Feedback.fromJson(json['phanHoi']) : null,
     );

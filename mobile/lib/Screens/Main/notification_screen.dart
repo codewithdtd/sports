@@ -124,9 +124,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               Text(
                                 '${item.tieuDe}',
                                 style: TextStyle(
-                                  color: item.tieuDe == 'Đổi sân'
-                                      ? Colors.greenAccent[700]
-                                      : Colors.red,
+                                  color: item.tieuDe == 'Hủy sân'
+                                      ? Colors.red[700]
+                                      : Colors.green,
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -146,7 +146,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ],
                           ),
                           Text(
-                            '${item.noiDung} ${item.noiDung} ${item.noiDung} ',
+                            '${item.noiDung}',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           Text(

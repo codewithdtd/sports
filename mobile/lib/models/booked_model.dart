@@ -296,7 +296,9 @@ class SportFieldBooked {
       ngayTaoSan: json['ngayTao_San'],
       ngayCapNhatSan: json['ngayCapNhat_San'],
       daXoa: json['da_xoa'],
-      bangGiaMoiGio: json['bangGiaMoiGio'],
+      bangGiaMoiGio: json['bangGiaMoiGio'] is int
+          ? json['bangGiaMoiGio']
+          : int.tryParse(json['bangGiaMoiGio']?.toString() ?? ''),
       maSan: json['ma_San'],
       idAsString: json['_idAsString'],
       datSan: json['datSan'] != null ? DatSan.fromJson(json['datSan']) : null,

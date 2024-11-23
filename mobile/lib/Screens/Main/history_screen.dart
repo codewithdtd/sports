@@ -41,8 +41,9 @@ class _HistoryState extends State<History> {
       final response = await BookingService(token: token)
           .getAll(queryParams: {'id': userId});
       return response.reversed.toList();
-    } catch (error) {
+    } catch (error, stackTrace) {
       print('Lỗi khi lấy dữ liệu: $error');
+      print('Stack Trace: $stackTrace');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Không thể tải dữ liệu. Vui lòng thử lại sau.')),
       );
@@ -472,6 +473,7 @@ class _HistoryState extends State<History> {
                                           setState(() {
                                             futureList = _fetchData();
                                           });
+                                          _fetchReviewed();
                                         }
                                         // Navigator.push(
                                         //   context,

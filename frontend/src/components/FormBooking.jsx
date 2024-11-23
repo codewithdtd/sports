@@ -124,6 +124,7 @@ function FromBooking(props) {
       const tienSan = data.san?.bangGiaMoiGio || 0; // Tiền sân
       const tienDichVu = data.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
       data.thanhTien = tienSan + tienDichVu;
+      data.khachHang = customer;
       props.handleData(data); // Xử lý dữ liệu biểu mẫ
 
     }
@@ -415,7 +416,7 @@ function FromBooking(props) {
 
   return (
     <div className='absolute z-20 bg-opacity-30 bg-black flex top-0 left-0 w-full h-full' onClick={e => props.toggle(false)}>
-      <ToastContainer autoClose={2000} />
+      {/* <ToastContainer autoClose={2000} /> */}
       <form action="" className='relative flex flex-col bg-white p-2 px-6 w-11/12 max-h-[98%] overflow-y-scroll max-w-[98%] rounded-md m-auto' onClick={e => e.stopPropagation()} onSubmit={handleSubmit}>
         <i className="ri-close-line absolute right-0 top-0 text-2xl cursor-pointer" onClick={e => props.toggle(false)}></i>
         <h1 className='text-center text-2xl font-bold p-5'>THÔNG TIN</h1>
