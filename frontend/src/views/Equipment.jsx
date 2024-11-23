@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ const Equipment = () => {
   const [edit, setEdit] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const user = useSelector((state)=> state.user.login.user)
+  const user = useSelector((state) => state.user.login.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -30,12 +30,12 @@ const Equipment = () => {
   // Chuyển đổi thành dạng chuỗi
   const convertString = () => {
     return list.map((item) => {
-      return [ item.ten_DV, item.so_luong, item.gia, item.ngayTao_DV ].join(" ").toLowerCase();
+      return [item.ten_DV, item.so_luong, item.gia, item.ngayTao_DV].join(" ").toLowerCase();
     });
   }
   // Lọc dữ liệu
   const filterFacility = () => {
-    if(search == '') 
+    if (search == '')
       return list;
 
 
@@ -60,18 +60,22 @@ const Equipment = () => {
 
   const handleData = async (data = {}) => {
     setFac(data)
-    if(data.phuongThuc == 'edit') {
+    if (data.phuongThuc == 'edit') {
       console.log('edit')
-      if(await editData(data))
+      if (await editData(data)) {
         console.log('Đã cập nhật');
+        toast.success('Thành công');
+      }
     }
-    if(data.phuongThuc == 'create') {
+    if (data.phuongThuc == 'create') {
       console.log('create')
-      if(await createData(data))
+      if (await createData(data)) {
         console.log('Đã thêm mới');
+        toast.success('Thành công');
+      }
     }
     // setFac(fac);
-    setEdit(!edit);  
+    setEdit(!edit);
   };
 
   // Lấy dữ liệu từ server
@@ -81,7 +85,7 @@ const Equipment = () => {
   }
   const createData = async (data) => {
     const newFac = await serviceService.create(data);
-    return newFac;  
+    return newFac;
   }
   const editData = async (data) => {
     const editFac = await serviceService.update(data._id, data);
@@ -94,12 +98,12 @@ const Equipment = () => {
       }
     );
 
-    if(findBooking && findBooking.length > 0) {
+    if (findBooking && findBooking.length > 0) {
       toast.error('Không thể xóa!');
       return;
     }
     const confirm = window.confirm('Bạn có chắc chắn muốn xóa không?');
-    if(confirm) {
+    if (confirm) {
       const deleteFac = await serviceService.delete(data._id);
       getService();
       return deleteFac;
@@ -107,7 +111,7 @@ const Equipment = () => {
 
   }
   useEffect(() => {
-    if(!user) {
+    if (!user) {
       navigate('/login');
     }
   })
@@ -126,28 +130,28 @@ const Equipment = () => {
             <i className="ri-search-line font-semibold"></i>
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          
-        </div> 
+
+        </div>
         <button className="bg-blue-500 ml-3 w-11 h-11 text-white cursor-pointer hover:bg-blue-700 m-auto rounded-lg shadow-xl text-2xl"
-              onClick={e => handleData()}
+          onClick={e => handleData()}
         >
           +
         </button>
       </div>
       {/* Bảng dữ liệu */}
-      <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-300">
+      <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border-2 border-gray-400">
         {/* Header bảngg */}
         <div className="flex bg-blue-500 p-4 px-6 pb-2 text-white justify-between border-b border-gray-300 text-center">
           <div className="w-1/12 font-semibold">STT</div>
           <div className="w-1/6 font-semibold">TÊN DỊCH VỤ</div>
-          
+
           <div className="w-1/6 font-semibold flex justify-center">
             GIÁ
-        
+
           </div>
           <div className="w-1/6 font-semibold flex justify-center">
             TỒN KHO
-            
+
           </div>
           {/* <div className="w-1/6 font-semibold flex justify-center">
             CHO MƯỢN
@@ -160,39 +164,39 @@ const Equipment = () => {
           </div>
         </div>
         {list.length > 0 ? filterFacility()?.map((item, index) =>
-        ((currentPage-1)*7 <= index && index < currentPage*7) ?
-        <div key={index} className={`flex justify-between items-center p-4 px-6 min-h-14 max-h-16 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
-          <div className="w-1/12">{index+1}</div>
-          <div className="w-1/6">{item.ten_DV}</div>
-          <div className="w-1/6 flex justify-center">
-            {formatNumber(item.gia)}
-          </div>
-          <div className="w-1/6 flex justify-center">
-            {item.tonKho || 0}
-          </div>
-          {/* <div className="w-1/6 flex justify-center">
+          ((currentPage - 1) * 7 <= index && index < currentPage * 7) ?
+            <div key={index} className={`flex justify-between items-center p-4 px-6 min-h-14 max-h-16 border-b border-gray-300 text-center ${index % 2 != 0 && 'bg-blue-100'}`}>
+              <div className="w-1/12">{index + 1}</div>
+              <div className="w-1/6">{item.ten_DV}</div>
+              <div className="w-1/6 flex justify-center">
+                {formatNumber(item.gia)}
+              </div>
+              <div className="w-1/6 flex justify-center">
+                {item.tonKho || 0}
+              </div>
+              {/* <div className="w-1/6 flex justify-center">
             {item.choMuon || 0}
           </div> */}
-          <div className="w-1/6">
-            <i className="ri-edit-box-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(item)}></i>
-            <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteData(item)} ></i>
-          
-          </div>
-        </div>
-        : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
+              <div className="w-1/6">
+                <i className="ri-edit-box-line p-2 w-[40px] h-[40px] mr-2 bg-gray-300 rounded-md" onClick={e => handleData(item)}></i>
+                <i className="ri-delete-bin-2-line bg-red-600 text-white p-2 rounded-md" onClick={e => deleteData(item)} ></i>
+
+              </div>
+            </div>
+            : '') : <div className="py-2 border-b border-gray-300 text-center items-center">Chưa có dữ liệu</div>
         }
       </div>
 
 
       {/* Phân trang */}
       <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
 
-    
-      {edit ? <FormEquipment toggle={setEdit} data={fac} handleData={handleData}/> : '' }
+
+      {edit ? <FormEquipment toggle={setEdit} data={fac} handleData={handleData} /> : ''}
     </div>
   )
 }

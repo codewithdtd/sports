@@ -75,14 +75,32 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(100.0),
-                                  child: Image.network(
-                                    'http://192.168.56.1:3000/uploads/${user.hinhAnhKh}',
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    height: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  child: (user.hinhAnhKh != null &&
+                                          user.hinhAnhKh != '')
+                                      ? Image.network(
+                                          'http://192.168.56.1:3000/uploads/${user.hinhAnhKh}',
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.35,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.35,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.asset(
+                                          'assets/images/avatar.jpg',
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.35,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.35,
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
                               ),
                             ),

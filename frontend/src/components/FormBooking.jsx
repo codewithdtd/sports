@@ -432,7 +432,7 @@ function FromBooking(props) {
                 <div className='flex justify-between'>
                   <div className="flex flex-1">
                     <i className="mr-1 ri-user-3-fill"></i>
-                    <input required name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={customer?.ho_KH} placeholder='Họ' onChange={e => setCustomer({ ...customer, ho_KH: e.target.value } )} />
+                    <input required name='' className='w-1/2 flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={customer?.ho_KH} placeholder='Họ' onChange={e => setCustomer({ ...customer, ho_KH: e.target.value })} />
                   </div>
                   <div className="flex flex-1">
                     <i className="mr-1 ri-user-3-fill"></i>
@@ -488,12 +488,12 @@ function FromBooking(props) {
                 </div> */}
             <div className={`${!data.trangThai ? 'hidden' : ''} flex font-bold ${data.trangThai == 'Đã hủy' ? 'text-red-500' : ''}`}>
               <i className={data.trangThai == 'Đã hủy' ? 'mr-1 ri-close-line' : 'mr-1 ri-check-double-line'}></i>
-              <select name="" id="" className='flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' onChange={e => setData({ ...data, trangThai: e.target.value })}>
+              <select name="" id="" className='flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' onChange={e => setData({ ...data, trangThai: e.target.value })} disabled={data.trangThai == 'Hoàn thành'}>
                 <option value={data.trangThai ? data.trangThai : ''}>{data.trangThai ? data.trangThai : 'Chọn'}</option>
                 <option value='Chưa duyệt'>Chưa duyệt</option>
                 <option value='Đã duyệt'>Đã duyệt</option>
                 <option value='Nhận sân'>Nhận sân</option>
-                <option value='Hoàn thành'>Hoàn thành</option>
+                {/* <option value='Hoàn thành'>Hoàn thành</option> */}
                 <option value='Đã hủy'>Đã hủy</option>
               </select>
             </div>
@@ -626,7 +626,7 @@ function FromBooking(props) {
 
                       <div className='flex justify-between'>
                         <div>
-                          <input type="date" className={`border rounded-md p-1 ${validateDate ? 'border-red-400 bg-red-100' : 'border-gray-400'}`} value={currentDate} />
+                          <input type="date" className={`border rounded-md p-1 ${validateDate ? 'border-red-400 bg-red-100' : 'border-gray-400'}`} value={currentDate} readOnly />
                           {validateDate ? <p className='text-red-500'>Vui lòng chọn ngày chính xác</p> : ''}
                         </div>
                         {/* <div>

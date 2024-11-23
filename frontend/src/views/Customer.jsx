@@ -78,16 +78,19 @@ const Customer = () => {
   }
   const createData = async (data) => {
     const newFac = await userService.create(data);
+    setFac(fac)
     return newFac;
   }
   const editData = async (data) => {
     const editFac = await userService.update(data._id, data, accessToken);
+    setFac(fac)
     return editFac;
   }
   const deleteData = async (data) => {
     const confirm = window.confirm('Xác nhận xóa!!!');
     if (confirm) {
       const deleteFac = await userService.delete(data._id);
+      setFac(fac)
       return deleteFac;
     }
   }
@@ -121,7 +124,7 @@ const Customer = () => {
 
       </div>
       {/* Bảng dữ liệu */}
-      <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-300">
+      <div className="bg-white text-[10px] overflow-hidden sm:text-sm md:text-base rounded-lg shadow-sm border-2 border-gray-400">
         {/* Header bảngg */}
         <div className="flex justify-between p-4 pb-2 bg-blue-500 text-white border-b border-gray-300 text-center">
           <div className="w-1/12 font-semibold">STT</div>

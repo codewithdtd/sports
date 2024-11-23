@@ -62,14 +62,18 @@ function FacilityManagement() {
         toast.error('Không thể cập nhật');
         return
       }
-      if (await editFacility(data))
+      if (await editFacility(data)) {
         console.log('Đã cập nhật');
+        toast.success('Đã cập nhật');
+      }
       // setFac(fac)
     }
     if (data.phuongThuc == 'create') {
       console.log('create')
-      if (await createFacility(data))
+      if (await createFacility(data)) {
         console.log('Đã thêm mới');
+        toast.success('Đã thêm mới');
+      }
     }
     setEdit(!edit);
   };
@@ -134,6 +138,7 @@ function FacilityManagement() {
     const confirm = window.confirm('Xác nhận xóa!!!');
     if (confirm) {
       const deleteFac = await facilityService.delete(data._id);
+      toast.success('Đã xóa');
       return deleteFac;
     }
   }

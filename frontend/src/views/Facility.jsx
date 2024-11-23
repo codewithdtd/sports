@@ -161,7 +161,8 @@ function Facility() {
   // GỌI SERVICE BACKEND
   // lấy dữ liệu
   const getFacility = async () => {
-    const data = await facilityService.getAll();
+    let data = await facilityService.getAll();
+    data = data.sort((a, b) => a.ten_San.localeCompare(b.ten_San));
     setFacilities(data);
     const sp = await sportTypeService.getAll()
     setSportType(sp)
@@ -176,7 +177,7 @@ function Facility() {
     };
     try {
       const field = await facilityService.getAllBookedExact(time);
-      setFacilities(field);
+      setFacilities(field.sort((a, b) => a.ten_San.localeCompare(b.ten_San)));
 
       if (field && facilities.length > 0) {
         facilities.forEach(async (facility) => {
@@ -284,6 +285,7 @@ function Facility() {
 
       <div className='grid grid-cols-3 lg:grid-cols-5 gap-4'>
         {facilities ? filterFacility().map((facility, index) =>
+          ((currentPage - 1) * 10 <= index && index < currentPage * 10) &&
           <div
             key={facility._id}
             className={`${facility.tinhTrang == "Trống"
@@ -306,7 +308,7 @@ function Facility() {
               <p>{facility.datSan ? formatNumber(facility.datSan.thanhTien) : formatNumber(facility.bangGiaMoiGio) + "/h"}</p>
             </div>
           </div>
-        ) : ''}
+        ) : 'Chưa có dữ liệu'}
       </div>
       <Pagination
         totalPages={totalPages}
@@ -315,7 +317,7 @@ function Facility() {
       />
       {/* from nhập dữ liệu */}
       {edit ? <FormFacility toggle={setEdit} handleData={handleFacility} data={fac} /> : ''}
-      {modalTime ? <ChangeTime toggle={setModalTime}  /> : ''}
+      {modalTime ? <ChangeTime toggle={setModalTime} /> : ''}
     </div>
   )
 }

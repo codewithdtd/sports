@@ -89,7 +89,7 @@ class DBHandler {
             $match: {
               $or: [
                 {
-                  "datSan.trangThai": { $ne: "Đã hủy" },
+                  "datSan.trangThai": { $nin: ["Đã hủy", "Hoàn thành"] },
                   "datSan.ngayDat": time.ngayDat,
                   "datSan.thoiGianBatDau": { $lte: time.thoiGian },
                   "datSan.thoiGianKetThuc": { $gte: time.thoiGian }

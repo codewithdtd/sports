@@ -132,7 +132,7 @@ exports.login = async (req, res, next) => {
                     // role: result.role
                 },  
                 process.env.JWT_ACCESS_TOKEN,
-                { expiresIn: "1d" }
+                { expiresIn: "20d" }
             );
             // refresh
             const refreshToken = jwt.sign(
@@ -141,7 +141,7 @@ exports.login = async (req, res, next) => {
                     // role: result.role
                 },  
                 process.env.JWT_REFRESH_TOKEN,
-                { expiresIn: "30d" }
+                { expiresIn: "45d" }
             );
 
             res.cookie("refreshToken", refreshToken, {
@@ -182,7 +182,7 @@ exports.refreshToken = async (req, res, next) => {
                 // role: result.role
             },  
             process.env.JWT_ACCESS_TOKEN,
-            { expiresIn: "1d" }
+            { expiresIn: "20d" }
         );
         // refresh
         const newRefreshToken = jwt.sign(
@@ -191,7 +191,7 @@ exports.refreshToken = async (req, res, next) => {
                 // role: result.role
             },  
             process.env.JWT_REFRESH_TOKEN,
-            { expiresIn: "30d" }
+            { expiresIn: "45d" }
         );
 
         res.cookie("refreshToken", newRefreshToken, {

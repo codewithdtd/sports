@@ -128,6 +128,7 @@ const SportType = () => {
     const confirm = window.confirm('Bạn có chắc chắn muốn xóa không?');
     if(confirm) {
       const editFac = await sportTypeService.delete(data._id, data);
+      toast.success('Đã xóa');
       getData();
       return editFac;
     }

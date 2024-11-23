@@ -133,7 +133,7 @@ exports.login = async (req, res, next) => {
                     role: result.chuc_vu
                 },  
                 process.env.JWT_ACCESS_TOKEN,
-                { expiresIn: "30m" }
+                { expiresIn: "20d" }
             );
             // refresh
             const refreshToken = jwt.sign(
@@ -142,7 +142,7 @@ exports.login = async (req, res, next) => {
                     role: result.chuc_vu
                 },  
                 process.env.JWT_REFRESH_TOKEN,
-                { expiresIn: "30d" }
+                { expiresIn: "45d" }
             );
 
             res.cookie("refreshToken", refreshToken, {
@@ -182,7 +182,7 @@ exports.refreshToken = async (req, res, next) => {
                 role: user.role
             },  
             process.env.JWT_ACCESS_TOKEN,
-            { expiresIn: "30m" }
+            { expiresIn: "20d" }
         );
         // refresh
         const newRefreshToken = jwt.sign(
@@ -191,7 +191,7 @@ exports.refreshToken = async (req, res, next) => {
                 role: user.role
             },  
             process.env.JWT_REFRESH_TOKEN,
-            { expiresIn: "30d" }
+            { expiresIn: "45d" }
         );
 
         res.cookie("refreshToken", newRefreshToken, {
@@ -1269,7 +1269,7 @@ exports.deleteImageSportType = async (req, res, next) => {
         const appDir = path.dirname(__dirname);  //Thư mục cha
         const filePath = path.join(appDir, 'uploads', imagePath);
         fs.unlinkSync(filePath);
-       
+
 
         const result = await sportType.deleteImage(req.params.id, imagePath);
         res.status(201).json(result);

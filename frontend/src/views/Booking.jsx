@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import FormBooking from '../components/FormBooking';
 import BookingService from '../services/booking.service';
 import SportTypeService from '../services/sportType.service';
@@ -10,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import ServiceService from '../services/service.service';
 import NotifyService from '../services/notify.service';
 import ViewBookingTime from '../components/ViewBookingTime';
+
 const Booking = () => {
   // const dispatch = useDispatch();
   const user = useSelector((state) => state.user.login.user)
@@ -190,9 +193,9 @@ const Booking = () => {
   const convertString = () => {
     return list.map((item) => {
       const { ho_KH, ten_KH, email_KH, sdt_KH } = item.khachHang;
-      const { loai_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San } = item.san;
+      const { loai_San, tinhTrang, khuVuc, bangGiaMoiGio, ten_San, hinhAnh_San, ma_San, ngayTao_San, ngayCapNhat_San } = item.san;
       const { trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, ngayTao } = item;
-      return [ho_KH, ten_KH, email_KH, sdt_KH, loai_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, ngayTao].join(" ").toLowerCase();
+      return [ho_KH, ten_KH, email_KH, sdt_KH, loai_San, ten_San, ma_San, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, ngayTao].join(" ").toLowerCase();
     });
   }
   const handleFilter = async () => {
@@ -298,10 +301,12 @@ const Booking = () => {
   }
   const createBooking = async (data) => {
     const newFac = await bookingService.create(data);
+    toast.success('Thành công');
     return newFac;
   }
   const editBooking = async (data) => {
     const editFac = await bookingService.update(data._id, data);
+    toast.success('Đã cập nhật', { position: 'top-right' });
     return editFac;
   }
   const editService = async (data) => {
@@ -324,6 +329,7 @@ const Booking = () => {
   }, [fac]);
   return (
     <div className='facility'>
+      <ToastContainer autoClose='2000' position='top-right' />
       <Header name="Đặt sân" />
       <div className="flex justify-between mb-5">
         <div className='flex-1 flex relative justify-between'>

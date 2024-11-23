@@ -255,7 +255,7 @@ const Invoice = () => {
         : ''}
 
       {/* Bảng dữ liệu */}
-      <div className="bg-white overflow-hidden text-[10px] sm:text-sm md:text-base rounded-lg shadow-sm border border-gray-300">
+      <div className="bg-white overflow-hidden text-[10px] sm:text-sm md:text-base rounded-lg shadow-sm border-2 border-gray-400">
         {/* Header bảngg */}
         <div className="flex justify-between p-4 px-6 pb-2 text-white bg-blue-500 border-b border-gray-300 text-center">
           <div className="w-1/12 font-semibold">STT</div>
