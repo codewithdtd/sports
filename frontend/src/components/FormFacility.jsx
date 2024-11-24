@@ -276,7 +276,7 @@ function FromFacility(props) {
                   onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckIn: getTime()}})}}>
                     Nhận sân
                 </button> */}
-            {data?.datSan?._id && (data.datSan.thoiGianBatDau == '--:--') &&
+            {/* {(data.datSan?._id && data.datSan?.thoiGianCheckIn) &&
               <button type='button' className='border-blue-600 flex-1 mx-2 bg-gray-200 border px-3 py-1 rounded-lg font-bold text-blue-600 hover:bg-blue-500 hover:text-white'
                 onClick={e => {
                   if (data.datSan) {
@@ -286,8 +286,8 @@ function FromFacility(props) {
                 }}>
                 Nhận sân
               </button>
-            }
-            {data?.datSan?._id && (data.datSan.thoiGianBatDau != '--:--')
+            } */}
+            {(data?.datSan?._id && data?.datSan?.thoiGianCheckIn != '--:--')
               &&
               <>
                 <button type='button' className='border-gray-600 flex-1 mx-2 bg-gray-200 border px-3 py-1 rounded-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white'
