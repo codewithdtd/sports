@@ -294,10 +294,11 @@ class _OrderScreenState extends State<OrderScreen> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Text(
-                                  '${invoice.ghiChu}',
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
+                                if (invoice.ghiChu != null)
+                                  Text(
+                                    '${invoice.ghiChu}',
+                                    style: TextStyle(fontSize: 16.0),
+                                  ),
                               ],
                             ),
                             SizedBox(height: 6.0),

@@ -9,9 +9,7 @@ import Login from '../views/Login';
 import SignUp from '../views/SignUp';
 import Home from '../views/Home';
 import About from '../views/About';
-import Membership from '../views/Membership';
 import Booking from '../views/Booking';
-import Event from '../views/Event';
 import Contact from '../views/Contact';
 import BookingDetail from '../views/BookingDetail';
 import Info from '../views/Info';
@@ -34,7 +32,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/',
-        element: <Home /> 
+        element: <Home />
       },
       {
         path: 'about',
@@ -47,14 +45,6 @@ export const router = createBrowserRouter([
       {
         path: 'booking/:loai_san',
         element: <BookingDetail />
-      },
-      {
-        path: 'event',
-        element: <Event />
-      },
-      {
-        path: 'membership',
-        element: <Membership />
       },
       {
         path: 'contact',

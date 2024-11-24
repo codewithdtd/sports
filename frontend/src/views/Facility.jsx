@@ -10,7 +10,8 @@ import SportTypeService from '../services/sportType.service';
 import ServiceService from '../services/service.service';
 import Pagination from '../components/Pagination';
 import ChangeTime from '../components/ChangeTime';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Facility() {
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -82,22 +83,26 @@ function Facility() {
       }
       if (await editBooking(data))
         console.log('Đã cập nhật');
+      toast.success('Cập nhật thành công');
       setFac(fac)
     }
     if (data.phuongThuc == 'thanhToan') {
       console.log('check out')
-      data.tinhTrang = "Trống";
-      data.datSan.trangThai = "Hoàn thành";
-      data.datSan.trangThaiThanhToan = 'Đã thanh toán';
-      const bookingSuccess = await editBooking(data);
-      const facilitySuccess = await editFacility(data);
-      const invoiceSuccess = await createInvoice(data)
-      if (data.datSan.dichVu?.length > 0) {
-        for (let dichVu of data.datSan.dichVu) {
-          const updateService = await editService(dichVu);
+      if (window.confirm('Xác nhận trả sân')) {
+        data.tinhTrang = "Trống";
+        data.datSan.trangThai = "Hoàn thành";
+        data.datSan.trangThaiThanhToan = 'Đã thanh toán';
+        const bookingSuccess = await editBooking(data);
+        const facilitySuccess = await editFacility(data);
+        const invoiceSuccess = await createInvoice(data)
+        if (data.datSan.dichVu?.length > 0) {
+          for (let dichVu of data.datSan.dichVu) {
+            const updateService = await editService(dichVu);
+          }
         }
+        toast.success('Trả sân thành công');
+        setFac(fac)
       }
-      setFac(fac)
     }
     setEdit(!edit);
   };
@@ -237,7 +242,6 @@ function Facility() {
   useEffect(() => {
     getFacility();
     getFacilityBooked();
-    console.log(1)
   }, [fac]);
 
   // useEffect(() => {
@@ -251,6 +255,7 @@ function Facility() {
   // }, []);
   return (
     <div className='facility'>
+      <ToastContainer autoClose='2000' />
       <Header name="Sân thể thao" />
       <div className="flex justify-between items-center mb-3">
         <div className='flex-1 flex relative justify-between'>
