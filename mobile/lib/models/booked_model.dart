@@ -165,6 +165,7 @@ class DatSan {
   String? ghiChu;
   List<DichVu>? dichVu;
   int? thanhTien;
+  int? phuThu;
   String? ngayDat;
   // ignore: non_constant_identifier_names
   String? app_trans_id;
@@ -188,6 +189,7 @@ class DatSan {
     this.dichVu,
     this.ghiChu,
     this.thanhTien,
+    this.phuThu,
     this.ngayDat,
     this.yeuCauHuy,
     // ignore: non_constant_identifier_names
@@ -216,6 +218,7 @@ class DatSan {
       ghiChu: json["ghiChu"],
       dichVu: List<DichVu>.from(json['dichVu'].map((x) => DichVu.fromJson(x))),
       thanhTien: json['thanhTien'],
+      phuThu: json['phuThu'],
       ngayDat: json['ngayDat'],
       // ignore: unnecessary_null_in_if_null_operators
       order_url: json['order_url'],

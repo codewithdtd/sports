@@ -249,6 +249,9 @@ class _HistoryState extends State<History> {
         newTotal += dichVu.thanhTien ?? 0;
       }
     }
+    if (item.phuThu != null) {
+      newTotal += item.phuThu!;
+    }
     return newTotal;
   }
 
@@ -404,7 +407,7 @@ class _HistoryState extends State<History> {
                                 ],
                               ),
                               Text(
-                                '${item.trangThaiThanhToan} - ${formatCurrency(_calculateTotalPrice(item))}đ',
+                                '${item.trangThaiThanhToan}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 17.0),

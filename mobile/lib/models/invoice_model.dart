@@ -9,6 +9,7 @@ class Invoice {
     this.ghiChu,
     this.phuongThucThanhToan,
     this.tongTien,
+    this.phuThu,
     this.daXoa,
     this.ngayTaoHd,
     this.v,
@@ -21,6 +22,7 @@ class Invoice {
   final String? ghiChu;
   final String? phuongThucThanhToan;
   final int? tongTien;
+  final int? phuThu;
   final bool? daXoa;
   final String? ngayTaoHd;
   final int? v;
@@ -37,6 +39,7 @@ class Invoice {
       ghiChu: json["ghiChu"],
       phuongThucThanhToan: json["phuongThucThanhToan"],
       tongTien: json["tongTien"],
+      phuThu: json["phuThu"],
       daXoa: json["da_xoa"],
       ngayTaoHd: json["ngayTao_HD"],
       v: json["__v"],

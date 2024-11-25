@@ -267,6 +267,28 @@ class _OrderScreenState extends State<OrderScreen> {
                                 ),
                               ],
                             ),
+                            if (invoice.phuThu != null)
+                              SizedBox(
+                                height: 6.0,
+                              ),
+                            if (invoice.phuThu != null)
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Phụ thu: ',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${formatCurrency(invoice.phuThu)}',
+                                    style: TextStyle(fontSize: 16.0),
+                                  ),
+                                ],
+                              ),
                             SizedBox(height: 6.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -282,6 +304,29 @@ class _OrderScreenState extends State<OrderScreen> {
                                   '${formatCurrency(invoice.tongTien)}',
                                   style: TextStyle(fontSize: 16.0),
                                 ),
+                              ],
+                            ),
+                            SizedBox(height: 6.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Tổng tiền phải trả: ',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                if (invoice.phuThu != null)
+                                  Text(
+                                    '${formatCurrency(invoice.tongTien! + invoice.phuThu!)}',
+                                    style: TextStyle(fontSize: 16.0),
+                                  ),
+                                if (invoice.phuThu == null)
+                                  Text(
+                                    '${formatCurrency(invoice.tongTien)}',
+                                    style: TextStyle(fontSize: 16.0),
+                                  ),
                               ],
                             ),
                             SizedBox(height: 6.0),
