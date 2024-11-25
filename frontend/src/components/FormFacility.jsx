@@ -267,10 +267,10 @@ function FromFacility(props) {
               <option value="Tiền mặt">Tiền mặt</option>
             </select>
           </div>
-          {/* <div className='flex items-center my-2'>
-              Phụ thu: 
-              <input className='border px-2 ml-2 border-gray-500' type="number" min={0} value={data?.phuThu} onChange={e => setData({...data, phuthu: e.target.value})} />
-            </div> */}
+          <div className='flex items-center my-2'>
+            Phụ thu:
+            <input className='border px-2 ml-2 border-gray-500' type="number" min={0} value={data?.phuThu} onChange={e => setData({ ...data, phuThu: e.target.value })} />
+          </div>
           <div className='flex mt-4'>
             {/* <button type='button' className='border-blue-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-blue-600 hover:bg-blue-500 hover:text-white' 
                   onClick={e => {if(data.datSan) setData({...data, datSan: {...data.datSan, thoiGianCheckIn: getTime()}})}}>

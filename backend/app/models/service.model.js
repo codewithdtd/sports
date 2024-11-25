@@ -5,6 +5,7 @@ const serviceSchema = new mongoose.Schema({
   ten_DV: { type: String, required: true },
   // dungCu: { type: Object, required: true },
   tonKho: { type: Number, required: true },
+  huHong: { type: Number, default: 0 },
   // choMuon: { type: Number, default: 0 },
   gia: { type: Number, required: true },
   ngayTao_DV: { type: String },

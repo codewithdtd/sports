@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 import BookingService from '../../services/booking.service';
 import SportTypeService from '../../services/sportType.service';
+import InvoiceService from '../../services/invoice.service';
 import { useSelector, useDispatch } from 'react-redux';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { styled } from '@mui/material/styles';
@@ -46,6 +47,7 @@ const MostBookedCourtType = () => {
   const dispatch = useDispatch();
   const bookingService = new BookingService(user, dispatch);
   const sportTypeService = new SportTypeService(user, dispatch)
+  const invoiceService = new InvoiceService(user, dispatch);
 
   const formatDate = (day) => {
     return `${String(day.getDate()).padStart(2, '0')}/${String(day.getMonth() + 1).padStart(2, '0')}/${day.getFullYear()}`;
@@ -177,10 +179,10 @@ const MostBookedCourtType = () => {
     let doanhThuMoi = 0;
     for(let day of weekDays) {
       const theoNgay = list.filter((item) => {
-        return item.ngayDat == day && item.trangThai == 'Hoàn thành'
+        return item.datSan.ngayDat == day && item.datSan.trangThai == 'Hoàn thành'
       })
       if(theoNgay.length > 0) {
-        const tongTien = theoNgay.reduce((total, item) => total + item.thanhTien, 0);
+        const tongTien = theoNgay.reduce((total, item) => total + item.tongTien + (item.phuThu || 0), 0);
         doanhThuMoi += tongTien;
       } else {
         doanhThuMoi += 0;
@@ -201,14 +203,14 @@ const MostBookedCourtType = () => {
         // Lọc các phần tử có ngày đặt và loại sân trùng khớp
         const filteredList = list.filter((item) => {
           return (
-            item.ngayDat === day &&
-            item.san.loai_San._id === type._id 
-            && item.trangThai == 'Hoàn thành'
+            item.datSan.ngayDat === day &&
+            item.datSan.san.loai_San._id === type._id 
+            && item.datSan.trangThai == 'Hoàn thành'
           );
         });
 
         // Đếm số phần tử và đẩy vào mảng countByDay
-        countByDay += filteredList.reduce((acc, cur) => acc + cur.thanhTien, 0);
+        countByDay += filteredList.reduce((acc, cur) => acc + cur.tongTien, 0);
       }
 
       // Thêm kết quả đếm theo loại sportType vào mảng kết quả
@@ -231,7 +233,7 @@ const MostBookedCourtType = () => {
   };
 
   const getBooking = async () => {
-    const booking = await bookingService.getAll();
+    const booking = await invoiceService.getAll();
     const sportType = await sportTypeService.getAll();
     setSoprtType(sportType);
     setList(booking);

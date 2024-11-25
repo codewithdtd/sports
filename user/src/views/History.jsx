@@ -347,6 +347,12 @@ const History = () => {
                     <div className="text-start">
                       <p className='my-auto'>Tiền thanh toán: <b>{formatNumber(item.thanhTien)}</b></p>
                     </div>
+                    {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
+                      <div className="text-start">
+                        <p className='my-auto'>Phụ thu: <b>{formatNumber(listInvoice.find((invoice) => invoice.datSan._id == item._id).phuThu || 0)}</b></p>
+                      </div>
+                    )
+                      : ''}
                     <div className="flex pt-4 w-full justify-between">
                       {listInvoice.find((invoice) => invoice.datSan._id == item._id) ? (
                         <span className='hover:bg-gray-400 cursor-pointer bg-gray-200 p-2 rounded-lg' onClick={(e) => handleData(listInvoice.find((invoice) => invoice.datSan._id == item._id))}><i

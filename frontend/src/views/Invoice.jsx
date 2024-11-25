@@ -72,7 +72,7 @@ const Invoice = () => {
       //   phuongThucThanhToan: item.phuongThucThanhToan, 
       //   tongTien: item.tongTien };
       // setListCSV([...listCSV, newCSV]);
-      return [ho_NV, ten_NV, email_NV, sdt_NV, ho_KH, ten_KH, email_KH, sdt_KH, loai_San, thoiGianCheckIn, thoiGianCheckOut, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, item.ngayTao_HD, item.phuongThucThanhToan, item.tongTien].join(" ").toLowerCase();
+      return [ho_NV, ten_NV, email_NV, sdt_NV, ho_KH, ten_KH, email_KH, sdt_KH, loai_San, thoiGianCheckIn, thoiGianCheckOut, tinhTrang, khuVuc, bangGiaMoiGio, hinhAnh_San, ngayTao_San, ngayCapNhat_San, trangThai, thoiGianBatDau, thoiGianKetThuc, thanhTien, ghiChu, ngayDat, item.ngayTao_HD, item.phuongThucThanhToan, item.tongTien, item._id].join(" ").toLowerCase();
     });
   }
   // Lọc dữ liệu
@@ -295,7 +295,7 @@ const Invoice = () => {
                 {item.ngayTao_HD}
               </div>
               <div className="w-1/6 flex justify-center">
-                {formatNumber(item.tongTien)}
+                {formatNumber(item.tongTien + (item.phuThu || 0))}
               </div>
               <div className="w-1/6">
                 {!merge ?

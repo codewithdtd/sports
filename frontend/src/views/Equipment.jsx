@@ -153,6 +153,10 @@ const Equipment = () => {
             TỒN KHO
 
           </div>
+          <div className="w-1/6 font-semibold flex justify-center">
+            HƯ HỎNG
+
+          </div>
           {/* <div className="w-1/6 font-semibold flex justify-center">
             CHO MƯỢN
             <div className="">
@@ -173,6 +177,9 @@ const Equipment = () => {
               </div>
               <div className="w-1/6 flex justify-center">
                 {item.tonKho || 0}
+              </div>
+              <div className="w-1/6 flex justify-center">
+                {item.huHong || 0}
               </div>
               {/* <div className="w-1/6 flex justify-center">
             {item.choMuon || 0}

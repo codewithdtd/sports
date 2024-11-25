@@ -207,6 +207,7 @@ function Facility() {
       nhanVien: user.user,
       khachHang: data.datSan.khachHang,
       datSan: data.datSan,
+      phuThu: data.phuThu,
       ghiChu: data.datSan.ghiChu,
       phuongThucThanhToan: data.phuongThucThanhToan,
       tongTien: data.datSan.thanhTien,
@@ -275,8 +276,8 @@ function Facility() {
       </div>
       <div className='flex pb-2'>
         <div className='flex items-center border border-gray-400 rounded-lg overflow-hidden'>
-          <input name='' className='flex-1 p-1 pl-2' type="date" value={currentDate} readOnly />
-          <input type="time" className='flex-1 p-1 pl-2' value={currentTime} readOnly />
+          <input name='' className='flex-1 p-1 pl-8' type="date" value={currentDate} readOnly />
+          {/* <input type="time" className='flex-1 p-1 pl-2' value={currentTime} readOnly /> */}
         </div>
         {/* <div className='flex items-center'>
           Đến:

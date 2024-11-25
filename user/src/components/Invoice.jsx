@@ -70,7 +70,13 @@ const Invoice = (props) => {
             )} 
           </div>
           <p className='text-end'>
+            Phụ thu: <b>{formatNumber(props.data.phuThu || 0)}</b>
+          </p>
+          <p className='text-end'>
               Tổng tiền: <b>{formatNumber(props.data.tongTien)}</b>
+          </p>
+          <p className='text-end'>
+            Tiền phải trả: <b>{formatNumber(props.data.tongTien + (props.data.phuThu || 0))}</b>
           </p>
         </div>
       </div>

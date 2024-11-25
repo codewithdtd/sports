@@ -26,10 +26,12 @@ const FormEquipment = (props) => {
               <label htmlFor="" className='w-1/4'>Tồn kho:</label>
               <input name='ten_San' min={0} className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="number" value={data.tonKho} onChange={e => setData({...data, tonKho: e.target.value})}/>
             </div>
-            {/* <div className="flex">
-              <label htmlFor="" className='w-1/4'>Cho mượn:</label>
-              <input name='ten_San' min={0}  className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="number" value={data.choMuon || 0} onChange={e => setData({...data, choMuon: e.target.value})}/>
-            </div> */}
+            {data._id &&
+            <div className="flex">
+              <label htmlFor="" className='w-1/4'>Bị hỏng:</label>
+              <input name='ten_San' min={0}  className='flex-1 bg-gray-300 mb-2 rounded-xl p-1 pl-2' type="number" value={data.huHong || 0} onChange={e => setData({...data, huHong: e.target.value})}/>
+            </div>
+            }
             <button className='bg-blue-600 w-full py-1 px-2 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
         </form>
     </div>

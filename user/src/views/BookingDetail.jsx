@@ -387,7 +387,7 @@ const BookingDetail = () => {
             </div>
           </div>
           <div className='h-[45vh] md:h-[65vh] overflow-y-scroll mt-2 border-2 border-gray-300'>
-            <div className='flex border-b-2 bg-blue-500 text-center py-2 border-gray-400'>
+            <div className='flex border-b-2 text-center py-2 border-gray-400'>
               <div className='w-1/6 font-bold'>Bắt đầu</div>
               <div className='w-1/6 font-bold'>Kết thúc</div>
               <div className='flex-1 font-bold'>Sân</div>

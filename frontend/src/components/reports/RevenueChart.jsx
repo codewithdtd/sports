@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { BarChart } from '@mui/x-charts/BarChart';
 import BookingService from '../../services/booking.service';
+import InvoiceService from '../../services/invoice.service';
 import SportTypeService from '../../services/sportType.service';
 import { useSelector, useDispatch } from 'react-redux';
 const RevenueChart = () => {
@@ -18,6 +19,7 @@ const RevenueChart = () => {
   const dispatch = useDispatch();
   const sportTypeService = new SportTypeService(user, dispatch);
   const bookingService = new BookingService(user, dispatch);
+  const invoiceService = new InvoiceService(user, dispatch);
 
   const formatDate = (day) => {
     return `${String(day.getDate()).padStart(2, '0')}/${String(day.getMonth() + 1).padStart(2, '0')}/${day.getFullYear()}`;
@@ -120,10 +122,10 @@ const RevenueChart = () => {
     let doanhThuMoi = [];
     for (let day of weekDays) {
       const theoNgay = list.filter((item) => {
-        return item.ngayDat == day && item.trangThai == 'Hoàn thành'
+        return item.datSan.ngayDat == day && item.datSan.trangThai == 'Hoàn thành'
       })
       if (theoNgay.length > 0) {
-        const tongTien = theoNgay.reduce((total, item) => total + item.thanhTien, 0);
+        const tongTien = theoNgay.reduce((total, item) => total + item.tongTien + (item.phuThu || 0), 0);
         doanhThuMoi.push(tongTien);
       } else {
         doanhThuMoi.push(0);
@@ -134,7 +136,7 @@ const RevenueChart = () => {
 
 
   const getBooking = async () => {
-    const booking = await bookingService.getAll();
+    const booking = await invoiceService.getAll();
     setList(booking);
     const sportType = await sportTypeService.getAll();
     setSoprtType(sportType);
