@@ -91,7 +91,6 @@ function Facility() {
       if (window.confirm('Xác nhận trả sân')) {
         data.tinhTrang = "Trống";
         data.datSan.trangThai = "Hoàn thành";
-        data.datSan.phuThu = (data.phuThu || 0);
         data.datSan.trangThaiThanhToan = 'Đã thanh toán';
         const bookingSuccess = await editBooking(data);
         const facilitySuccess = await editFacility(data);

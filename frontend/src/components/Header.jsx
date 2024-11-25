@@ -33,7 +33,7 @@ function Header(props) {
     getNotify();
   }, [])
   return (
-    <div className="header py-1 bg-white mb-2 rounded-xl px-2 items-center pl-12 md:pl-0 flex justify-between">
+    <div className="header py-1 bg-white mb-2 rounded-xl px-2 items-center pl-12 md:pl-0 flex justify-between" onClick={e => getNotify()}>
       <div className="header__left text-xl font-[1000]">
         <p className='text-slate-800 pl-2'>Quản lý / {props.name}</p>
       </div>
