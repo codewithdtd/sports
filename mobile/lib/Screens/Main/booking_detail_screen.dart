@@ -582,13 +582,14 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
               ElevatedButton(
                 onPressed: () {
                   // Xử lý logic thanh toán ở đây
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          CornfirmScreen(list: fieldsSelected),
-                    ),
-                  );
+                  if (fieldsSelected.length > 0)
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CornfirmScreen(list: fieldsSelected),
+                      ),
+                    );
                 },
                 child: Text(
                   'Thanh toán',
