@@ -3,20 +3,24 @@ import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import UserService from '../services/user.service';
+import BookingService from '../services/booking.service';
 import Pagination from '../components/Pagination';
 import FormCustomer from '../components/FormCustomer';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Customer = () => {
   const [list, setList] = useState([]);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState(false);
   const [edit, setEdit] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [listBooking, setListBooking] = useState([]);
   const user = useSelector((state) => state.user.login.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const accessToken = user?.accessToken;
   const userService = new UserService(user, dispatch);
+  const bookingService = new BookingService(user, dispatch);
 
   const [fac, setFac] = useState({});
   // Định dạng số
@@ -59,13 +63,21 @@ const Customer = () => {
     if (data.phuongThuc == 'edit') {
       console.log('edit')
       console.log(data)
-      if (await editData(data))
+      if (await editData(data)) {
         console.log('Đã cập nhật');
+        toast.success('Thành công');
+      } else {
+        toast.error('Có lỗi xảy ra');
+      }
     }
     if (data.phuongThuc == 'create') {
       console.log('create')
-      if (await createData(data))
+      if (await createData(data)) {
+        toast.success('Thành công');
         console.log('Đã thêm mới');
+      } else {
+        toast.error('Có lỗi xảy ra');
+      }
     }
     // setFac(fac);
     setEdit(!edit);
@@ -74,6 +86,8 @@ const Customer = () => {
   // Lấy dữ liệu từ server
   const getService = async () => {
     const data = await userService.getAll();
+    const booking = await bookingService.getAll();
+    setListBooking(booking);
     setList(data);
   }
   const createData = async (data) => {
@@ -87,6 +101,16 @@ const Customer = () => {
     return editFac;
   }
   const deleteData = async (data) => {
+    const find = listBooking.filter(
+      (booking) =>
+        booking.khachHang._id === data._id &&
+        booking.trangThai !== "Đã hủy" &&
+        booking.trangThai !== "Hoàn thành"
+    );
+    if (find.length > 0) {
+      toast.error('Không thể xóa');
+      return;
+    }
     const confirm = window.confirm('Xác nhận xóa!!!');
     if (confirm) {
       const deleteFac = await userService.delete(data._id);
@@ -106,6 +130,7 @@ const Customer = () => {
 
   return (
     <div>
+      <ToastContainer autoClose='2000' position='top-right' />
       <Header name="Khách hàng" />
       <div className="flex justify-between mb-5">
         <div className='flex-1 flex relative justify-between'>
