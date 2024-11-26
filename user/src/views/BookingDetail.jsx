@@ -407,7 +407,7 @@ const BookingDetail = () => {
                     {slot.formattedTimeEnd}
                   </div>
                   <div className="flex-1">
-                    {listFac?.map((san) =>
+                    {listFac.length > 0 ? listFac?.map((san) =>
                       <div className={`flex py-2 border border-gray-400 hover:bg-gray-300
                     ${san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
                           ? 'bg-gray-300' : ''
@@ -452,7 +452,7 @@ const BookingDetail = () => {
                           />
                         </div>
                       </div>
-                    )}
+                    ): 'Chưa có sân'}
                   </div>
                 </div>
                 : '')}

@@ -75,7 +75,7 @@ const Info = () => {
               <i className="ri-image-edit-fill"></i>
             </label>
           </p>
-          <input type="file" id='avatar' className='hidden' onChange={handleFileUploadAvatar} />
+          <input type="file" accept="image/*" id='avatar' className='hidden' onChange={handleFileUploadAvatar} />
         </div>
         <form className='flex-1 md:w-1/2 flex flex-col mr-4 rounded-lg p-4 bg-white border-2 shadow-md shadow-gray-500 h-[90%]' onSubmit={e => handleSubmit(e)}>
           <h1 className='text-center text-2xl md:text-3xl text-blue-600 font-bold py-3'>CẬP NHẬT THÔNG TIN CỦA BẠN</h1>

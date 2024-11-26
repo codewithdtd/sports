@@ -111,7 +111,7 @@ function FromSportType(props) {
             <label htmlFor="file-upload-avatar" className='bg-gray-300 hover:text-blue-900 hover:border-blue-500 cursor-pointer w-[80px] h-[80px] flex items-center justify-center text-4xl rounded-lg border border-dashed border-black'>
               <i className="ri-image-add-fill"></i>
             </label>
-            <input id='file-upload-avatar' className='hidden' type='file' name='hinhAnhDaiDien' onChange={handleFileUploadAvatar} />
+            <input id='file-upload-avatar' accept="image/*" className='hidden' type='file' name='hinhAnhDaiDien' onChange={handleFileUploadAvatar} />
           </div>
         </div>
         <div className="flex mt-2">
@@ -140,7 +140,7 @@ function FromSportType(props) {
             <label htmlFor="file-upload" className='bg-gray-300 hover:text-blue-900 hover:border-blue-500 cursor-pointer w-[80px] h-[80px] flex items-center justify-center text-4xl rounded-lg border border-dashed border-black'>
               <i className="ri-image-add-fill"></i>
             </label>
-            <input id='file-upload' className='hidden' type='file' name='hinhAnh' multiple onChange={handleFileUpload} />
+            <input id='file-upload' accept="image/*" className='hidden' type='file' name='hinhAnh' multiple onChange={handleFileUpload} />
           </div>
         </div>
         <button className='bg-blue-600 m-4 py-1 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
