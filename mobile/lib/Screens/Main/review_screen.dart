@@ -130,6 +130,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                             fontSize: 17.0,
                                           ),
                                         ),
+                                        Text('${item.datSan?.san?.tenSan}'),
                                         Text('${item.createdAt}'),
                                         Text(
                                           '${item.content}',

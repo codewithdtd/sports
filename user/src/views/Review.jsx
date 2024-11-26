@@ -88,7 +88,7 @@ const Review = () => {
                         : <img src="./src/assets/avatar.jpg" className='hidden sm:hidden w-14 h-14 mr-5 rounded-full' alt="" />
                       }
                       <div>
-                        <p>{review.khachHang.ho_KH + ' ' + review.khachHang.ten_KH}</p>
+                        <p>{review.khachHang.ho_KH + ' ' + review.khachHang.ten_KH} - {review.datSan.san.ten_San }</p>
                         <p className='sm:hidden text-sm font-medium text-gray-700'>{review.ngayTao_DG}</p>
                       </div>
                     </div>

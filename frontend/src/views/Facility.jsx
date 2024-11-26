@@ -18,7 +18,8 @@ function Facility() {
   const [facilities, setFacilities] = useState([]);
   const [sportType, setSportType] = useState([]);
   const [modalTime, setModalTime] = useState(false);
-  const user = useSelector((state) => state.user.login.user)
+  // const login = useSelector((state) => state.user.login)
+  const user = useSelector((state) => state.user?.login?.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -265,7 +266,7 @@ function Facility() {
             <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div>
-        {user.user.chuc_vu == 'admin' &&
+        {user?.user?.chuc_vu == 'admin' &&
           <div className='bg-blue-200 border border-blue-700 p-2 text-blue-700 rounded-sm hover:bg-blue-300 cursor-pointer' onClick={e => setModalTime(true)}>Thời gian hoạt động</div>
         }
         {/* <button className="bg-green-500 ml-3 text-white font-bold text-2xl cursor-pointer hover:bg-green-700 w-10 h-10 m-auto rounded-xl"

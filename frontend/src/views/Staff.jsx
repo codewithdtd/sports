@@ -18,7 +18,7 @@ const Staff = () => {
   const user = useSelector((state) => state.user.login.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const accessToken = user.accessToken;
+  const accessToken = user?.accessToken;
 
   const staffService = new StaffService(user, dispatch);
 
@@ -91,7 +91,7 @@ const Staff = () => {
   }
   const deleteData = async (data) => {
     const confirm = window.confirm('Xác nhận xóa!!!');
-      if (confirm) {
+    if (confirm) {
       const deleteFac = await staffService.delete(data._id);
       setFac(fac);
       return deleteFac;

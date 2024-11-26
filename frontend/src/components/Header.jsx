@@ -62,7 +62,7 @@ function Header(props) {
         <div className='group relative flex min-w-52'>
           <div className='flex items-center'>
             <div className="header__item header__user flex rounded-full overflow-hidden">
-              <img src={`${user?.user.hinhAnh_NV ? 'http://localhost:3000/uploads/' + user.user.hinhAnh_NV : "./src/assets/img/image.png"}`} alt="" className="object-cover w-[50px] h-[50px]" />
+              <img src={`${user?.user.hinhAnh_NV ? 'http://localhost:3000/uploads/' + user.user.hinhAnh_NV : "./src/assets/img/user.png"}`} alt="" className="object-cover w-[50px] h-[50px]" />
             </div>
             <div className='ml-2 hidden sm:block'>
               <p>

@@ -109,10 +109,7 @@ const Review = () => {
 
           <div className="w-1/6 font-semibold flex justify-center">
             ĐÁNH GIÁ
-            <div className="">
-              <i className="ri-arrow-up-fill"></i>
-              {/* <i className="ri-arrow-down-fill"></i> */}
-            </div>
+
           </div>
           <div className="w-1/3 font-semibold flex justify-center">
             NỘI DUNG

@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: _buildIcon(Icons.receipt_long_rounded, 2),
-            label: 'Đơn hàng',
+            label: 'Lịch sử',
           ),
           BottomNavigationBarItem(
             icon: FutureBuilder<int>(

@@ -82,7 +82,8 @@ const FormReview = (props) => {
                 <div>
                     <div className="flex justify-between mb-4">
                         <div>
-                            <p className='font-medium'>{reviewed?.khachHang.ho_KH} {reviewed?.khachHang.ten_KH}</p>
+              <p className='font-medium'>{reviewed?.khachHang.ho_KH} {reviewed?.khachHang.ten_KH}</p>
+              <p className='font-medium'>{reviewed?.datSan.san.ten_San}</p>
                             <p className='font-bold text-gray-600 text-sm'>{reviewed?.ngayTao_DG}</p>
                         </div>
                         <div>
