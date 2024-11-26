@@ -463,84 +463,87 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                             style: TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.w400),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: 10),
-                                  for (var field in fields)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4.0),
-                                      child: ElevatedButton(
-                                        onPressed: (field.datSan
-                                                        ?.thoiGianBatDau ==
-                                                    startText ||
-                                                field.tinhTrang == 'Bảo trì' ||
-                                                (int.tryParse(
-                                                            startText
-                                                                .substring(0,
-                                                                    2))! <=
-                                                        DateTime.now().hour) &&
-                                                    selectedDate?.isAtSameMomentAs(
-                                                            DateTime(
-                                                                DateTime.now()
-                                                                    .year,
-                                                                DateTime.now()
-                                                                    .month,
-                                                                DateTime.now()
-                                                                    .day)) ==
-                                                        true)
-                                            ? null
-                                            : () {
-                                                String key =
-                                                    '${field.id}-$startText-$endText-$selectedDate';
-                                                _toggleSelection(
-                                                  key,
-                                                  field,
-                                                  startText,
-                                                  endText,
-                                                  selectedDate.toString(),
-                                                ); // Truyền `field` vào _toggleSelection
-                                              },
-                                        // ignore: sort_child_properties_last
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              '${field.maSan}',
-                                              style: TextStyle(
-                                                  color: Colors.black),
+                          if (fields.length > 0)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 10),
+                                    for (var field in fields)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4.0),
+                                        child: ElevatedButton(
+                                          onPressed: (field.datSan
+                                                          ?.thoiGianBatDau ==
+                                                      startText ||
+                                                  field.tinhTrang ==
+                                                      'Bảo trì' ||
+                                                  (int.tryParse(startText
+                                                              .substring(
+                                                                  0, 2))! <=
+                                                          DateTime.now()
+                                                              .hour) &&
+                                                      selectedDate?.isAtSameMomentAs(
+                                                              DateTime(
+                                                                  DateTime.now()
+                                                                      .year,
+                                                                  DateTime.now()
+                                                                      .month,
+                                                                  DateTime.now()
+                                                                      .day)) ==
+                                                          true)
+                                              ? null
+                                              : () {
+                                                  String key =
+                                                      '${field.id}-$startText-$endText-$selectedDate';
+                                                  _toggleSelection(
+                                                    key,
+                                                    field,
+                                                    startText,
+                                                    endText,
+                                                    selectedDate.toString(),
+                                                  ); // Truyền `field` vào _toggleSelection
+                                                },
+                                          // ignore: sort_child_properties_last
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                '${field.maSan}',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              Text(
+                                                '${formatCurrency(field.bangGiaMoiGio)}',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12.0),
+                                              )
+                                            ],
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                selectedFieldMap.containsKey(
+                                                        '${field.id}-$startText-$endText-$selectedDate')
+                                                    ? Colors.greenAccent[400]
+                                                    : Colors.grey[300],
+                                            disabledBackgroundColor:
+                                                Colors.red[300],
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
                                             ),
-                                            Text(
-                                              '${formatCurrency(field.bangGiaMoiGio)}',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 12.0),
-                                            )
-                                          ],
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              selectedFieldMap.containsKey(
-                                                      '${field.id}-$startText-$endText-$selectedDate')
-                                                  ? Colors.greenAccent[400]
-                                                  : Colors.grey[300],
-                                          disabledBackgroundColor:
-                                              Colors.red[300],
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
                           SizedBox(width: 10.0),
+                          if (fields.length < 1) Text('Chưa có sân'),
                         ],
                       );
                     },
