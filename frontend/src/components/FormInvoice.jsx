@@ -103,13 +103,16 @@ const FormInvoice = (props) => {
                       Phụ thu: <b>{formatNumber((props.listData.length == 0 ? props.data.phuThu : props.listData?.reduce((a, c) => a + c.phuThu, 0)) || 0) }</b>
                 </p> */}
                     <p className='text-end'>
-                        Phụ thu: <b>{formatNumber(props.listData.length == 0 ? (props.data.phuThu || 0) : props.listData?.reduce((a, c) => a + (c.phuThu || 0), 0))}</b>
-                    </p>
-                    <p className='text-end'>
                         Tổng tiền: <b>{formatNumber(props.listData.length == 0 ? props.data.tongTien : props.listData?.reduce((a, c) => a + c.tongTien, 0))}</b>
                     </p>
                     <p className='text-end'>
-                        Tổng tiền thanh toán: <b>{formatNumber(props.listData.length == 0 ? (props.data.phuThu || 0) + props.data.tongTien : props.listData?.reduce((a, c) => a + (c.phuThu || 0), 0) + props.listData?.reduce((a, c) => a + c.tongTien, 0))}</b>
+                        Phụ thu: <b>{formatNumber(props.listData.length == 0 ? (props.data.phuThu || 0) : props.listData?.reduce((a, c) => a + (c.phuThu || 0), 0))}</b>
+                    </p>
+                    <p className='text-end'>
+                        Giảm giá: <b>{formatNumber(props.listData.length == 0 ? (props.data.giamGia || 0) : props.listData?.reduce((a, c) => a + (c.giamGia || 0), 0))}</b>
+                    </p>
+                    <p className='text-end'>
+                        Tổng tiền thanh toán: <b>{formatNumber(props.listData.length == 0 ? (props.data.phuThu || 0) + props.data.tongTien - (props.data.giamGia || 0) : props.listData?.reduce((a, c) => a + (c.phuThu || 0), 0) + props.listData?.reduce((a, c) => a + c.tongTien, 0) - props.listData?.reduce((a, c) => a + (c.giamGia || 0), 0))}</b>
                     </p>
                     <p className='text-center italic mt-5'>Cảm ơn quý khách đã sử dụng dịch vụ của DSport</p>
                     <p className='text-center italic'>Nếu có bất kỳ thắc mắc nào xin liên hệ hotline: 0999 888 777</p>

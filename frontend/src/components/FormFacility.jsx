@@ -256,7 +256,7 @@ function FromFacility(props) {
               <p className='pb-1'>Thành tiền: <b>0</b></p>  */}
           </div>
           <div className='flex items-center'>
-            Phương thức thanh toán:
+            <span className='w-1/3'>Phương thức thanh toán:</span>
             <select
               required={paymentModal}
               className='border border-gray-500 ml-2 '
@@ -268,8 +268,12 @@ function FromFacility(props) {
             </select>
           </div>
           <div className='flex items-center my-2'>
-            Phụ thu:
+            <span className='w-1/3'>Phụ thu:</span>
             <input className='border px-2 ml-2 border-gray-500' type="number" min={0} value={data?.phuThu} onChange={e => setData({ ...data, phuThu: e.target.value })} />
+          </div>
+          <div className='flex items-center my-2'>
+            <span className='w-1/3'>Giảm giá:</span>
+            <input className='border px-2 ml-2 border-gray-500' type="number" min={0} value={data?.giamGia} onChange={e => setData({ ...data, giamGia: e.target.value })} />
           </div>
           <div className='flex mt-4'>
             {/* <button type='button' className='border-blue-600 flex-1 mx-2 border px-3 py-1 rounded-lg font-bold text-blue-600 hover:bg-blue-500 hover:text-white' 

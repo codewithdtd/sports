@@ -95,7 +95,7 @@ function Facility() {
         data.datSan.trangThaiThanhToan = 'Đã thanh toán';
         const bookingSuccess = await editBooking(data);
         const facilitySuccess = await editFacility(data);
-        const invoiceSuccess = await createInvoice(data)
+        const invoiceSuccess = await createInvoice(data);
         if (data.datSan.dichVu?.length > 0) {
           for (let dichVu of data.datSan.dichVu) {
             const updateService = await editService(dichVu);
@@ -209,6 +209,7 @@ function Facility() {
       khachHang: data.datSan.khachHang,
       datSan: data.datSan,
       phuThu: data.phuThu,
+      giamGia: data.giamGia,
       ghiChu: data.datSan.ghiChu,
       phuongThucThanhToan: data.phuongThucThanhToan,
       tongTien: data.datSan.thanhTien,

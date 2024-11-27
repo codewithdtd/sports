@@ -80,7 +80,6 @@ const Invoice = () => {
     if (search == '')
       return list;
 
-
     const searchTerms = search.toLowerCase().split(' ');
     const convertedStrings = convertString();
     const filteredlist = list.filter((item, index) =>
@@ -207,7 +206,7 @@ const Invoice = () => {
         <div className='flex-1 flex relative justify-between'>
           <div className="bg-white border flex-1 max-w-[30%] border-black shadow-gray-500 shadow-sm rounded-full overflow-hidden p-2">
             <i className="ri-search-line font-semibold"></i>
-            <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => setSearch(e.target.value)} />
+            <input className='pl-2 w-[85%]' type="text" placeholder="Tìm kiếm" value={search} onChange={e => (setSearch(e.target.value), setCurrentPage(1))} />
           </div>
           <div className="bg-blue-500 cursor-pointer hover:bg-blue-700 ml-2 max-w-50% shadow-gray-700 shadow-sm text-white overflow-hidden rounded-lg p-2" onClick={e => setFilter(!filter)}>
             <i className="ri-arrow-down-double-line"></i>
@@ -295,7 +294,7 @@ const Invoice = () => {
                 {item.ngayTao_HD}
               </div>
               <div className="w-1/6 flex justify-center">
-                {formatNumber(item.tongTien + (item.phuThu || 0))}
+                {formatNumber(item.tongTien + (item.phuThu || 0) - (item.giamGia || 0))}
               </div>
               <div className="w-1/6">
                 {!merge ?

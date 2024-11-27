@@ -11,6 +11,7 @@ const invoiceSchema = new mongoose.Schema({
   ghiChu: { type: String, },
   phuongThucThanhToan: { type: String, required: true},
   phuThu: { type: Number },
+  giamGia: { type: Number },
   // maGiaoDich: { type: String, },
   // giamGia: { type: Number, default: 0 },
   tongTien: { type: Number, required: true, default: 0},
