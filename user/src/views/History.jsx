@@ -366,10 +366,16 @@ const History = () => {
                         <button className='bg-red-500 p-1 shadow-md shadow-gray-500 text-white px-2 hover:bg-red-700 my-auto rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
                         : ''}
                       {(item.trangThai === 'Đã duyệt' && !item.yeuCauHuy) ?
-                        <button className='text-red-500 border-red-500 border hover:bg-red-200 my-auto rounded-md mx-2 p-1' onClick={e => editRequestBooking(item)}>Yêu cầu hủy</button>
+                        <div>
+                          <button className='text-red-500 border-red-500 border hover:bg-red-200 my-auto rounded-md mx-2 p-1' onClick={e => editRequestBooking(item)}>Yêu cầu hủy</button>
+                          <p className='font-medium'>Lưu ý: Sẽ KHÔNG được hoàn tiền nếu đã thanh toán</p>
+                        </div>
                         : ''}
                       {(item.trangThai === 'Đã duyệt' && item.yeuCauHuy) ?
-                        <button className='text-red-500 italic my-auto rounded-md mx-2 p-1'>Đã gửi yêu cầu hủy</button>
+                        <div>
+                          <button className='text-red-500 italic my-auto rounded-md mx-2 p-1'>Đã gửi yêu cầu hủy</button>
+                          <p className='font-medium'>Lưu ý: Sẽ KHÔNG được hoàn tiền nếu đã thanh toán</p>
+                        </div>
                         : ''}
                       {/* Hiển thị kết quả của getReview() */}
                       {reviews[item._id] ?

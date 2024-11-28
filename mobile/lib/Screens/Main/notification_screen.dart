@@ -21,7 +21,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         Provider.of<UserProvider>(context, listen: false).user?.id;
     final response =
         await NotifyService(token: token).getAll(userId.toString());
-    return response.toList();
+    return response.reversed.toList();
   }
 
   Future<void> _createNotify(NotificationModel item) async {

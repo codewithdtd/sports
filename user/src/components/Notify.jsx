@@ -15,7 +15,7 @@ const Notify = (props) => {
 
     const getNotify = async () => {
         const noti = await notifyService.get(user.user._id);
-        setNotification(noti);
+        setNotification(noti.reverse());
     }
 
     const isRead = async (id) => {

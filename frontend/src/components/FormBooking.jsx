@@ -489,7 +489,7 @@ function FromBooking(props) {
                 </div> */}
             <div className={`${!data.trangThai ? 'hidden' : ''} flex font-bold ${data.trangThai == 'Đã hủy' ? 'text-red-500' : ''}`}>
               <i className={data.trangThai == 'Đã hủy' ? 'mr-1 ri-close-line' : 'mr-1 ri-check-double-line'}></i>
-              <select name="" id="" className='flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' onChange={e => setData({ ...data, trangThai: e.target.value })} disabled={data.trangThai == 'Hoàn thành' || data.trangThai == 'Đã hủy'}>
+              <select name="" id="" className='flex-1 border font-bold border-gray-400 mb-2 rounded-xl p-1 pl-2' onChange={e => setData({ ...data, trangThai: e.target.value })} disabled={props.data?.trangThai == 'Hoàn thành' || props.data?.trangThai == 'Đã hủy'}>
                 <option value={data.trangThai ? data.trangThai : ''}>{data.trangThai ? data.trangThai : 'Chọn'}</option>
                 <option value='Chưa duyệt'>Chưa duyệt</option>
                 <option value='Đã duyệt'>Đã duyệt</option>
@@ -750,7 +750,7 @@ function FromBooking(props) {
           </div>
         </div>
 
-        {(data?.trangThai !== 'Hoàn thành' && data?.trangThai !== 'Đã hủy') ?
+        {(props.data?.trangThai !== 'Hoàn thành' && props.data?.trangThai !== 'Đã hủy') ?
           <button className='bg-blue-600 m-4 py-1 rounded-lg text-white hover:bg-blue-500'>Xác nhận</button>
           : ''}
       </form>

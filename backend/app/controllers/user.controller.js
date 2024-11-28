@@ -697,7 +697,7 @@ exports.payment = async (req, res, next) => {
         amount: thanhTien,
         description: `DSport - Payment for the order #${transID}`,
         bank_code: "",
-        callback_url: 'https://fba1-115-75-103-11.ngrok-free.app/api/user/callback'
+        callback_url: 'https://c67b-123-22-13-80.ngrok-free.app/api/user/callback'
     };
 
     // appid|app_trans_id|appuser|amount|apptime|embeddata|item

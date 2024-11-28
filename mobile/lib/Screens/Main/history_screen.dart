@@ -406,12 +406,20 @@ class _HistoryState extends State<History> {
                                   )
                                 ],
                               ),
-                              Text(
-                                '${item.trangThaiThanhToan}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17.0),
-                              ),
+                              if (item.trangThai != 'Hoàn thành')
+                                Text(
+                                  '${item.trangThaiThanhToan} - ${formatCurrency(item.thanhTien)}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17.0),
+                                ),
+                              if (item.trangThai == 'Hoàn thành')
+                                Text(
+                                  '${item.trangThaiThanhToan}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17.0),
+                                ),
                               const SizedBox(height: 8.0),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
