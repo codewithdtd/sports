@@ -21,6 +21,7 @@ class BookingDetailScreen extends StatefulWidget {
 class _BookingDetailScreenState extends State<BookingDetailScreen> {
   final Map<String, SportFieldBooked> selectedFieldMap = {};
   final List<SportFieldBooked> fields = [];
+  final List<SportFieldBooked> fieldsBooked = [];
   final List<DatSan> fieldsSelected = [];
   final List<DichVu> services = [];
   int startTimeHour = 8;
@@ -220,18 +221,24 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
       // Gọi hàm lấy tất cả các trường đã đặt
       final List<SportFieldBooked> bookedFields =
           await SportFieldService().getAllBooked(date);
+      final List<SportFieldBooked> facility =
+          await SportFieldService().getAll();
       // final List<Time> time = await TimeService().getAll();
       // final List<DichVu> allService = await DichVuService().getAll();
 
       // Lọc các trường theo loại
-      final List<SportFieldBooked> filteredFields = bookedFields
+      final List<SportFieldBooked> filteredFields = facility
           .where((item) => item.loaiSan?.tenLoai == widget.sportType)
           .toList();
-
+      final List<SportFieldBooked> filteredFieldsBooked = bookedFields
+          .where((item) => item.loaiSan?.tenLoai == widget.sportType)
+          .toList();
       // Cập nhật trạng thái
       setState(() {
         fields.clear(); // Clear old data
         fields.addAll(filteredFields); // Thêm các trường đã lọc
+        fieldsBooked.clear();
+        fieldsBooked.addAll(filteredFieldsBooked);
       });
     } catch (e) {
       // Xử lý lỗi (nếu cần)
@@ -387,9 +394,10 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                       ),
                     ),
                     Text(
-                      widget.sportType == 'Bóng đá'
-                          ? 'Đơn giá / 1.5 giờ'
-                          : 'Đơn giá / 1 giờ',
+                      // widget.sportType == 'Bóng đá'
+                      //     ? 'Đơn giá / 1.5 giờ'
+                      //     : 'Đơn giá / 1 giờ',
+                      'CÓ ${fields.length} SÂN',
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -476,24 +484,22 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 4.0),
                                         child: ElevatedButton(
-                                          onPressed: (field.datSan
-                                                          ?.thoiGianBatDau ==
-                                                      startText ||
+                                          onPressed: (((fieldsBooked.any((fac) =>
+                                                          fac.id == field.id &&
+                                                          fac.datSan?.thoiGianBatDau ==
+                                                              startText)) ==
+                                                      true) ||
                                                   field.tinhTrang ==
                                                       'Bảo trì' ||
-                                                  (int.tryParse(startText
-                                                              .substring(
-                                                                  0, 2))! <=
+                                                  (int.tryParse(startText.substring(0, 2))! <=
                                                           DateTime.now()
                                                               .hour) &&
-                                                      selectedDate?.isAtSameMomentAs(
-                                                              DateTime(
-                                                                  DateTime.now()
-                                                                      .year,
-                                                                  DateTime.now()
-                                                                      .month,
-                                                                  DateTime.now()
-                                                                      .day)) ==
+                                                      selectedDate?.isAtSameMomentAs(DateTime(
+                                                              DateTime.now()
+                                                                  .year,
+                                                              DateTime.now()
+                                                                  .month,
+                                                              DateTime.now().day)) ==
                                                           true)
                                               ? null
                                               : () {

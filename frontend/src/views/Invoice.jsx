@@ -137,7 +137,7 @@ const Invoice = () => {
   // Lấy dữ liệu từ server
   const getInvoice = async () => {
     const data = await invoiceService.getAll();
-    setList(data);
+    setList(data.reverse());
     const st = await sportTypeService.getAll();
     setListSportType(st);
 

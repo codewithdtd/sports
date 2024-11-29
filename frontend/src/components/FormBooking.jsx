@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function FromBooking(props) {
   const [data, setData] = useState(props.data);
   const [list, setList] = useState([]);
+  const [fieldBooked, setFieldBooked] = useState([]);
   const [listBooked, setListBooked] = useState(null);
   const [filter, setFilter] = useState(props.data._id ? props.data.san.loai_San.ten_loai : 'Bóng đá');
   const [listSelected, setListSelected] = useState([]);
@@ -117,6 +118,7 @@ function FromBooking(props) {
           const tienSan = item.san?.bangGiaMoiGio || 0; // Tiền sân
           const tienDichVu = item.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
           item.thanhTien = tienSan + tienDichVu;
+          item.ghiChu = data.ghiChu;
           props.handleData(item); // Xử lý dữ liệu biểu mẫ
         }
     if (data._id) {
@@ -137,8 +139,10 @@ function FromBooking(props) {
 
   // lấy dữ liệu sân
   const getFacility = async () => {
+    const allField = await facilityService.getAll();
+    setList(allField);
     const field = await facilityService.getAllBooked({ ngayDat: currentDate });
-    setList(field);
+    setFieldBooked(field);
     const user = await userService.getAll();
     setListUser(user);
     const services = await serviceService.getAll();
@@ -477,7 +481,7 @@ function FromBooking(props) {
                 </div> */}
             <div className="flex">
               <i className="mr-1 ri-sticky-note-line"></i>
-              <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data.ghiChu || ''} onChange={e => setData({ ...data, ghiChu: e.target.value })} placeholder='Ghi chú' />
+              <input name='' className=' flex-1 border border-gray-400 mb-2 rounded-xl p-1 pl-2' type="text" value={data?.ghiChu} onChange={e => setData({ ...data, ghiChu: e.target.value })} placeholder='Ghi chú' />
             </div>
             {/* <div className="flex">
                   <i className="mr-1 ri-money-dollar-circle-fill text-lg"></i>
@@ -552,7 +556,13 @@ function FromBooking(props) {
                               <div className="flex-1">
                                 {filterList()?.map((san) =>
                                   <div className={`flex py-2 border border-gray-400
-                                  ${(san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd)
+                                  ${(fieldBooked?.filter(
+                                    (field) => {
+                                      return (field._id === san._id &&
+                                        field.datSan?.thoiGianBatDau === slot.formattedTimeStart &&
+                                        field.datSan?.thoiGianKetThuc === slot.formattedTimeEnd)
+                                    }
+                                  ))?.length > 0 
                                       || (san.tinhTrang == 'Bảo trì')
                                       ? 'bg-gray-300' : ''
                                     }
@@ -565,7 +575,13 @@ function FromBooking(props) {
                                     <div className="flex-1">{formatNumber(san.bangGiaMoiGio || 0)}</div>
                                     <div className="flex-1">
                                       {
-                                        (san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd)
+                                        (fieldBooked?.filter(
+                                    (field) => {
+                                      return (field._id === san._id &&
+                                        field.datSan?.thoiGianBatDau === slot.formattedTimeStart &&
+                                        field.datSan?.thoiGianKetThuc === slot.formattedTimeEnd)
+                                    }
+                                  ))?.length > 0 
                                           ? 'Đã đặt' : (san.tinhTrang == 'Bảo trì') ? san.tinhTrang : 'Trống'
                                       }
                                     </div>
@@ -580,7 +596,13 @@ function FromBooking(props) {
                                           ngayDat: currentDate,
                                           thanhTien: san.bangGiaMoiGio
                                         }, e.target.checked)}
-                                        disabled={(san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd) || (san.tinhTrang == 'Bảo trì')}
+                                        disabled={(fieldBooked?.filter(
+                                    (field) => {
+                                      return (field._id === san._id &&
+                                        field.datSan?.thoiGianBatDau === slot.formattedTimeStart &&
+                                        field.datSan?.thoiGianKetThuc === slot.formattedTimeEnd)
+                                    }
+                                  ))?.length > 0  || (san.tinhTrang == 'Bảo trì')}
                                       />
                                     </div>
                                   </div>
@@ -654,7 +676,13 @@ function FromBooking(props) {
                             <div className="flex-1">
                               {filterList()?.map((san) =>
                                 <div className={`flex py-2 border border-gray-400
-                                ${san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                                ${(fieldBooked?.filter(
+                                  (field) => {
+                                    return (field._id == san._id &&
+                                      field.datSan?.thoiGianBatDau == slot.formattedTimeStart &&
+                                      field.datSan?.thoiGianKetThuc == slot.formattedTimeEnd)
+                                  }
+                                ))?.length > 0
                                     || (data.thoiGianBatDau <= slot.formattedTimeStart && data.thoiGianKetThuc >= slot.formattedTimeEnd && data.san._id == san._id)
                                     || (san.tinhTrang == 'Bảo trì')
                                     ? 'bg-gray-300' : ''
@@ -668,7 +696,13 @@ function FromBooking(props) {
                                   <div className="flex-1">{formatNumber(san.bangGiaMoiGio || 0)}</div>
                                   <div className="flex-1">
                                     {
-                                      san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                                      (fieldBooked?.filter(
+                                        (field) => {
+                                          return (field._id === san._id &&
+                                            field.datSan?.thoiGianBatDau == slot.formattedTimeStart &&
+                                            field.datSan?.thoiGianKetThuc == slot.formattedTimeEnd)
+                                        }
+                                      ))?.length > 0
                                         || (data.thoiGianBatDau <= slot.formattedTimeStart && data.thoiGianKetThuc >= slot.formattedTimeEnd && data.san._id == san._id)
                                         ? 'Đã đặt' : san.tinhTrang == 'Bảo trì' ? 'Bảo trì' : 'Trống'
                                     }
@@ -685,7 +719,13 @@ function FromBooking(props) {
                                         ngayDat: currentDate,
                                         thanhTien: san.bangGiaMoiGio
                                       })}
-                                      disabled={(san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd)
+                                      disabled={(fieldBooked?.filter(
+                                    (field) => {
+                                      return (field._id === san._id &&
+                                        field.datSan?.thoiGianBatDau == slot.formattedTimeStart &&
+                                        field.datSan?.thoiGianKetThuc == slot.formattedTimeEnd)
+                                    }
+                                  ))?.length > 0 
                                         || (data.thoiGianBatDau <= slot.formattedTimeStart && data.thoiGianKetThuc >= slot.formattedTimeEnd && data.san._id == san._id)
                                         || (san.tinhTrang == 'Bảo trì')
                                       }

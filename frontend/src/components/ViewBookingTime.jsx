@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function ViewBookingTime(props) {
   const [data, setData] = useState(props.data);
   const [list, setList] = useState([]);
+  const [fieldBooked, setFieldBooked] = useState([]);
   const [listBooked, setListBooked] = useState(null);
   const [filter, setFilter] = useState('Bóng đá');
   const [listSelected, setListSelected] = useState([]);
@@ -88,8 +89,10 @@ function ViewBookingTime(props) {
 
   // lấy dữ liệu sân
   const getFacility = async () => {
+    const allField = await facilityService.getAll();
+    setList(allField);
     const field = await facilityService.getAllBooked({ ngayDat: currentDate });
-    setList(field);
+    setFieldBooked(field);
     const user = await userService.getAll();
     setListUser(user);
     const services = await serviceService.getAll();
@@ -379,7 +382,7 @@ function ViewBookingTime(props) {
                       <div className='flex-1 font-bold'>Sân</div>
                       <div className='flex-1 font-bold'>Giá</div>
                       <div className='flex-1 font-bold'>Tình trạng</div>
-                      <div className='mx-4'></div>
+                      {/* <div className='mx-4'></div> */}
                     </div>
                     {timeSlots.map((slot, index) =>
                       <div className={`flex items-center border-b text-center border-gray-400`} key={index}>
@@ -390,7 +393,7 @@ function ViewBookingTime(props) {
                           {slot.formattedTimeEnd}
                         </div>
                         <div className="flex-1">
-                          {filterList()?.map((san) =>
+                          {/* {filterList()?.map((san) =>
                             <div className={`flex py-2 border border-gray-400
                                   ${(san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd)
                                 || (san.tinhTrang == 'Bảo trì')
@@ -410,7 +413,43 @@ function ViewBookingTime(props) {
                                 }
                               </div>
                             </div>
-                          )}
+                          )} */}
+                          {filterList()?.map((san) => {
+                            // Lọc các phần tử trùng _id trong fieldBooked
+                            console.log(slot.formattedTimeStart)
+                            const matchedFields = fieldBooked?.filter(
+                              (field) =>{
+                                return (field._id === san._id &&
+                                field.datSan?.thoiGianBatDau === slot.formattedTimeStart &&
+                                field.datSan?.thoiGianKetThuc === slot.formattedTimeEnd)
+                              }
+                            );
+                            // Kiểm tra điều kiện trùng thời gian
+                            const isTimeConflict = matchedFields?.length > 0;
+
+                            // Kiểm tra trạng thái bảo trì
+                            const isUnderMaintenance = san.tinhTrang === "Bảo trì";
+
+                            return (
+                              <div
+                                className={`flex py-2 border border-gray-400 ${isTimeConflict || isUnderMaintenance ? "bg-blue-300" : ""
+                                  }`}
+                                key={san._id}
+                              >
+                                <div className="flex-1">{san.ten_San}</div>
+                                <div className="flex-1">{formatNumber(san.bangGiaMoiGio || 0)}</div>
+                                <div className="flex-1">
+                                  {isTimeConflict
+                                    ? "Đã đặt"
+                                    : isUnderMaintenance
+                                      ? san.tinhTrang
+                                      : "Trống"}
+                                </div>
+                              </div>
+                            );
+                          })}
+
+
                         </div>
                       </div>
                     )}

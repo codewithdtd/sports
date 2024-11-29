@@ -167,7 +167,7 @@ const Booking = () => {
     if (data.phuongThuc == 'create') {
       console.log('create')
       console.log(data)
-      let updatedServices = null;
+      // let updatedServices = null;
       // if(data.dichVu?.length > 0) {
       //   updatedServices = await Promise.all(
       //     data.dichVu?.map(async (service) => {
@@ -180,6 +180,7 @@ const Booking = () => {
       // if(await createBooking(data) && updatedServices)
       if (await createBooking(data)) {
         console.log('Đã thêm mới');
+        console.log(data);
         // setFac(fac)
       }
     }

@@ -21,6 +21,7 @@ const BookingDetail = () => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [listFac, setListFac] = useState([]);
   const [field, setField] = useState({})
+  const [fieldBooked, setFieldBooked] = useState([]);
   const [booking, setBooking] = useState([]);
   const [currentDate, setCurrentDate] = useState(getCurrentDate());
   const [checkedSlots, setCheckedSlots] = useState([]);
@@ -110,8 +111,13 @@ const BookingDetail = () => {
 
     const date = { ngayDat: currentDate };
     let list = await facilityService.getAllBooked(date);
-    list = list.filter(fac => fac.loai_San.ten_loai === fields.ten_loai)
-    setListFac(list)
+    // list = list.filter(fac => fac.loai_San.ten_loai === fields.ten_loai)
+    setFieldBooked(list)
+    let allField = await facilityService.getAll();
+    allField = allField.filter(fac => fac.loai_San.ten_loai === fields.ten_loai)
+    setListFac(allField);
+    console.log(allField)
+
 
     const service = await serviceService.getAll();
     setListService(service)
@@ -409,7 +415,13 @@ const BookingDetail = () => {
                   <div className="flex-1">
                     {listFac.length > 0 ? listFac?.map((san) =>
                       <div className={`flex py-2 border border-gray-400 hover:bg-gray-300
-                    ${san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
+                    ${fieldBooked?.filter(
+                      (field) => {
+                        return (field._id === san._id &&
+                          field.datSan?.thoiGianBatDau === slot.formattedTimeStart &&
+                          field.datSan?.thoiGianKetThuc === slot.formattedTimeEnd)
+                      }
+                    )?.length > 0 || san.tinhTrang == 'Bảo trì'
                           ? 'bg-gray-300' : ''
                         }
                   `}
@@ -421,8 +433,14 @@ const BookingDetail = () => {
                         <div className="flex-1">{formatNumber(san.bangGiaMoiGio || 0)}</div>
                         <div className="flex-1">
                           {
-                            san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd
-                              ? 'Đã đặt' : 'Trống'
+                            fieldBooked?.filter(
+                              (field) => {
+                                return (field._id === san._id &&
+                                  field.datSan?.thoiGianBatDau === slot.formattedTimeStart &&
+                                  field.datSan?.thoiGianKetThuc === slot.formattedTimeEnd)
+                              }
+                            )?.length > 0
+                              ? 'Đã đặt' : san.tinhTrang == 'Bảo trì' ? 'Bảo trì' : 'Trống'
                           }
                         </div>
                         <div className='mx-2'>
@@ -448,11 +466,17 @@ const BookingDetail = () => {
                               ngayDat: currentDate,
                               thanhTien: san.bangGiaMoiGio
                             }, e.target.checked)}
-                            disabled={san.datSan?.thoiGianBatDau <= slot.formattedTimeStart && san.datSan?.thoiGianKetThuc >= slot.formattedTimeEnd}
+                            disabled={fieldBooked?.filter(
+                              (field) => {
+                                return (field._id === san._id &&
+                                  field.datSan?.thoiGianBatDau === slot.formattedTimeStart &&
+                                  field.datSan?.thoiGianKetThuc === slot.formattedTimeEnd)
+                              }
+                            )?.length > 0 || san.tinhTrang == 'Bảo trì'}
                           />
                         </div>
                       </div>
-                    ): 'Chưa có sân'}
+                    ) : 'Chưa có sân'}
                   </div>
                 </div>
                 : '')}

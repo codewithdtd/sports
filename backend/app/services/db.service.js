@@ -137,8 +137,8 @@ class DBHandler {
             $match: {
               "datSan.trangThai": { $ne: "Đã hủy" },
               "datSan.ngayDat": time.ngayDat,
-              "datSan.thoiGianBatDau": { $gte: '08:00' },
-              "datSan.thoiGianKetThuc": { $lte: '22:00' }
+              // "datSan.thoiGianBatDau": { $gte: '08:00' },
+              // "datSan.thoiGianKetThuc": { $lte: '22:00' }
             }   
           }
       ]);

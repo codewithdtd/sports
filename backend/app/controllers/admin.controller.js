@@ -325,8 +325,10 @@ exports.findAllFacilityBooking = async (req, res, next) => {
         const listBooking = await facility.findAllBooked(time);
         let result = listField.map(field => field.toObject());
         // Tạo một map từ listBooking để tra cứu nhanh
+        console.log(listBooking.length);
         const bookingMap = new Map(listBooking.map(booking => [booking._id.toString(), booking]));
-        // console.log(bookingMap)
+        const bookingArray = Array.from(bookingMap.values());
+        console.log("Booking Array:", bookingArray.length)
 
         // Duyệt qua listField và thay thế các phần tử trùng lặp
         result = result.map(field => {
@@ -340,41 +342,9 @@ exports.findAllFacilityBooking = async (req, res, next) => {
             return field;
         });
         
-        
-
-        // if(listBooking)
-        //     result = result.filter(field => {
-        //         return listBooking.some(element => field._id.toString() === element.san._id.toString());
-        //     });
-        
-                // return listBooking.some((booking) => {
-                //     const bookingDate = convertToDate(booking.ngayDat);
-                //     // const bookingDate = convertToDate(booking.ngayDat);
-                //     const isSameDate = bookingDate === time.ngayDat;
-                //     const isSameField = booking.san._id.toString() === field._id.toString();
-
-                //     const startTime = time.thoiGianBatDau ? time.thoiGianBatDau : '00:00';
-                //     const endTime = time.thoiGianKetThuc ? time.thoiGianKetThuc : '23:59';
-                //     const bookingStart = booking.thoiGianBatDau;
-                //     const bookingEnd = booking.thoiGianKetThuc;
-                //     // Lọc theo thời gian nếu có thời gian bắt đầu và kết thúc
-                //     if (time.thoiGianBatDau || time.thoiGianKetThuc) {
-                //         return isSameField &&
-                //         isSameDate &&
-                //         (
-                //             (startTime <= bookingEnd && endTime >= bookingStart) // Kiểm tra chồng lấn thời gian
-                //         );
-                //     } else {
-                //         // Lọc chỉ theo ngày nếu không có thời gian
-                //         return isSameField &&
-                //         isSameDate;
-                //     }
-                // });
-            // });
-        // }
-        // console.log(result);
-        res.status(201).json(result);
+        res.status(201).json(listBooking);
     } catch (err) {
+        console.log(err)
         res.status(500).json({ error: err.message });
     }
 }
