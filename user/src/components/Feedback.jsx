@@ -36,6 +36,7 @@ const Feedback = (props) => {
   const createReview = async (data) => {
     try {
       const review = await reviewService.create(data);
+      props.setFac(props.fac);
       return review;
     } catch (error) {
       console.log(error)

@@ -550,33 +550,33 @@ class _HistoryState extends State<History> {
                                         ),
                                       ),
                                     ),
-                                  if (item.trangThai == "Đã duyệt" &&
-                                      item.yeuCauHuy == false)
-                                    GestureDetector(
-                                      onTap: () =>
-                                          _confirmRequestCancelBooking(item),
-                                      child: Container(
-                                        height: 35.0,
-                                        width: 100.0,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                              color: Colors.red, width: 2.0),
-                                          borderRadius:
-                                              BorderRadius.circular(6.0),
-                                        ),
-                                        child: const Center(
-                                          child: Text(
-                                            'Yêu cầu hủy',
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                  // if (item.trangThai == "Đã duyệt" &&
+                                  //     item.yeuCauHuy == false)
+                                  //   GestureDetector(
+                                  //     onTap: () =>
+                                  //         _confirmRequestCancelBooking(item),
+                                  //     child: Container(
+                                  //       height: 35.0,
+                                  //       width: 100.0,
+                                  //       decoration: BoxDecoration(
+                                  //         color: Colors.white,
+                                  //         border: Border.all(
+                                  //             color: Colors.red, width: 2.0),
+                                  //         borderRadius:
+                                  //             BorderRadius.circular(6.0),
+                                  //       ),
+                                  //       child: const Center(
+                                  //         child: Text(
+                                  //           'Yêu cầu hủy',
+                                  //           style: TextStyle(
+                                  //             color: Colors.red,
+                                  //             fontSize: 16.0,
+                                  //             fontWeight: FontWeight.w500,
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ),
                                   if (item.trangThai == "Đã duyệt" &&
                                       item.yeuCauHuy == true)
                                     const Text(

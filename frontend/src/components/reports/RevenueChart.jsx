@@ -125,7 +125,7 @@ const RevenueChart = () => {
         return item.datSan.ngayDat == day && item.datSan.trangThai == 'Hoàn thành'
       })
       if (theoNgay.length > 0) {
-        const tongTien = theoNgay.reduce((total, item) => total + item.tongTien + (item.phuThu || 0), 0);
+        const tongTien = theoNgay.reduce((total, item) => total + item.tongTien + (item.phuThu || 0) - (item.gimaGia || 0), 0);
         doanhThuMoi.push(tongTien);
       } else {
         doanhThuMoi.push(0);

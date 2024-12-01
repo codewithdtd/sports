@@ -77,16 +77,20 @@ const Review = () => {
             ((currentPage - 1) * 5 <= index && index < currentPage * 5) ? (
               <div key={review._id} className='shadow-gray-600 bg-white rounded-md shadow-md border text-lg border-gray-400 mb-5'>
                 <div className="rounded-xl flex p-4 text-lg">
-                  {review.khachHang.hinhAnh_KH ?
+                  {/* {review.khachHang.hinhAnh_KH ?
                     <img src={`http://localhost:3000/uploads/${review.khachHang.hinhAnh_KH}`} className='hidden sm:block w-14 h-14 mr-5 rounded-full object-cover' alt="" />
                     : <img src="./src/assets/avatar.jpg" className='hidden sm:block w-14 h-14 mr-5 rounded-full' alt="" />
-                  }
+                  } */}
+                  <img src="./src/assets/avatar.jpg" className='hidden sm:block w-14 h-14 mr-5 rounded-full' alt="" />
+
                   <div>
                     <div className='font-medium flex items-center'>
-                      {review.khachHang.hinhAnh_KH ?
+                      {/* {review.khachHang.hinhAnh_KH ?
                         <img src={`http://localhost:3000/uploads/${review.khachHang.hinhAnh_KH}`} className='hidden sm:hidden w-14 h-14 mr-5 rounded-full object-cover' alt="" />
                         : <img src="./src/assets/avatar.jpg" className='hidden sm:hidden w-14 h-14 mr-5 rounded-full' alt="" />
-                      }
+                      } */}
+                      <img src="./src/assets/avatar.jpg" className='hidden sm:hidden w-14 h-14 mr-5 rounded-full' alt="" />
+
                       <div>
                         <p>{review.khachHang.ho_KH + ' ' + review.khachHang.ten_KH} - {review.datSan.san.ten_San }</p>
                         <p className='sm:hidden text-sm font-medium text-gray-700'>{review.ngayTao_DG}</p>

@@ -185,8 +185,8 @@ function Facility() {
       const field = await facilityService.getAllBookedExact(time);
       setFacilities(field.sort((a, b) => a.ten_San.localeCompare(b.ten_San)));
 
-      if (field && facilities.length > 0) {
-        facilities.forEach(async (facility) => {
+      if (field && field.length > 0) {
+        field.forEach(async (facility) => {
           // Kiểm tra xem id của facility có trong field không
           if (facility.datSan && facility.datSan.trangThai != 'Nhận sân' && facility.tinhTrang == "Trống") {
             facility.tinhTrang = 'Đã đặt';
@@ -242,9 +242,39 @@ function Facility() {
     return deleteFac;
   }
 
+  const scheduleNextCall = () => {
+    const now = new Date();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+
+    // Tính thời gian đến mốc tiếp theo (7h, 7h30, 8h,...)
+    let nextMinutes;
+    if (minutes < 30) {
+      nextMinutes = 30;
+    } else {
+      nextMinutes = 0;
+      now.setHours(now.getHours() + 1);
+    }
+    const millisecondsToNextCall =
+      (nextMinutes - minutes) * 60 * 1000 - seconds * 1000;
+    const millisecondsToNextMinute = 30 * 1000 - seconds * 1000;
+    // Gọi fetchData sau khoảng thời gian tính toán
+    setTimeout(() => {
+      console.log(
+        `Waiting for the next call in ${millisecondsToNextCall / 1000} seconds.`
+      );
+      getFacility();
+      getFacilityBooked();
+      scheduleNextCall();
+      // setFac(fac);
+    }, millisecondsToNextMinute);
+  };
+
+
   useEffect(() => {
     getFacility();
     getFacilityBooked();
+    // scheduleNextCall();
   }, [fac]);
 
   // useEffect(() => {
