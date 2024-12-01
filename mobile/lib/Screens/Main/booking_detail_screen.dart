@@ -321,7 +321,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double interval = widget.sportType == 'Bóng đá' ? 1.5 : 1;
+    final double interval = widget.sportType == 'Bóng đá' ? 1 : 1;
     if (times.id != null) {
       final double thoiGianMoCua = _timeStringToDouble(times.thoiGianMoCua!);
       final double thoiGianDongCua =
@@ -344,7 +344,7 @@ class _BookingDetailScreenState extends State<BookingDetailScreen> {
             return Center(child: Text('Có lỗi xảy ra'));
           } else {
             // Dữ liệu đã được tải thành công, tiếp tục hiển thị giao diện
-            double interval = widget.sportType == 'Bóng đá' ? 1.5 : 1;
+            double interval = widget.sportType == 'Bóng đá' ? 1 : 1;
             double thoiGianMoCua = _timeStringToDouble(times.thoiGianMoCua);
             double thoiGianDongCua = _timeStringToDouble(times.thoiGianDongCua);
             List<String> timeSlots =

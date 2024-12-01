@@ -43,7 +43,7 @@ const BookingDetail = () => {
   const { loai_san } = useParams();
   // const startTime = 8; // 8:00
   // const endTime = 22; // 22:00
-  const interval = field?.ten_loai == 'Bóng đá' ? 1.5 : 1; // 1 giờ 30 phút
+  const interval = field?.ten_loai == 'Bóng đá' ? 1 : 1; // 1 giờ 30 phút
 
 
   const bookingService = new Booking(user, dispatch);
@@ -97,9 +97,9 @@ const BookingDetail = () => {
 
   const totalPrice = () => {
     return booking.reduce((a, c) => {
-      const tienSan = c.san?.bangGiaMoiGio || 0; // Tiền sân
-      const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0; // Tiền dịch vụ
-      return a + tienSan + tienDichVu;
+      const tienSan = parseInt(c.san?.bangGiaMoiGio) || parseInt(0); // Tiền sân
+      const tienDichVu = c.dichVu?.reduce((bd, kt) => parseInt(bd) + parseInt(kt.thanhTien || 0), 0) || parseInt(0); // Tiền dịch vụ
+      return parseInt(a) + parseInt(tienSan) + parseInt(tienDichVu);
     }, 0)
   }
 
@@ -250,8 +250,8 @@ const BookingDetail = () => {
   function getCurrentTime() {
     const today = new Date();
 
-    const hour = today.getHours();
-    const minute = today.getMinutes();
+    const hour = today.getHours().toString().padStart(2, '0');
+    const minute = today.getMinutes().toString().padStart(2, '0');
     return `${hour}:${minute}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
   }
 
@@ -403,7 +403,7 @@ const BookingDetail = () => {
             </div>
             {timeSlots.map((slot, index) =>
               (currentDate === getCurrentDate() ?
-                (slot.formattedTimeStart > getCurrentTime()) : true)
+                (slot.formattedTimeStart >= getCurrentTime()) : true)
                 ?
                 <div className={`flex items-center border-b text-center border-gray-400`} key={index}>
                   <div className='w-1/6'>
@@ -416,12 +416,12 @@ const BookingDetail = () => {
                     {listFac.length > 0 ? listFac?.map((san) =>
                       <div className={`flex py-2 border border-gray-400 hover:bg-gray-300
                     ${fieldBooked?.filter(
-                      (field) => {
-                        return (field._id === san._id &&
-                          field.datSan?.thoiGianBatDau === slot.formattedTimeStart &&
-                          field.datSan?.thoiGianKetThuc === slot.formattedTimeEnd)
-                      }
-                    )?.length > 0 || san.tinhTrang == 'Bảo trì'
+                        (field) => {
+                          return (field._id === san._id &&
+                            field.datSan?.thoiGianBatDau === slot.formattedTimeStart &&
+                            field.datSan?.thoiGianKetThuc === slot.formattedTimeEnd)
+                        }
+                      )?.length > 0 || san.tinhTrang == 'Bảo trì'
                           ? 'bg-gray-300' : ''
                         }
                   `}

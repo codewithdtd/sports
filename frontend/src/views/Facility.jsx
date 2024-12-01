@@ -193,7 +193,7 @@ function Facility() {
             await editFacility(facility);
           }
           // Cập nhật facility mà không cần trả về
-          setFac(fac);
+          // setFac(fac);
         });
       }
     } catch (error) {
@@ -263,18 +263,18 @@ function Facility() {
       console.log(
         `Waiting for the next call in ${millisecondsToNextCall / 1000} seconds.`
       );
-      getFacility();
+      // getFacility();
       getFacilityBooked();
       scheduleNextCall();
       // setFac(fac);
-    }, millisecondsToNextMinute);
+    }, millisecondsToNextCall);
   };
 
 
   useEffect(() => {
     getFacility();
     getFacilityBooked();
-    // scheduleNextCall();
+    scheduleNextCall();
   }, [fac]);
 
   // useEffect(() => {

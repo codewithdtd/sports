@@ -33,7 +33,7 @@ function FacilityManagement() {
 
   // pHÂN TRANG
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(facilities.length / 4);
+  const totalPages = Math.ceil(facilities.length / 6);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -208,7 +208,7 @@ function FacilityManagement() {
 
         {/* Nội dung bảng */}
         {facilities ? filterFacility().map((facility, index) =>
-          ((currentPage - 1) * 4 <= index && index < currentPage * 4) ?
+          ((currentPage - 1) * 6 <= index && index < currentPage * 6) ?
             <div key={facility._id} className={` p-4 text-sm md:text-base flex flex-grow justify-between py-2 border-b border-gray-300 text-center items-center ${index % 2 != 0 && 'bg-blue-100'}`}>
               <div className="w-1/12">{index + 1}</div>
               {/* <div className="w-1/6 md:w-[10%] hidden sm:block">
@@ -221,7 +221,7 @@ function FacilityManagement() {
               <div className="w-1/6">
                 {facility.ten_San}
                 <p className='lg:block'>Loại sân: {facility.loai_San.ten_loai}</p>
-                <p className='md:block'>{facility.khuVuc}</p>
+                {/* <p className='md:block'>{facility.khuVuc}</p> */}
               </div>
               <div className="w-1/6">{formatNumber(parseInt(facility.bangGiaMoiGio))}</div>
               <div className="w-1/6 flex">

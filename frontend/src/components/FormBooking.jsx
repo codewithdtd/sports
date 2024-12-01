@@ -44,7 +44,7 @@ function FromBooking(props) {
 
   // const startTime = 8; // 8:00
   // const endTime = 22; // 22:00
-  const interval = filter == 'Bóng đá' ? 1.5 : 1; // 1 giờ 30 phút
+  const interval = filter == 'Bóng đá' ? 1 : 1; // 1 giờ 30 phút
 
   const timeSlots = [];
 
@@ -83,8 +83,8 @@ function FromBooking(props) {
   function getCurrentTime() {
     const today = new Date();
 
-    const hour = today.getHours();
-    const minute = today.getMinutes();
+    const hour = today.getHours().toString().padStart(2, '0');
+    const minute = today.getMinutes().toString().padStart(2, '0');
     return `${hour}:${minute}`; // Trả về chuỗi theo định dạng yyyy-mm-dd
   }
 
@@ -780,9 +780,9 @@ function FromBooking(props) {
 
               <p>Tổng tiền: <b>{formatNumber(booking.reduce((a, c) => {
                 const tienSan = c.san?.bangGiaMoiGio || 0; // Tiền sân
-                const tienDichVu = c.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || data.dichVu?.reduce((bd, kt) => bd + (kt.thanhTien || 0), 0) || 0;  // Tiền dịch vụ
+                const tienDichVu = c.dichVu?.reduce((bd, kt) => parseInt(bd) + parseInt(kt.thanhTien || 0), 0) || data.dichVu?.reduce((bd, kt) => parseInt(bd) + parseInt(kt.thanhTien || 0), 0) || parseInt(0);  // Tiền dịch vụ
 
-                return a + tienSan + tienDichVu;
+                return parseInt(a) + parseInt(tienSan) + parseInt(tienDichVu);
               }, 0))}</b>
               </p>
             </div>

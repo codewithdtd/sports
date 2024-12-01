@@ -106,6 +106,9 @@ const Contact = () => {
           <div className="w-1/6 font-semibold flex justify-center">
             SỐ ĐIỆN THOẠI
           </div>
+          <div className="w-1/6 font-semibold flex justify-center">
+            EMAIL
+          </div>
           <div className="w-1/3 font-semibold flex justify-center">
             NỘI DUNG
           </div>
@@ -131,6 +134,11 @@ const Contact = () => {
           <div className={`w-1/6 flex justify-center`}>
             <div className={`p-1 px-3 rounded-md flex justify-center`}>
               {item.sdt} 
+            </div>
+          </div>
+          <div className={`w-1/6 flex justify-center`}>
+            <div className={`p-1 px-3 rounded-md flex justify-center`}>
+              {item.email}
             </div>
           </div>
           <div className="w-1/3 py-2 flex justify-center">

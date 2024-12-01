@@ -40,7 +40,7 @@ function ViewBookingTime(props) {
 
   const startTime = 8; // 8:00
   const endTime = 22; // 22:00
-  const interval = filter == 'Bóng đá' ? 1.5 : 1; // 1 giờ 30 phút
+  const interval = filter == 'Bóng đá' ? 1 : 1; // 1 giờ 30 phút
 
   const timeSlots = [];
 
