@@ -24,6 +24,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   final TextEditingController _newPassController = TextEditingController();
+  final TextEditingController _confirmController = TextEditingController();
   File? _avatar; // Ảnh avatar người dùng chọn
   String? _initialAvatarUrl;
   bool _isSubmitting = false;
@@ -105,7 +106,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
       print('Lỗi khi cập nhật người dùng: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Lỗi khi cập nhật!'),
+          content: Text('Mật khẩu sai hoặc có lỗi khi cập nhật!'),
           backgroundColor: Colors.red,
         ),
       );
@@ -184,17 +185,22 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                   },
                   obscureText: true,
                 ),
-                // SizedBox(height: 16),
-                // TextFormField(
-                //   controller: _newPassConfirmController,
-                //   decoration: InputDecoration(labelText: 'Mật khẩu mới'),
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Vui lòng nhập mật khẩu';
-                //     }
-                //     return null;
-                //   },
-                // ),
+                SizedBox(height: 16),
+                TextFormField(
+                  controller: _confirmController,
+                  decoration:
+                      InputDecoration(labelText: 'Xác nhận mật khẩu mới'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Vui lòng nhập mật khẩu';
+                    }
+                    if (value != _newPassController.text) {
+                      return 'Mật khẩu không khớp';
+                    }
+                    return null;
+                  },
+                  obscureText: true,
+                ),
                 SizedBox(height: 32),
                 // ElevatedButton(
                 //   onPressed: _isSubmitting ? null : _handleSubmit,
