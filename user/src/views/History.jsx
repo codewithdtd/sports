@@ -155,6 +155,22 @@ const History = () => {
     console.log(diffInDays < 0)
     return diffInDays;
   }
+
+  function tinhChenhLechNgayHuy(ngayNhap) {
+    const [day, month, year] = ngayNhap.split('/').map(Number);
+    const date1 = new Date(year, month - 1, day);  // Ngày bạn nhập (dd/mm/yyyy)
+    const date2 = new Date();            // Ngày hiện tại
+
+    // Tính số mili-giây giữa hai ngày
+    const diffInMs = date1 - date2;
+
+    // Chuyển mili-giây thành số ngày
+    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24)); // Làm tròn lên
+    console.log(diffInDays < 0)
+    return diffInDays;
+  }
+
+
   function formatDate(dateString) {
     const date = new Date(dateString);
 
@@ -365,12 +381,12 @@ const History = () => {
                       {item.trangThai === 'Chưa duyệt' ?
                         <button className='bg-red-500 p-1 shadow-md shadow-gray-500 text-white px-2 hover:bg-red-700 my-auto rounded-md mx-2' onClick={e => editBooking(item)}>Hủy sân</button>
                         : ''}
-                      {/* {(item.trangThai === 'Đã duyệt' && !item.yeuCauHuy) ?
+                      {(item.trangThai === 'Đã duyệt' && !item.yeuCauHuy && tinhChenhLechNgayHuy(item.ngayDat) > 2) ?
                         <div>
                           <button className='text-red-500 border-red-500 border hover:bg-red-200 my-auto rounded-md mx-2 p-1' onClick={e => editRequestBooking(item)}>Yêu cầu hủy</button>
                           <p className='font-medium'>Lưu ý: Sẽ KHÔNG được hoàn tiền nếu đã thanh toán</p>
                         </div>
-                        : ''} */}
+                        : ''}
                       {(item.trangThai === 'Đã duyệt' && item.yeuCauHuy) ?
                         <div>
                           <button className='text-red-500 italic my-auto rounded-md mx-2 p-1'>Đã gửi yêu cầu hủy</button>

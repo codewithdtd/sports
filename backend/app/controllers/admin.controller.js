@@ -325,10 +325,8 @@ exports.findAllFacilityBooking = async (req, res, next) => {
         const listBooking = await facility.findAllBooked(time);
         let result = listField.map(field => field.toObject());
         // Tạo một map từ listBooking để tra cứu nhanh
-        console.log(listBooking.length);
         const bookingMap = new Map(listBooking.map(booking => [booking._id.toString(), booking]));
         const bookingArray = Array.from(bookingMap.values());
-        console.log("Booking Array:", bookingArray.length)
 
         // Duyệt qua listField và thay thế các phần tử trùng lặp
         result = result.map(field => {

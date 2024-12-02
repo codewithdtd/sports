@@ -260,6 +260,18 @@ exports.createBooking = async (req, res, next) => {
                 return;
             }
         }
+        const exits = await booking.find({
+            'san._id': newBooking.san._id,
+            ngayDat: newBooking.ngayDat,
+            thoiGianBatDau: newBooking.thoiGianBatDau,
+            thoiGianKetThuc: newBooking.thoiGianKetThuc,
+        });
+
+        if(exits.length > 0) {
+            res.status(500).json({message: 'Đã có lỗi xảy ra'});
+            return;
+        }
+        
         const result = await booking.create(newBooking);
         if(!result.maGiaoDich && result.khachHang.email != '' && result.khachHang.email) {
             const email = await axios.post("http://localhost:3000/api/user/email", result);

@@ -200,7 +200,7 @@ const BookingDetail = () => {
         }, 2500);
       }
     } catch (error) {
-      toast.error("Đặt sân thất bại! Hết số lượng dịch vụ hoặc lỗi kết nối!!!", {
+      toast.error("Đặt sân thất bại!", {
       });
       setTimeout(() => {
         navigate('/');  // Chuyển hướng sau 2 giây

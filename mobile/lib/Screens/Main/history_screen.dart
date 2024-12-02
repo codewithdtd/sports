@@ -278,6 +278,29 @@ class _HistoryState extends State<History> {
 
     return diffInDays;
   }
+  int tinhChenhLechNgayHuy(String? ngayNhap) {
+    // Tách chuỗi ngày nhập thành các phần tử ngày, tháng, năm
+    List<String> parts = ngayNhap!.split('/');
+    int day = int.parse(parts[0]);
+    int month = int.parse(parts[1]);
+    int year = int.parse(parts[2]);
+
+    // Tạo đối tượng DateTime từ ngày nhập
+    DateTime date1 = DateTime(year, month, day);
+
+    // Lấy ngày hiện tại
+    DateTime date2 =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+    // Tính số mili-giây giữa hai ngày và chuyển thành số ngày
+    int diffInMs = date1.difference(date2).inMilliseconds;
+    int diffInDays = (diffInMs / (1000 * 60 * 60 * 24)).ceil();
+
+    // Kiểm tra và in thông báo nếu số ngày chênh lệch là số âm
+    print(diffInDays < 0);
+
+    return diffInDays;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -550,43 +573,49 @@ class _HistoryState extends State<History> {
                                         ),
                                       ),
                                     ),
-                                  // if (item.trangThai == "Đã duyệt" &&
-                                  //     item.yeuCauHuy == false)
-                                  //   GestureDetector(
-                                  //     onTap: () =>
-                                  //         _confirmRequestCancelBooking(item),
-                                  //     child: Container(
-                                  //       height: 35.0,
-                                  //       width: 100.0,
-                                  //       decoration: BoxDecoration(
-                                  //         color: Colors.white,
-                                  //         border: Border.all(
-                                  //             color: Colors.red, width: 2.0),
-                                  //         borderRadius:
-                                  //             BorderRadius.circular(6.0),
-                                  //       ),
-                                  //       child: const Center(
-                                  //         child: Text(
-                                  //           'Yêu cầu hủy',
-                                  //           style: TextStyle(
-                                  //             color: Colors.red,
-                                  //             fontSize: 16.0,
-                                  //             fontWeight: FontWeight.w500,
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ),
+                                  if (item.trangThai == "Đã duyệt" &&
+                                      item.yeuCauHuy == false && tinhChenhLechNgayHuy(item.ngayDat) > 2)
+                                    GestureDetector(
+                                      onTap: () =>
+                                          _confirmRequestCancelBooking(item),
+                                      child: Container(
+                                        height: 35.0,
+                                        width: 100.0,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: Colors.red, width: 2.0),
+                                          borderRadius:
+                                              BorderRadius.circular(6.0),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            'Yêu cầu hủy',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   if (item.trangThai == "Đã duyệt" &&
                                       item.yeuCauHuy == true)
-                                    const Text(
-                                      'Đã gửi yêu cầu hủy',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w500,
-                                        fontStyle: FontStyle.italic,
-                                      ),
+                                    const Column(
+                                      children: [
+                                        Text(
+                                          'Đã gửi yêu cầu hủy',
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                        Text(
+                                            'Lưu ý KHÔNG hoàn tiền nếu đã thanh toán'),
+                                      ],
                                     ),
                                   // const SizedBox(width: 8.0),
                                   if (item.order_url != null &&
